@@ -1,0 +1,18 @@
+#headerpanel{
+	background-color: #27ae60;
+	height: 100vh;
+}
+
+.masthead h1.ui.header{
+	margin-top: 3em;
+	font-size: 4em;
+}
+
+.masthead .menu a.ui.inverted.button{
+	margin: 5px;
+}
+
+.masthead i.chevron.icon{
+	position: absolute;
+	bottom: 5px;
+}
