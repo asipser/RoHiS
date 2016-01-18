@@ -4,9 +4,10 @@ var passportLocalMongoose = require('passport-local-mongoose');
 
 var Account = new Schema({
     username: String,
-    full_name: String,
+    first_name: String,
+    last_name: String,
     password: String,
-    venmo_email: String,
+    email: String,
     access_token: String,
     profile_picture_url: String
 });

@@ -8,6 +8,10 @@
 	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
 </head>
 <body>
+	{{#if user}}
+		<p>You are currently logged in as {{user.username}} </p>
+		<a href="/logout">Logout </a>
+	{{else}}
 	<div class="ui vertical masthead center aligned segment" id="headerpanel">
 		<div class="ui container">
 			<div class="ui large secondary pointing menu">
@@ -50,15 +54,15 @@
 	<div class="ui modal signup">
 		<div class="ui header">Create an account</div>
 		<div class="ui text content">
-			<form class="ui form">
+			<form class="ui form" action="/register" method="post" >
 				<div class="field">
 					<label>Name</label>
 					<div class="two fields">
 						<div class="field">
-							<input type="text" name="first-name" placeholder="First Name">
+							<input type="text" name="firstName" placeholder="First Name">
 						</div>
 						<div class="field">
-							<input type="text" name="last-name" placeholder="Last Name">
+							<input type="text" name="lastName" placeholder="Last Name">
 						</div>
 					</div>
 				</div>
@@ -81,7 +85,7 @@
 	<div class="ui small modal login">
 		<div class="ui header">Login</div>
 		<div class="ui text content">
-			<form class="ui form">
+			<form class="ui form" action="/login" method="post" >
 				<div class="field">
 					<label>Username</label>
 					<input type="text" name="username" placeholder="Username">
@@ -94,6 +98,7 @@
 			</form>
 		</div>
 	</div>
+	{{/if}}
 	<script src="/javascripts/index.js"></script>
 </body>
 </html>
