@@ -28,3 +28,6 @@ $win.scroll(function(){
 		$('#homemenuitem').addClass("active");
 	}
 });
+$('#sidebarmenuitem').click(function(){
+	$('div.ui.sidebar').sidebar('toggle');
+});

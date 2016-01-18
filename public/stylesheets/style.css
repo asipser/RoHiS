@@ -1,15 +1,18 @@
-body{
-	background-color: #ecf0f1;
+body, body.pushable>.pusher{
+	background: #27ae60;
 }
 
 #headerpanel, .pusher{
-	background-color: #27ae60;
 	height: 100vh;
 }
 
+.pusher .dimmed{
+	background-color: #27ae60;
+}
+
 .masthead h1.ui.header{
-	margin-top: 4em;
-	font-size: 4em;
+	margin-top: 30vh;
+	font-size: 7em;
 }
 
 .masthead .menu a.ui.inverted.button{
@@ -28,8 +31,13 @@ body{
 	padding-left:5vw;
 	padding-right: 5vw;
 	display: none;
+	background-color: #ecf0f1;
 }
 
 div.ui.grid{
 	font-size: 2em;
+}
+
+div.ui.right.aligned.text.container{
+	padding:10px;
 }

@@ -9,8 +9,19 @@
 </head>
 <body>
 	{{#if user}}
-		<p>You are currently logged in as {{user.username}} </p>
-		<a href="/logout">Logout </a>
+	{{> menu-partial}}
+	<div class="pusher">
+		<div class="ui container">
+			<div class="ui large secondary menu">
+				<a class="active item" id='sidebarmenuitem'><i class='sidebar icon'></i>Menu</a>
+				<div class="item">MoneyMatters</div>
+				<div class="right item">
+					<div class="ui right aligned text container">Welcome, <a href='#'>{{user.username}}</a></div>
+					<div class="ui inverted button" id="logoutbutton">Logout</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	{{else}}
 	<div class="ui vertical masthead center aligned segment" id="headerpanel">
 		<div class="ui container">
@@ -54,7 +65,7 @@
 	<div class="ui modal signup">
 		<div class="ui header">Create an account</div>
 		<div class="ui text content">
-			<form class="ui form" action="/register" method="post" >
+			<form class="ui large form" action="/register" method="post" >
 				<div class="field">
 					<label>Name</label>
 					<div class="two fields">
@@ -78,14 +89,14 @@
 					<label>Password</label>
 					<input type="password" name="password">
 				</div>
-				<button class="ui button" type="submit">Submit</button>
+				<button class="ui green button" type="submit">Submit</button>
 			</form>
 		</div>
 	</div>
 	<div class="ui small modal login">
 		<div class="ui header">Login</div>
 		<div class="ui text content">
-			<form class="ui form" action="/login" method="post" >
+			<form class="ui large form" action="/login" method="post" >
 				<div class="field">
 					<label>Username</label>
 					<input type="text" name="username" placeholder="Username">
@@ -94,7 +105,7 @@
 					<label>Password</label>
 					<input type="password" name="password">
 				</div>
-				<button class="ui button" type="submit">Submit</button>
+				<button class="ui green button" type="submit">Submit</button>
 			</form>
 		</div>
 	</div>
