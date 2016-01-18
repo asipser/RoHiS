@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>title</title>
+	<title>MoneyMatters</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/dist/semantic.min.css">
 	<script src="/dist/semantic.min.js"></script>
@@ -14,8 +14,7 @@
 				<a class="active item">Home</a>
 				<a class="item">About Us</a>
 				<div class="right item">
-					<a href='#' class="ui inverted button">Log in</a>
-					<a href='#' class="ui inverted button">Sign Up</a>
+					<div class="ui inverted button">Login</div>
 				</div>
 			</div>
 		</div>
@@ -25,12 +24,64 @@
 				MoneyMatters
 			</h1>
 			<h2>Peer lending, made easy.</h2>
-			<div class="ui huge primary button">Get Started <i class="right arrow icon"></i></div>
+			<div class="ui huge primary button" id="getstartedbutton">Get Started <i class="right arrow icon"></i></div>
 		</div>
 		<a href='#'><i class="circular inverted chevron down large icon"></i></a>
 	</div>
 	<div id="aboutpanel">
-		
+		<div class="ui large three column grid">
+			<div class="column"><div class="ui message blue">
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			</div></div>
+			<div class="column"><div class="ui message green">
+					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			</div></div>
+			<div class="column"><div class="ui message purple">
+					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			</div></div>
+		</div>
+	</div>
+	<div class="ui modal">
+		<div class="ui header">Create an account</div>
+		<div class="ui text content">
+			<form class="ui form">
+				<div class="field">
+				    <label>Name</label>
+				    <div class="two fields">
+				    	<div class="field">
+				    		<input type="text" name="first-name" placeholder="First Name">
+				   		</div>
+				   		<div class="field">
+				   			<input type="text" name="last-name" placeholder="Last Name">
+				   		</div>
+			    	</div>
+				</div>
+				<div class="field">
+					<label>Username</label>
+					<input type="text" name="username" placeholder="Username">
+				</div>
+				<div class="field">
+					<label>Email</label>
+					<input type="text" name="email" placeholder="foo@bar.io">
+				</div>
+				<button class="ui button" type="submit">Submit</button>
+			</form>
+		</div>
 	</div>
 	<script src="/javascripts/index.js"></script>
 </body>
