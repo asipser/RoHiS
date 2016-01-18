@@ -31,3 +31,4 @@ $win.scroll(function(){
 $('#sidebarmenuitem').click(function(){
 	$('div.ui.sidebar').sidebar('toggle');
 });
+
