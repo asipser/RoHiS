@@ -11,36 +11,37 @@ router.get('/', function (req, res) {
     }
     else{
     username = req.user.username;
+	var user_has_venmo; // boolean to see if the req.user has venmo.
+
     var you_owe = []; // people u know
     var owe_you = []; // charges with people that owe u
 
+    // check to see if  venmo has been  linked with account
+    if(req.user['venmo_id'] === undefined)
+    	user_has_venmo = false;
+    else
+    	user_has_venmo = true;
+
+    //console.log(req.user.username + " has venmo value of " + user_has_venmo);
 
     Charge.find({completed:false}, function (err,charges){
-    	for(transaction in charges)
-    	{
-    		if(charges[transaction]['payer'] === null || charges[transaction]['recipient'] === null){
-    			console.log("ERROR NULL");
+    	for(transaction in charges){
+    		if(charges[transaction]['payer']['username'] === username){ // user has venmo and is payer, other does not 
+    			if(charges[transaction]['recipient']['username'] === undefined)
+					you_owe.push({username:charges[transaction]['recipient'], amount:charges[transaction]['amount']});    				
+    			else
+    				you_owe.push({username:charges[transaction]['recipient']['username'], amount:charges[transaction]['amount']});
     		}
-
-    		else{
-	    		if(charges[transaction]['payer']['username'] === username){
-	    			if(charges[transaction]['recipient']['username'] === undefined)
-						you_owe.push({username:charges[transaction]['recipient'], amount:charges[transaction]['amount']});    				
-	    			else
-	    				you_owe.push({username:charges[transaction]['recipient']['username'], amount:charges[transaction]['amount']});
-	    		}
-	    		else if(charges[transaction]['recipient']['username'] === username){
-	    			if(charges[transaction]['payer']['username'] === undefined)
-	    				owe_you.push({username:charges[transaction]['payer'], amount:charges[transaction]['amount']});
-	    			else
-	    				owe_you.push({username:charges[transaction]['payer']['username'], amount:charges[transaction]['amount']});
-	    		}
-
+    		else if(charges[transaction]['recipient']['username'] === username){ // user has venmo and is recipient, other does  not
+    			if(charges[transaction]['payer']['username'] === undefined)
+    				owe_you.push({username:charges[transaction]['payer'], amount:charges[transaction]['amount']});
+    			else
+    				owe_you.push({username:charges[transaction]['payer']['username'], amount:charges[transaction]['amount']});
+	    		
     		}
-
     	}
-    	console.log(you_owe);
-    	console.log(owe_you);
+    	//console.log(you_owe);
+    	//console.log(owe_you);
 
     	res.render('index', {user:req.user, owe_you, you_owe });
     });	
@@ -53,7 +54,7 @@ router.get('/', function (req, res) {
 
 router.post('/register', function(req, res) {
     Account.count({username:req.body.username},function(error, count){
-        console.log(req.body);
+        //console.log(req.body);
 
         Account.register(new Account({ username : req.body.username, first_name: req.body.firstName, last_name: req.body.lastName, email: req.body.email}), req.body.password, function(err, account) {
         if (err) {
