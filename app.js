@@ -43,6 +43,9 @@ app.use('/users', users);
 app.use('/venmo', venmo);
 app.use('/payments', payments);
 
+//charge schema
+var Charge = require('./models/charge');
+
 // passport config
 var Account = require('./models/account');
 passport.use(new LocalStrategy(Account.authenticate()));
