@@ -7,7 +7,7 @@ var Charge = new Schema({
     recipient: Object, //JSON Object of User in Accounts DB if no workuse stringify
     amount: Number, // amount charged / loaned. Calcualted in dollars.
     completed: Boolean, // has charge been completed
-    date: { type: Date, default: new Date()},
+    date: { type: Date, default: Date.now},
     used_venmo: Boolean
 });
 
