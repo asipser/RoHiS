@@ -27,16 +27,16 @@ router.get('/', function (req, res) {
 
     Charge.find({completed:false}, function (err,charges){
     	for(transaction in charges){
-    		if(charges[transaction]['payer']['username'] === username){ // user is  a payer
-    			if(charges[transaction]['recipient']['username'] === undefined) // check if person targetted has an account or no, undefined fs they dont 
+    		if(charges[transaction]['payer']['username'] === username){                                                          // user is  a payer
+    			if(charges[transaction]['recipient']['username'] === undefined)                                                  // check if person targetted has an account or no, undefined fs they dont 
 					you_owe.push({username:charges[transaction]['recipient'], amount:charges[transaction]['amount']});    				
-    			else // they have an account and it pushes to charges that you owe their name
+    			else                                                                                                             // they have an account and it pushes to charges that you owe their name
     				you_owe.push({username:charges[transaction]['recipient']['username'], amount:charges[transaction]['amount']});
     		}
-    		else if(charges[transaction]['recipient']['username'] === username){ // user is a recipient
-    			if(charges[transaction]['payer']['username'] === undefined) // check if the person targetted has an account
+    		else if(charges[transaction]['recipient']['username'] === username){                                                 // user is a recipient
+    			if(charges[transaction]['payer']['username'] === undefined)                                                      // check if the person targetted has an account
     				owe_you.push({username:charges[transaction]['payer'], amount:charges[transaction]['amount']});
-    			else // if they have an account it pushes their account username to the array with debts owed to you
+    			else                                                                                                             // if they have an account it pushes their account username to the array with debts owed to you
     				owe_you.push({username:charges[transaction]['payer']['username'], amount:charges[transaction]['amount']});
 	    		
     		}
@@ -59,7 +59,7 @@ router.post('/register', function(req, res) {
         //console.log(req.body);
 
         Account.register(new Account({ username : req.body.username, first_name: req.body.firstName, last_name: req.body.lastName, email: req.body.email}), req.body.password, function(err, account) { // registers account with initial data passed through the register form, uses express session, passport js, and passport local mongoose
-        if (err) { // if there is an error such as a duplicated account or fields left blank. THESE WILL BE DEALT WITH LATER
+        if (err) {                              // if there is an error such as a duplicated account or fields left blank. THESE WILL BE DEALT WITH LATER
             console.log("err");
             console.log(err);
             res.render('register', { account : account });
