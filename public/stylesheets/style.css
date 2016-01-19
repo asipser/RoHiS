@@ -41,3 +41,8 @@ div.ui.grid{
 div.ui.right.aligned.text.container{
 	padding:10px;
 }
+
+#venmoauthbutton{
+	height:2em;
+	margin: 10px;
+}
