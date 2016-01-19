@@ -13,16 +13,17 @@ router.get('/', function (req, res) {
     username = req.user.username;
 	var user_has_venmo; // boolean to see if the req.user has venmo.
 
-    var you_owe = []; // people u know
+    var you_owe = []; // people u owe
     var owe_you = []; // charges with people that owe u
 
-    // check to see if  venmo has been  linked with account
+    /*// check to see if  venmo has been  linked with account NOT NEEDED SO FAR
     if(req.user['venmo_id'] === undefined)
     	user_has_venmo = false;
     else
     	user_has_venmo = true;
 
     //console.log(req.user.username + " has venmo value of " + user_has_venmo);
+	*/
 
     Charge.find({completed:false}, function (err,charges){
     	for(transaction in charges){
@@ -40,8 +41,9 @@ router.get('/', function (req, res) {
 	    		
     		}
     	}
-    	//console.log(you_owe);
-    	//console.log(owe_you);
+
+    	console.log(you_owe);
+    	console.log(owe_you);
 
     	res.render('index', {user:req.user, owe_you, you_owe });
     });	
