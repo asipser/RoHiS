@@ -34,11 +34,9 @@
 			<tr><th>Charges you owe</th>
 		</tr></thead>
 		<tbody>
-		<tr>
 		{{#each owes_you}}
-			<td>{{username}} owes you ${{amount}}</td>
+			<tr>{{username}} owes you ${{amount}}</tr>
 		{{/each}}
-		</tr>
 		</tbody>
 	</div>
 	<div class="ui celled table">
@@ -46,11 +44,9 @@
 			<tr><th>Charges owed to you</th>
 		</tr></thead>
 		<tbody>
-		<tr>
 		{{#each you_owe}}
-			<td>You owe {{username}} ${{amount}}</td>
+			<tr>You owe {{username}} ${{amount}}</tr>
 		{{/each}}
-		</tr>
 		</tbody>
 	</div>
 </div>
