@@ -10,17 +10,7 @@
 	{{#if user}}
 	{{> menu-partial}}
 	<div class="pusher">
-		<div class="ui container">
-			<div class="ui large secondary menu">
-				<a class="active item" id='sidebarmenuitem'><i class='sidebar icon'></i>Menu</a>
-				<div class="item">MoneyMatters</div>
-				<div class="right item">
-					<div class="ui right aligned text container">Welcome, <a href='#'>{{user.username}}</a></div>
-					<a href="/venmo/auth"><img src="/images/venmo_icon.png" id="venmoauthbutton"></a>
-					<a href="/logout"><div class="ui inverted button" id="logoutbutton">Logout</div> </a>
-				</div>
-			</div>
-		</div>
+		{{> top-bar-partial}}
 		<div class="ui container" id="accountsettings">
 			<h2 class="ui dividing large header"><i class="large settings icon"></i> Account Settings</h2>
 			<div class="ui fluid styled accordion">
@@ -29,7 +19,7 @@
 				    Venmo
 				  </div>
 				  <div class="content active">
-				    <p class="transition visible" style="display: block !important;">Venmo is used to complete payments of loans.<br>Your venmo account is: {{user.venmo}}</p>
+				    <p class="transition visible" style="display: block !important;">Venmo is used to complete payments of loans.<br>Your venmo account is: {{user.venmo_id}}</p>
 				  </div>
 				  <div class="title">
 				    <i class="dropdown icon"></i>
@@ -51,7 +41,7 @@
 	{{else}}
 	{{> home-page-partial}}
 	{{/if}}
-	<script src="/javascripts/index.js"></script>
 	<script src="/dist/semantic.min.js"></script>
+	<script src="/javascripts/index.js"></script>
 </body>
 </html>
