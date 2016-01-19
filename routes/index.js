@@ -2,11 +2,52 @@ var express = require('express');
 var passport = require('passport');
 var Account = require('../models/account');
 var router = express.Router();
+var Charge = require('../models/charge');
 
 
 router.get('/', function (req, res) {
-    console.log(req.user);
+    if(req.user === undefined){
     res.render('index', {user:req.user});
+    }
+    else{
+    username = req.user.username;
+    var you_owe = []; // people u know
+    var owe_you = []; // charges with people that owe u
+
+
+    Charge.find({completed:false}, function (err,charges){
+    	for(transaction in charges)
+    	{
+    		if(charges[transaction]['payer'] === null || charges[transaction]['recipient'] === null){
+    			console.log("ERROR NULL");
+    		}
+
+    		else{
+	    		if(charges[transaction]['payer']['username'] === username){
+	    			if(charges[transaction]['recipient']['username'] === undefined)
+						you_owe.push({username:charges[transaction]['recipient'], amount:charges[transaction]['amount']});    				
+	    			else
+	    				you_owe.push({username:charges[transaction]['recipient']['username'], amount:charges[transaction]['amount']});
+	    		}
+	    		else if(charges[transaction]['recipient']['username'] === username){
+	    			if(charges[transaction]['payer']['username'] === undefined)
+	    				owe_you.push({username:charges[transaction]['payer'], amount:charges[transaction]['amount']});
+	    			else
+	    				owe_you.push({username:charges[transaction]['payer']['username'], amount:charges[transaction]['amount']});
+	    		}
+
+    		}
+
+    	}
+    	console.log(you_owe);
+    	console.log(owe_you);
+
+    	res.render('index', {user:req.user});
+    });	
+    }
+    
+
+    
     
 });
 

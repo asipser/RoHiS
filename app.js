@@ -47,6 +47,9 @@ app.use('/payments', payments);
 app.use('/settings', settings);
 app.use('/statistics', statistics);
 
+//charge schema
+var Charge = require('./models/charge');
+
 // passport config
 var Account = require('./models/account');
 passport.use(new LocalStrategy(Account.authenticate()));

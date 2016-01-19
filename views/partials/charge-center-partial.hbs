@@ -1,4 +1,4 @@
-<div class="ui container" id="chargecenter">
+<div class="ui container" id="chargecenterpanel">
 	<form class="ui large form" action="/payments/addcharge" method="post">
 		<h2 class="ui dividing header">New Charge</h2>
 		<div class="three inline fields">
@@ -29,4 +29,28 @@
 	</form>
 	<div class="ui divider"></div>
 	<h2 class="ui header">Current Charges</h2>
+	<div class="ui celled table">
+		<thead>
+			<tr><th>Charges you owe</th>
+		</tr></thead>
+		<tbody>
+		<tr>
+		{{#each owes_you}}
+			<td>{{username}} owes you ${{amount}}</td>
+		{{/each}}
+		</tr>
+		</tbody>
+	</div>
+	<div class="ui celled table">
+		<thead>
+			<tr><th>Charges owed to you</th>
+		</tr></thead>
+		<tbody>
+		<tr>
+		{{#each you_owe}}
+			<td>You owe {{username}} ${{amount}}</td>
+		{{/each}}
+		</tr>
+		</tbody>
+	</div>
 </div>
