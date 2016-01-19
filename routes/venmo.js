@@ -5,12 +5,18 @@ var router = express.Router();
 
 var request = require("request");
 
+// DO NOT EDIT PLEASE
+
 var client_id = "3420";
 var client_secret = "nfZrqdjpkb3UDKtFmV4Be8gfqKdnrfsn";
+
+// REDIRECTS TO VENMO AUTHENTICATION LOGIN AND REDIRECTS TO /getCode.
 
 router.get('/auth', function(req, res, next) {
     res.redirect("https://api.venmo.com/v1/oauth/authorize?client_id=3420&scope=make_payments%20access_profile&response_type=code&redirect_uri=https://milestone-2.herokuapp.com/venmo/getCode");
 });
+
+// EXTRACTS ACCESS TOKEN AND ALL RELEVANT INFORMATION ABOUT THE USER'S VENMO ACCOUNT AND UPDATES THEIR ACCOUNT INFO. REDIRECTS TO '/'
 
 router.get('/getCode', function (req, res, next) {
 
@@ -32,6 +38,8 @@ router.get('/getCode', function (req, res, next) {
         });
     });
 });
+
+// SHOWS WHAT IS IN THE USER'S ACCOUNT DATABASE
 
 router.get('/checkdata', function (req, res, next) {
     Account.findOne({username: req.user.username}, function (err, profile) {

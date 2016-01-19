@@ -19,12 +19,12 @@ router.post('/addcharge', function (req, res, next) {
         var payer;
 
         var target_user = users[0]; // user that has been requested
-        //if no accounts have been found then the entered username shall be set target_user
+                                    //if no accounts have been found then the entered username shall be set target_user
         if(users[0] === undefined)
             target_user = req.body.user;
 
         var host_user = (req.user); // user issuing the command
-        // configures reciept/payer correctly
+                                    // configures reciept/payer correctly
          if (req.body.borroworlent === "true")
         {
             recipient = host_user;
@@ -39,7 +39,7 @@ router.post('/addcharge', function (req, res, next) {
         var d = new Date();     // gets current date
         var time = d.getTime(); // gets current time 
 
-        var charge = new Charge({ // creates new charge scehma
+        var charge = new Charge({ // creates new charge schema
             payer: payer,
             recipient: recipient,
             amount: req.body.amount,
@@ -53,7 +53,7 @@ router.post('/addcharge', function (req, res, next) {
         });
 
 
-
+        // IF VENMO OPTION IS CHECKED (SO FAR ONLY WORKS IF BOTH USERS HAVE VENMO), THEN EITHER CHARGES OR REQUESTS THE OTHER PERSON.
 
 
         if (req.body.venmousage) {
