@@ -42,7 +42,7 @@ router.get('/', function (req, res) {
     	console.log(you_owe);
     	console.log(owe_you);
 
-    	res.render('index', {user:req.user});
+    	res.render('index', {user:req.user, owe_you, you_owe });
     });	
     }
     
