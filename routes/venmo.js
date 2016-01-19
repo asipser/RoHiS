@@ -9,7 +9,7 @@ var client_id = "3420";
 var client_secret = "nfZrqdjpkb3UDKtFmV4Be8gfqKdnrfsn";
 
 router.get('/auth', function(req, res, next) {
-    res.redirect("https://api.venmo.com/v1/oauth/authorize?client_id=3420&scope=make_payments%20access_profile&response_type=code&redirect_uri=http://localhost:3000/venmo/getCode");
+    res.redirect("https://api.venmo.com/v1/oauth/authorize?client_id=3420&scope=make_payments%20access_profile&response_type=code&redirect_uri=https://milestone-2.herokuapp.com/venmo/getCode");
 });
 
 router.get('/getCode', function (req, res, next) {
