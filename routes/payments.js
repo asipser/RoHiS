@@ -10,15 +10,15 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-router.post('/charge', function (req, res, next) {
+router.post('/addcharge', function (req, res, next) {
 
     if (req.body.venmousage) {
         console.log(req.body);
 
-        var username = req.body.user;
-        var amount = req.body.amount;
-        var note = req.body.note;
-        var access_token = null;
+        var username = req.body.user; // OTHER PERSON'S USERNAME. IF YOU WANT YOUR OWN USERNAME IT'S REQ.USER.USERNAME, AS ALWAYS
+        var amount = req.body.amount; // AMOUNT BEING PAID/REQUESTED
+        var note = req.body.note;     // NOTE ASSOCIATED WITH THING
+        var access_token = null;      
         var user_id = null;
         var url = 'https://api.venmo.com/v1/payments';
 
