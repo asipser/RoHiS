@@ -2,8 +2,6 @@ var express = require('express');
 var router = express.Router();
 var Charge = require('../models/charge');
 var Account = require('../models/account');
-var router = express.Router();
-
 var request = require("request");
 
 router.get('/', function(req, res, next) {
@@ -37,7 +35,6 @@ router.post('/addcharge', function (req, res, next) {
             payer = host_user;
             recipient = target_user;
         }
-
 
         var d = new Date();     // gets current date
         var time = d.getTime(); // gets current time 
