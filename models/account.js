@@ -8,8 +8,10 @@ var Account = new Schema({
     last_name: String,
     password: String,
     email: String,
+    venmo_id: String,
     access_token: String,
-    profile_picture_url: String
+    profile_picture_url: String,
+    information: String
 });
 
 Account.plugin(passportLocalMongoose);
