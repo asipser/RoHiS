@@ -28,29 +28,21 @@
 		<button class="ui blue button" type="submit">Charge!</button>
 	</form>
 	<div class="ui divider"></div>
-	<h2 class="ui header">Current Charges</h2>
-	<div class="ui celled table">
-		<thead>
-			<tr><th>Charges you owe</th>
-		</tr></thead>
-		<tbody>
-		<tr>
-		{{#each owe_you}}
-			<td>{{username}} owes you ${{amount}}</td>
-		{{/each}}
-		</tr>
-		</tbody>
-	</div>
-	<div class="ui celled table">
-		<thead>
-			<tr><th>Charges owed to you</th>
-		</tr></thead>
-		<tbody>
-		<tr>
-		{{#each you_owe}}
-			<td>You owe {{username}} ${{amount}}</td>
-		{{/each}}
-		</tr>
-		</tbody>
+	<div class="ui container">
+		<h2 class="ui header">Current Charges</h2>
+		<div class="ui grid">
+			<div class="eight wide column">
+				<h3 class="ui small header">Charges owed to you</h3>
+				{{#each owe_you}}
+				<p>{{username}} owes you ${{amount}}</p>
+				{{/each}}
+			</div>
+			<div class="eight wide column">
+				<h3 class="ui small header">Charges you owe</h3>
+				{{#each you_owe}}
+				<p>You owe {{username}} ${{amount}}</p>
+				{{/each}}
+			</div>
+		</div>
 	</div>
 </div>
