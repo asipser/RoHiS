@@ -23,11 +23,11 @@
 			</div>
 		</div>
 		<div class="ui container">
-			<form class="ui large form" action="/payments/charge">
+			<form class="ui large form" action="/payments/charge" method="post">
 				<h2 class="ui dividing header">New Charge</h2>
 				<div class="three inline fields">
 					<div class="field">
-						<select id="borroworlent" class="ui fluid dropdown">
+						<select name="borroworlent" id="borroworlent" class="ui fluid dropdown">
 							<option value="">Who's paying?</option>
 							<option value="true">I lent</option>
 							<option value="false">I borrowed</option>
@@ -45,7 +45,7 @@
 				</div>
 				<div class="field">
 					<div class="ui slider checkbox">
-						<input type="checkbox" name="venmousage">
+						<input type="checkbox" name="venmousage" value="true">
 						<label>Use Venmo?</label>
 					</div>
 				</div>
