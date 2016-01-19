@@ -13,6 +13,8 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var venmo = require('./routes/venmo');
 var payments = require('./routes/payments');
+var settings = require('./routes/settings');
+var statistics = require('./routes/statistics');
 
 var app = express();
 
@@ -42,6 +44,8 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/venmo', venmo);
 app.use('/payments', payments);
+app.use('/settings', settings);
+app.use('/statistics', statistics);
 
 // passport config
 var Account = require('./models/account');
