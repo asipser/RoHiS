@@ -31,3 +31,10 @@ $win.scroll(function(){
 $('#sidebarmenuitem').click(function(){
 	$('div.ui.sidebar').sidebar('toggle');
 });
+$('.ui.accordion.title').click(function(){
+	console.log('fslkjfl');
+	if($(this).hasClass('active')){
+		$('div.accordion.title').removeClass('active');
+		$(this).addClass('active');
+	}
+});

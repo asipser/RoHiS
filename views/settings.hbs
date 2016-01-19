@@ -4,7 +4,6 @@
 	<title>MoneyMatters</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/dist/semantic.min.css">
-	<script src="/dist/semantic.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
 </head>
 <body>
@@ -24,28 +23,27 @@
 		</div>
 		<div class="ui container" id="accountsettings">
 			<h2 class="ui dividing large header"><i class="large settings icon"></i> Account Settings</h2>
-			<div class="ui massive styled accordion">
+			<div class="ui fluid styled accordion">
 				<div class="title active">
 				    <i class="dropdown icon"></i>
-				    What is a dog?
+				    Venmo
 				  </div>
 				  <div class="content active">
-				    <p class="transition visible" style="display: block !important;">A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.</p>
+				    <p class="transition visible" style="display: block !important;">Venmo is used to complete payments of loans.<br>Your venmo account is: {{user.venmo}}</p>
 				  </div>
 				  <div class="title">
 				    <i class="dropdown icon"></i>
-				    What kinds of dogs are there?
+				    Email
 				  </div>
 				  <div class="content">
-				    <p class="transition hidden">There are many breeds of dogs. Each breed varies in size and temperament. Owners often select a breed of dog that they find to be compatible with their own lifestyle and desires from a companion.</p>
+				    <p class="transition hidden">We do not send you emails other than for password recovery purposes.<br>Your email account is: {{user.email}}</p>
 				  </div>
 				  <div class="title">
 				    <i class="dropdown icon"></i>
-				    How do you acquire a dog?
+				    Reset Password
 				  </div>
 				  <div class="content">
-				    <p class="transition hidden">Three common ways for a prospective owner to acquire a dog is from pet shops, private owners, or shelters.</p>
-				    <p class="transition hidden">A pet shop may be the most convenient way to buy a dog. Buying a dog from a private owner allows you to assess the pedigree and upbringing of your dog before choosing to take it home. Lastly, finding your dog from a shelter, helps give a good home to a dog who may not find one so readily.</p>
+				    <p class="transition hidden">Coming soon!</p>
 				  </div>
 			</div>
 		</div>
@@ -54,5 +52,6 @@
 	{{> home-page-partial}}
 	{{/if}}
 	<script src="/javascripts/index.js"></script>
+	<script src="/dist/semantic.min.js"></script>
 </body>
 </html>
