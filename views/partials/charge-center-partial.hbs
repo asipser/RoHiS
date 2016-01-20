@@ -1,13 +1,17 @@
 <div class="ui container" id="chargecenterpanel">
-	<form class="ui large form" action="/payments/addcharge" method="post">
+	<form class="ui large form charge" action="/payments/addcharge" method="post">
 		<h2 class="ui dividing header">New Charge</h2>
 		<div class="three inline fields">
 			<div class="field">
-				<select name="borroworlent" id="borroworlent" class="ui fluid dropdown">
-					<option value="">Who's paying?</option>
-					<option value="true">I lent</option>
-					<option value="false">I borrowed</option>
-				</select>
+				<div class='ui selection dropdown'>
+					<input name="borroworlent" id="borroworlent" type="hidden">
+					<i class='dropdown icon'></i>
+					<div class='default text'>Who's paying?</div>
+					<div class="menu">
+						<div class='item' data-value="true"><i class='pointing right icon'></i>I lent</div>
+						<div class='item' data-value="false"><i class='pointing left icon'></i>I borrowed</div>
+					</div>
+				</div>
 			</div>
 			<div class="field">
 				<label>$</label><input type="number" min="0.01" step="0.01" name="amount" placeholder="5.00">
@@ -25,6 +29,7 @@
 				<label>Use Venmo?</label>
 			</div>
 		</div>
+		<div class='ui error message'></div>
 		<button class="ui blue button" type="submit">Charge!</button>
 	</form>
 	<div class="ui divider"></div>
