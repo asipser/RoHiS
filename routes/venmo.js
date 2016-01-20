@@ -13,7 +13,7 @@ var client_secret = "nfZrqdjpkb3UDKtFmV4Be8gfqKdnrfsn";
 // REDIRECTS TO VENMO AUTHENTICATION LOGIN AND REDIRECTS TO /getCode.
 
 router.get('/auth', function(req, res, next) {
-    res.redirect("https://api.venmo.com/v1/oauth/authorize?client_id=3420&scope=make_payments%20access_profile&response_type=code&redirect_uri=https://milestone-2.herokuapp.com/venmo/getCode");
+    res.redirect("https://api.venmo.com/v1/oauth/authorize?client_id=3420&scope=make_payments%20access_profile&response_type=code&redirect_uri=http://localhost:3000/venmo/getCode");
 });
 
 // EXTRACTS ACCESS TOKEN AND ALL RELEVANT INFORMATION ABOUT THE USER'S VENMO ACCOUNT AND UPDATES THEIR ACCOUNT INFO. REDIRECTS TO '/'
