@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MoneyMatters</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/dist/semantic.min.css">
+	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+</head>
+<body>
+	{{#if user}}
+	{{> menu-partial}}
+	<div class="pusher">
+		{{> top-bar-partial}}
+		{{> charge-center-partial}}
+	</div>
+	{{else}}
+	{{> home-page-partial}}
+	{{/if}}
+	<script src="/dist/semantic.min.js"></script>
+	<script src="/javascripts/index.js"></script>
+</body>
+</html>

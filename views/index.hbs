@@ -11,7 +11,26 @@
 	{{> menu-partial}}
 	<div class="pusher">
 		{{> top-bar-partial}}
-		{{> charge-center-partial}}
+		<div class="ui container" id="historypanel">
+			<div class="ui divider"></div>
+			<div class="ui container">
+				<h2 class="ui header">Historical Charges</h2>
+				<div class="ui grid">
+					<div class="eight wide column">
+						<h3 class="ui small header">Charges owed to you</h3>
+						{{#each owe_you}}
+						<p>{{username}} paid you ${{amount}}</p>
+						{{/each}}
+					</div>
+					<div class="eight wide column">
+						<h3 class="ui small header">Charges you owe</h3>
+						{{#each you_owe}}
+						<p>You paid {{username}} ${{amount}}</p>
+						{{/each}}
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	{{else}}
 	{{> home-page-partial}}
