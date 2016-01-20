@@ -26,7 +26,14 @@ router.get('/', function (req, res) {
     //console.log(req.user.username + " has venmo value of " + user_has_venmo);
 	*/
 
-    Charge.find({completed:false}, function (err,charges){
+    var find_condition = {
+        $and:[
+            {completed:false},
+            {cancelled:false}
+        ]
+    }
+
+    Charge.find(find_condition, function (err,charges){
     	for(transaction in charges){
     		if(charges[transaction]['payer']['username'] === username){                                                          // user is  a payer
     			if(charges[transaction]['recipient']['username'] === undefined)                                                  // check if person targetted has an account or no, undefined fs they dont 
@@ -64,7 +71,13 @@ router.post('/chargecomplete', function(req, res) {
 
 // WHEN YOU CLICK THE X NEXT TO A CHARGE
     
-    
+router.post('/chargecancel', function(req, res) {
+
+    Charge.findOneAndUpdate({_id: req.body.charge_id}, {cancelled: true}, function(err, profile) {
+        res.send('Success!');
+    });
+
+});
 
 
 router.post('/register', function(req, res) {

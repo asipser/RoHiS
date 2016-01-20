@@ -48,10 +48,5 @@ $(document).ready(function(){
 	      password	: 'empty'
 	    }
 	});
-	$('.ui.form.charge').form({
-	    fields: {
-	      borroworlent	: ''
-	    }
-	});
 	$('.ui.dropdown').dropdown();
 });

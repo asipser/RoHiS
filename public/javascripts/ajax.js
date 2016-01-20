@@ -1,4 +1,4 @@
-$(".checkcharge").click(function() {
+$(".chargecomplete").click(function() {
 
 	var charge_id = $(this).parent().attr('id');
 
@@ -18,3 +18,25 @@ $(".checkcharge").click(function() {
 			}
 		});
 });
+
+$(".chargecancel").click(function() {
+
+	var charge_id = $(this).parent().attr('id');
+
+	$.ajax({
+			url: '/chargecancel',
+			data: {
+				charge_id: charge_id
+			},
+			type: 'POST',
+			success: function(data){
+				if (data === "Success!") {
+					console.log("Success!");
+				}
+			},
+			error: function(xhr, status, error) {
+				console.log("A problem occurred.");
+			}
+		});
+});
+
