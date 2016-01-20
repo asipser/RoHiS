@@ -33,14 +33,25 @@ $(document).ready(function(){
 		$('div.ui.sidebar').sidebar('toggle');
 	});
 	$('.ui.accordion').accordion();
-	$('.ui.form')
-	  .form({
+	$('.ui.form.signup').form({
 	    fields: {
 	      firstName	: 'empty',
 	      lastName	: 'empty',
 	      username	: 'empty',
-	      email		: 'empty',
-	      password	: [/*'minLength[6]',*/ 'empty']
+	      email		: 'email',
+	      password	: ['minLength[6]', 'empty']
 	    }
-	  });
+	});
+	$('.ui.form.login').form({
+	    fields: {
+	      username	: 'empty',
+	      password	: 'empty'
+	    }
+	});
+	$('.ui.form.charge').form({
+	    fields: {
+	      borroworlent	: ''
+	    }
+	});
+	$('.ui.dropdown').dropdown();
 });
