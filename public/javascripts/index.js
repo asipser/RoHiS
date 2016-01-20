@@ -33,4 +33,14 @@ $(document).ready(function(){
 		$('div.ui.sidebar').sidebar('toggle');
 	});
 	$('.ui.accordion').accordion();
+	$('.ui.form')
+	  .form({
+	    fields: {
+	      firstName	: 'empty',
+	      lastName	: 'empty',
+	      username	: 'empty',
+	      email		: 'empty',
+	      password	: [/*'minLength[6]',*/ 'empty']
+	    }
+	  });
 });
