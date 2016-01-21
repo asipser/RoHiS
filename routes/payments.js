@@ -14,7 +14,7 @@ router.post('/addcharge', function (req, res, next) {
     // search accounts database for the username person entered.
 
     Account.find({username: req.body.user}, function (err, users) {
-        console.log("This is in /addcharge, entered username is " + req.body.user)
+        console.log("This is in / addcharge, entered username is " + req.body.user)
         var recipient;
         var payer;
 
@@ -44,6 +44,7 @@ router.post('/addcharge', function (req, res, next) {
             recipient: recipient,
             amount: req.body.amount,
             completed: false,
+            description: req.body.note,
             used_venmo: req.body.venmousage
         });
 
