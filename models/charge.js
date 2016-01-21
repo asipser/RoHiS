@@ -11,7 +11,7 @@ var Charge = new Schema({
     completed: Boolean, // has charge been completed
     description: String,
     cancelled: { type: Boolean, default: false},
-    date_created: { type: Date, default: moment()},
+    date_created: Date,
     date_completed: Date,
     used_venmo: Boolean
 });
