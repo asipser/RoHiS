@@ -42,13 +42,13 @@
 			<div class="eight wide column">
 				<h3 class="ui small header">Charges owed to you</h3>
 				{{#each owe_you}}
-				<p id='{{id}}'> {{username}} owes you ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
+				<p data-title="Created by {{creator}} on {{date_created}}" id='{{id}}'> {{username}} owes you ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
 				{{/each}}
 			</div>
 			<div class="eight wide column">
 				<h3 class="ui small header">Charges you owe</h3>
 				{{#each you_owe}}
-				<p id='{{id}}'>You owe {{username}} ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
+				<p data-title="Created by {{creator}} on {{date_created}}" id='{{id}}'>You owe {{username}} ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
 				{{/each}}
 			</div>
 		</div>
