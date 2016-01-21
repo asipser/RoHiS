@@ -22,7 +22,7 @@ router.get('/', function (req, res) {
     var merged_you_owe = []; // merged charges one way within you_owe
     var merged_owe_you = []; // merged charges one way within array owe_you
     var final_merged_you_owe = []; // merges similarities between merged_you_ owe and merged_owe_you
-    var final merged_owe_you = [];  			// ex asips appears in both of them, moving it to only one of them
+    var final_merged_owe_you = [];  			// ex asips appears in both of them, moving it to only one of them
 
 
     /*// check to see if  venmo has been  linked with account NOT NEEDED SO FAR
