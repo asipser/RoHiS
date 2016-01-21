@@ -183,7 +183,7 @@ router.get('/', function (req, res) {
     	console.log("NEW merged_you_owe");
     	console.log(merged_you_owe); // test owe_you and you_owe
 
-    	res.render('index', {user:req.user, owe_you, you_owe });
+    	res.render('index', {user:req.user, merged_owe_you, merged_you_owe });
 
     });	
     }
