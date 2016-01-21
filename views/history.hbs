@@ -17,14 +17,14 @@
 				<h2 class="ui header">Historical Charges</h2>
 				<div class="ui grid">
 					<div class="eight wide column">
-						<h3 class="ui small header">Charges owed to you</h3>
-						{{#each owe_you}}
+						<h3 class="ui small header">History of charges owed to you</h3>
+						{{#each history_owe_you}}
 						<p id="{{id}}">{{username}} paid you ${{amount}}</p>
 						{{/each}}
 					</div>
 					<div class="eight wide column">
-						<h3 class="ui small header">Charges you owe</h3>
-						{{#each you_owe}}
+						<h3 class="ui small header">History of charges you owed</h3>
+						{{#each history_you_owe}}
 						<p id="{{id}}">You paid {{username}} ${{amount}}</p>
 						{{/each}}
 					</div>
@@ -35,15 +35,15 @@
 				<h2 class="ui header">Cancelled Charges</h2>
 				<div class="ui grid">
 					<div class="eight wide column">
-						<h3 class="ui small header">Charges owed to you</h3>
-						{{#each owe_you}}
-						<p id="{{id}}">{{username}} paid you ${{amount}}</p>
+						<h3 class="ui small header">Cancelled charges owed to you</h3>
+						{{#each cancelled_owe_you}}
+						<p id="{{id}}">{{who_cancelled}} cancelled a charge of ${{amount}} from {{username}}</p>
 						{{/each}}
 					</div>
 					<div class="eight wide column">
-						<h3 class="ui small header">Charges you owe</h3>
-						{{#each you_owe}}
-						<p id="{{id}}">You paid {{username}} ${{amount}}</p>
+						<h3 class="ui small header">Cancelled charges you owe</h3>
+						{{#each cancelled_you_owe}}
+						<p id="{{id}}">{{who_cancelled}} cancelled a charge of ${{amount}} to {{username}}</p>
 						{{/each}}
 					</div>
 				</div>

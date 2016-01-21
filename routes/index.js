@@ -184,7 +184,7 @@ router.post('/chargecomplete', function(req, res) {
     
 router.post('/chargecancel', function(req, res) {
 
-    Charge.findOneAndUpdate({_id: req.body.charge_id}, {cancelled: true}, function(err, profile) {
+    Charge.findOneAndUpdate({_id: req.body.charge_id}, {cancelled: true, who_cancelled: req.user.username}, function(err, profile) {
         res.send('Success!');
     });
 

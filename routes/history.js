@@ -9,12 +9,14 @@ router.get('/', function(req, res, next) {
     if(req.user === undefined){
     res.render('history', {user:req.user});
     }
-    else{
+    else {
     username = req.user.username;
 	var user_has_venmo; // boolean to see if the req.user has venmo.
 
-    var you_owe = []; // people u owe
-    var owe_you = []; // charges with people that owe u
+    var history_you_owe = []; // people u owe
+    var history_owe_you = []; // charges with people that owe u
+    var cancelled_you_owe = [];
+    var cancelled_owe_you = [];
 
 
     /*// check to see if  venmo has been  linked with account NOT NEEDED SO FAR
@@ -27,29 +29,63 @@ router.get('/', function(req, res, next) {
 	*/
 
     Charge.find({completed:true}, function (err,charges){
-    	for(transaction in charges){
+    	for (transaction in charges){
     		if(charges[transaction]['payer']['username'] === username){                                                          // user is  a payer
     			if(charges[transaction]['recipient']['username'] === undefined)                                                  // check if person targetted has an account or no, undefined fs they dont 
-					you_owe.push({username:charges[transaction]['recipient'], amount:charges[transaction]['amount'], id:charges[transaction]['_id']});    				
+					history_you_owe.unshift({username:charges[transaction]['recipient'], amount:charges[transaction]['amount'], id:charges[transaction]['_id']});    				
     			else                                                                                                             // they have an account and it pushes to charges that you owe their name
-    				you_owe.push({username:charges[transaction]['recipient']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id']});
+    				history_you_owe.unshift({username:charges[transaction]['recipient']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id']});
     		}
-    		else if(charges[transaction]['recipient']['username'] === username){                                                 // user is a recipient
+    		else if (charges[transaction]['recipient']['username'] === username){                                                 // user is a recipient
     			if(charges[transaction]['payer']['username'] === undefined)                                                      // check if the person targetted has an account
-    				owe_you.push({username:charges[transaction]['payer'], amount:charges[transaction]['amount'], id:charges[transaction]['_id']});
+    				history_owe_you.unshift({username:charges[transaction]['payer'], amount:charges[transaction]['amount'], id:charges[transaction]['_id']});
     			else                                                                                                             // if they have an account it pushes their account username to the array with debts owed to you
-    				owe_you.push({username:charges[transaction]['payer']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id']});
+    				history_owe_you.unshift({username:charges[transaction]['payer']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id']});
 	    		
     		}
     	}
 
-    	//console.log(you_owe); // test owe_you and you_owe
-    	//console.log(owe_you);
+        Charge.find({cancelled:true}, function (err,charges){
+        for(transaction in charges) {
 
-    	res.render('history', {user:req.user, owe_you, you_owe});
-    });	
+            var who_cancelled;
+            var creator;
+
+            if (charges[transaction]['who_cancelled'] === username) {
+                who_cancelled = "You";
+            } else {
+                who_cancelled = charges[transaction]['who_cancelled'];
+            }
+
+            if (charges[transation]['creator'] === username) {
+                creator = "you";
+            } else {
+                creator = charges[transaction]['creator'];
+            }
+
+            if (charges[transaction]['payer']['username'] === username) {                                                          // user is  a payer
+                if(charges[transaction]['recipient']['username'] === undefined) {                                                // check if person targetted has an account or no, undefined fs they dont 
+                    cancelled_you_owe.unshift({username:charges[transaction]['recipient'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled: who_cancelled, creator: creator}); 
+                }                  
+                else {                                                                                                            // they have an account and it pushes to charges that you owe their name
+                    cancelled_you_owe.unshift({username:charges[transaction]['recipient']['username'], id:charges[transaction]['_id'], who_cancelled: who_cancelled, creator: creator});
+                }
+            }
+
+            else if (charges[transaction]['recipient']['username'] === username) {                                                 // user is a recipient
+                if(charges[transaction]['payer']['username'] === undefined)                                                      // check if the person targetted has an account
+                    cancelled_owe_you.unshift({username:charges[transaction]['payer'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled: who_cancelled, creator: creator});
+                else                                                                                                             // if they have an account it pushes their account username to the array with debts owed to you
+                    cancelled_owe_you.unshift({username:charges[transaction]['payer']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled: who_cancelled, creator: creator});
+                
+            }
+        }
+
+    	res.render('history', {user:req.user, history_owe_you, history_you_owe, cancelled_owe_you, cancelled_you_owe});
+
+        });	
+    });
     }
-
 });
     
 module.exports = router;

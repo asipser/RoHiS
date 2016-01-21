@@ -53,7 +53,8 @@ router.post('/addcharge', function (req, res, next) {
             completed: completed,
             description: req.body.note,
             used_venmo: req.body.venmousage,
-            date_created: date_created
+            date_created: date_created,
+            creator: req.user.username
         });
 
         charge.save(function(err, charge) { // saves data in collection
