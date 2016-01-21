@@ -12,11 +12,17 @@ router.get('/', function (req, res) {
     res.render('index', {user:req.user});
     }
     else{
-    username = req.user.username;
+    var username = req.user.username;
 	var user_has_venmo; // boolean to see if the req.user has venmo.
 
+    var userCharges = []; // Array used to store all charges for one person 
+    var mergedCharges = []; // Array with a merged userCharges where it compiles the same payer recipients under the same piles.
     var you_owe = []; // people u owe
     var owe_you = []; // charges with people that owe u
+    var merged_you_owe = []; // merged charges one way within you_owe
+    var merged_owe_you = []; // merged charges one way within array owe_you
+    var final_merged_you_owe = []; // merges similarities between merged_you_ owe and merged_owe_you
+    var final_merged_owe_you = [];  			// ex asips appears in both of them, moving it to only one of them
 
 
     /*// check to see if  venmo has been  linked with account NOT NEEDED SO FAR
@@ -36,26 +42,86 @@ router.get('/', function (req, res) {
     }
 
     Charge.find(find_condition, function (err,charges){
+    	/*
     	for(transaction in charges){
     		if(charges[transaction]['payer']['username'] === username){                                                          // user is  a payer
     			if(charges[transaction]['recipient']['username'] === undefined)                                                  // check if person targetted has an account or no, undefined fs they dont 
-					you_owe.push({username:charges[transaction]['recipient'], amount:charges[transaction]['amount'], id:charges[transaction]['_id']});    				
+					userCharges.push({isPayer: true, payer: charges[transaction]['payer']['username'], recipient:charges[transaction]['recipient'], amount:charges[transaction]['amount']});    				
     			else                                                                                                             // they have an account and it pushes to charges that you owe their name
-    				you_owe.push({username:charges[transaction]['recipient']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id']});
+    				userCharges.push({isPayer: true, payer: charges[transaction]['payer']['username'], recipient:charges[transaction]['recipient']['username'], amount:charges[transaction]['amount']});
     		}
     		else if(charges[transaction]['recipient']['username'] === username){                                                 // user is a recipient
     			if(charges[transaction]['payer']['username'] === undefined)                                                      // check if the person targetted has an account
-    				owe_you.push({username:charges[transaction]['payer'], amount:charges[transaction]['amount'], id:charges[transaction]['_id']});
+    				userCharges.push({isPayer: false, payer:charges[transaction]['payer'], recipient: charges[transaction]['recipient']['username'], amount:charges[transaction]['amount']});
     			else                                                                                                             // if they have an account it pushes their account username to the array with debts owed to you
-    				owe_you.push({username:charges[transaction]['payer']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id']});
+    				userCharges.push({isPayer: false, payer:charges[transaction]['payer']['username'], recipient: charges[transaction]['recipient']['username'], amount:charges[transaction]['amount']});
+    		}
+
+    	}*/
+
+    	
+    	for(transaction in charges){
+    		if(charges[transaction]['payer']['username'] === username){                                                          // user is  a payer
+    			if(charges[transaction]['recipient']['username'] === undefined)                                                  // check if person targetted has an account or no, undefined fs they dont 
+					you_owe.unshift({username:charges[transaction]['recipient'], amount:charges[transaction]['amount'], id:charges[transaction]['_id']});    				
+    			else                                                                                                             // they have an account and it pushes to charges that you owe their name
+    				you_owe.unshift({username:charges[transaction]['recipient']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id']});
+    		}
+    		else if(charges[transaction]['recipient']['username'] === username){                                                 // user is a recipient
+    			if(charges[transaction]['payer']['username'] === undefined)                                                      // check if the person targetted has an account
+    				owe_you.unshift({username:charges[transaction]['payer'], amount:charges[transaction]['amount'], id:charges[transaction]['_id']});
+    			else                                                                                                             // if they have an account it pushes their account username to the array with debts owed to you
+    				owe_you.unshift({username:charges[transaction]['payer']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id']});
 	    		
     		}
     	}
 
-    	//console.log(you_owe); // test owe_you and you_owe
-    	//console.log(owe_you);
 
-    	res.render('index', {user:req.user, owe_you, you_owe});
+
+    	for(transaction in you_owe){
+    		var user = you_owe[transaction]['username'];
+    		var amount = you_owe[transaction]['amount'];
+    		var in_database = false;
+    		var id = you_owe[transaction]['id'];
+
+    		for(mergedTransaction in merged_you_owe){
+    			if(merged_you_owe[mergedTransaction]['username'] === user){
+    				merged_you_owe[mergedTransaction]['amount'] += amount;
+    				merged_you_owe[mergedTransaction]['amounts'].push(amount);
+    				merged_you_owe[mergedTransaction]['ids'].push(id);
+    				in_database = true;
+    			}
+    		}
+    		if(!in_database)
+    			merged_you_owe.push({username:user, amount:amount, amounts:[amount],ids:[id]});
+    	}
+
+    	for(transaction in owe_you){
+    		var user = owe_you[transaction]['username'];
+    		var amount = owe_you[transaction]['amount'];
+    		var in_database = false;
+    		var id = owe_you[transaction]['id'];
+
+    		for(mergedTransaction in merged_owe_you){
+    			if(merged_owe_you[mergedTransaction]['username'] === user){
+    				merged_owe_you[mergedTransaction]['amount'] += amount;
+    				merged_owe_you[mergedTransaction]['amounts'].push(amount);
+    				merged_owe_you[mergedTransaction]['ids'].push(id);
+    				in_database = true;
+    			}
+    		}
+    		if(!in_database)
+    			merged_owe_you.push({username:user, amount:amount, amounts:[amount],ids:[id]});
+    	}
+
+
+
+    	console.log(merged_you_owe); // test owe_you and you_owe
+    	console.log(merged_owe_you);
+
+    	//console.log(userCharges);
+    	res.render('index', {user:req.user, owe_you, you_owe });
+
     });	
     }
 
