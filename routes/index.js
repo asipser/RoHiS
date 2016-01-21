@@ -3,6 +3,8 @@ var passport = require('passport');
 var Account = require('../models/account');
 var router = express.Router();
 var Charge = require('../models/charge');
+var moment = require('moment');
+moment().format();
 
 
 router.get('/', function (req, res) {
@@ -63,8 +65,42 @@ router.get('/', function (req, res) {
 
 router.post('/chargecomplete', function(req, res) {
 
-    Charge.findOneAndUpdate({_id: req.body.charge_id}, {completed: true}, function(err, profile) {
-        res.send('Success!');
+    Charge.findOneAndUpdate({_id: req.body.charge_id}, {completed: true, date_completed: moment()}, {new: true}, function(err, profile) {
+
+        console.log(profile);
+
+        Account.findOne({username: profile['payer']['username']}, function(err, payer_info) {
+
+            if (payer_info) {             // UPDATES AVERAGE PAYMENT TIME FOR THE PAYER IF THE USER EXISTS
+
+                console.log(payer_info);
+
+                var start_time = moment(profile['date_created']);
+                var complete_time = moment(profile['date_completed']);
+
+                console.log("AHHHHHHHHHHHH");
+
+                var time_diff = complete_time.diff(start_time);
+
+                console.log(time_diff);
+
+                var previous_num = payer_info['statistics']['num_charges'];
+                var previous_avg = payer_info['statistics']['average_time'];
+                var previous_total = previous_num * previous_avg;
+                var new_avg = (previous_total + time_diff) / (previous_num + 1);
+
+                console.log(new_avg);
+
+                Account.findOneAndUpdate({username: profile['payer']['username']}, {statistics: {num_charges: previous_num + 1, average_time: new_avg}}, function() {
+                    res.send('Success!');
+                });
+
+            } else {                    // OTHERWISE SKIP UPDATING
+                res.send('Success!');
+            }
+
+        });
+
     });
 
 });
