@@ -12,4 +12,8 @@ $(document).ready(function(){
 			note		: 'empty'
 		}
 	});
+	$('#makechargebutton').click(function(){
+		$('#chargeformwrapper').addClass('expansion');
+	})
+	$('p').popup();
 });

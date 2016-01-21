@@ -66,3 +66,33 @@ h2.ui.message{
 .ui.vertical.segment{
 	border-bottom:0;
 }
+
+#chargeformwrapper{
+	width: 0px;
+	overflow: hidden;
+}
+
+#precharge{
+	margin-top:-20vh;
+	margin-bottom:10vh;
+}
+#makechargebutton{
+}
+
+.expansion{
+	animation: expansion 1s;
+	animation-fill-mode: forwards;
+}
+
+@keyframes expansion{
+	from{
+		width: 0;
+	}
+	to{
+		width: 100%;
+	}
+}
+
+h2.ui.dividing.header{
+	min-width:200px;
+}
