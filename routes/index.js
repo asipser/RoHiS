@@ -43,7 +43,7 @@ router.get('/', function (req, res) {
 
     Charge.find(find_condition, function (err,charges){
 
-    	
+    	//step 1
     	for(transaction in charges){
     		if(charges[transaction]['payer']['username'] === username){                                                          // user is  a payer
     			if(charges[transaction]['recipient']['username'] === undefined)                                                  // check if person targetted has an account or no, undefined fs they dont 
@@ -60,7 +60,7 @@ router.get('/', function (req, res) {
     		}
     	}
 
-
+    	//step 2
 
     	for(transaction in you_owe){
     		var user = you_owe[transaction]['username'];
@@ -95,7 +95,9 @@ router.get('/', function (req, res) {
     			if(merged_owe_you[mergedTransaction]['username'] === user){
     				merged_owe_you[mergedTransaction]['amount'] += amount;
     				merged_owe_you[mergedTransaction]['transactions_info'].push({amount:amount,id:id,note:note,date:date});
-    				console.log(merged_owe_you[mergedTransaction]['transactions_info']);
+
+    				//console.log(merged_owe_you[mergedTransaction]['transactions_info']);
+    				
     				// merged_owe_you[mergedTransaction]['amounts'].push(amount);
     				// merged_owe_you[mergedTransaction]['ids'].push(id);
     				// merged_owe_you[mergedTransaction]['notes'].push(note);
@@ -108,26 +110,67 @@ router.get('/', function (req, res) {
     			merged_owe_you.push({username:user, amount:amount, transactions_info:[{amount:amount,id:id,note:note,date:date}]});
     	}
 
-    	console.log('merged_owe_you');
+    	// console.log("printing transactions info:");
+    	// var x = merged_owe_you[0]['transactions_info']
+    	// console.log(x);
+    	// x = negateElements(merged_owe_you[0]['transactions_info']);
+    	// console.log(x);
+
+    	// console.log('merged_owe_you');
+    	// console.log(merged_owe_you);
+
+
+    	// console.log("merged_you_owe");
+    	// console.log(merged_you_owe); // test owe_you and you_owe
+
+    	//step 3
+
+    	merged_owe_you.forEach(function(transaction_owe_you){
+    	var merge_username = transaction_owe_you['username'];
+   		var owe_you_amount = transaction_owe_you['amount'];
+   		var owe_you_transactions_info = transaction_owe_you['transactions_info'];
+
+    		merged_you_owe.forEach(function(transaction_you_owe){
+    			var cross_check_username = transaction_you_owe['username']; // cross check  this username with merge username
+    			var you_owe_amount = transaction_you_owe['amount'];
+    			var you_owe_transactions_info = transaction_you_owe['transactions_info'];
+    			if(merge_username === cross_check_username){
+    				if(owe_you_amount > you_owe_amount){
+    					you_owe_transactions_info = negateElements(transaction_you_owe['transactions_info']); // negates values to show clarity
+    					you_owe_transactions_info.forEach(function(individual_transaction){transaction_owe_you['transactions_info'].push(individual_transaction);});
+    					console.log(transaction_owe_you['transactions_info']);
+    					transaction_owe_you['amount'] = owe_you_amount - you_owe_amount;
+    					var arr = merged_you_owe;
+						var idx = arr.indexOf(transaction_you_owe); // INDEX OF THE CURRENT TRANSACTION IN MERGED YOU OWE, used to SPLICE out DATA
+						// be careful, .indexOf() will return -1 if the item is not found
+						if (idx !== -1) 
+						    arr.splice(idx, 1);						
+						else
+							console.log("Error, current you_owe_transaction not found in array, bug happened here");
+    				}
+    				else{
+    					owe_you_transactions_info = negateElements(transaction_owe_you['transactions_info']); // negates values to show clarity
+    					owe_you_transactions_info.forEach(function(individual_transaction){transaction_you_owe['transactions_info'].push(individual_transaction);});
+    					console.log(transaction_you_owe['transactions_info']);
+    					transaction_you_owe['amount'] = you_owe_amount - owe_you_amount;
+    					var arr = merged_owe_you;
+						var idx = arr.indexOf(transaction_owe_you); // INDEX OF THE CURRENT TRANSACTION IN MERGED YOU OWE, used to SPLICE out DATA
+						// be careful, .indexOf() will return -1 if the item is not found
+						if (idx !== -1) 
+						    arr.splice(idx, 1);						
+						else
+							console.log("Error, current owe_you_transaction not found in array, bug happened here");
+    				}
+    			}
+
+    		});
+    	});
+
+		console.log('NEW merged_owe_you');
     	console.log(merged_owe_you);
-    	console.log(merged_owe_you['transactions_info']);
 
-
-    	console.log("merged_you_owe");
+    	console.log("NEW merged_you_owe");
     	console.log(merged_you_owe); // test owe_you and you_owe
-    	console.log(merged_you_owe['transactions_info']);
-
-
-    	// merged_owe_you.forEach(function(transaction_owe_you){
-    	// var merge_username = transaction_owe_you['username'];
-   		// var owe_you_amount = transaction_owe_you['amount'];
-   		// var owe_you_amounts = transaction_owe_you['amounts'];
-   		// var owe_you_ids  
-
-    	// 	merged_you_owe.forEach(function(transaction_you_owe){
-
-    	// 	});
-    	// });
 
     	res.render('index', {user:req.user, owe_you, you_owe });
 
@@ -135,6 +178,15 @@ router.get('/', function (req, res) {
     }
 
 });
+
+function negateElements(input_array){
+	input_array.forEach(function(charge){
+		var negate_amount = -1*charge['amount'];
+		charge['amount'] = negate_amount;
+    });
+
+    return input_array;
+}
 
 // WHEN YOU CLICK THE CHECK BUTTON NEXT TO A CHARGE
 
