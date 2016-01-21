@@ -45,7 +45,8 @@ router.get('/', function (req, res) {
 
     	//step 1
     	for(transaction in charges){
-
+    		
+    		var date_created = moment(charges[transaction]['date_created']).format("dddd, MMMM Do YYYY, h:mm:ss a");
             var creator;
           
             if (charges[transaction]['creator'] === username) {
@@ -55,8 +56,6 @@ router.get('/', function (req, res) {
             }
 
     		if(charges[transaction]['payer']['username'] === username){           
-
-                var date_created = moment(charges[transaction]['date_created']).format("dddd, MMMM Do YYYY, h:mm:ss a");
                                                            // user is  a payer
     			if(charges[transaction]['recipient']['username'] === undefined)                                                  // check if person targetted has an account or no, undefined fs they dont 
 					you_owe.unshift({username:charges[transaction]['recipient'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});    				
@@ -80,7 +79,7 @@ router.get('/', function (req, res) {
     		var in_database = false;
     		var id = you_owe[transaction]['id'];
     		var note = you_owe[transaction]['note'];
-    		var date = you_owe[transaction]['date'];
+    		var date = you_owe[transaction]['date_created'];
 
 
     		for(mergedTransaction in merged_you_owe){
@@ -101,7 +100,7 @@ router.get('/', function (req, res) {
     		var in_database = false;
     		var id = owe_you[transaction]['id'];
     		var note = owe_you[transaction]['note'];
-    		var date = owe_you[transaction]['date'];
+    		var date = owe_you[transaction]['date_created'];
 
     		for(mergedTransaction in merged_owe_you){
     			if(merged_owe_you[mergedTransaction]['username'] === user){
