@@ -3,7 +3,8 @@
 		<h2 class="ui dividing header">New Charge</h2>
 		<div class="three inline fields">
 			<div class="field">
-				<div class='ui selection dropdown'>
+				<div class='ui selection inline dropdown'>
+					<label style='display: none'>Payer status</label>
 					<input name="borroworlent" id="borroworlent" type="hidden">
 					<i class='dropdown icon'></i>
 					<div class='default text'>Who's paying?</div>
@@ -13,11 +14,13 @@
 					</div>
 				</div>
 			</div>
+			<div style='margin-right: 5px'>$</div>
 			<div class="field">
-				<label>$</label><input type="number" min="0.01" step="0.01" name="amount" placeholder="5.00">
+				<label style='display: none'>Amount</label><input type="number" min="0.01" step="0.01" name="amount" placeholder="5.00">
 			</div>
+			<div id='tofrom' style='margin-right: 5px'>to</div>
 			<div class="field">
-				<label id="tofrom">to</label><input type="text" name="user" placeholder="Username">
+				<input type="text" name="user" placeholder="Username">
 			</div>
 		</div>
 		<div class="field">

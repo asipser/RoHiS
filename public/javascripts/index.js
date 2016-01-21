@@ -49,4 +49,12 @@ $(document).ready(function(){
 	    }
 	});
 	$('.ui.dropdown').dropdown();
+	$('.ui.form.charge').form({
+		fields: {
+			borroworlent: 'empty',
+			amount		: 'empty',
+			user		: 'empty',
+			note		: 'empty'
+		}
+	});
 });
