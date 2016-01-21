@@ -1,40 +1,45 @@
 <div class="ui container" id="chargecenterpanel">
-	<form class="ui large form charge" action="/payments/addcharge" method="post">
-		<h2 class="ui dividing header">New Charge</h2>
-		<div class="three inline fields">
-			<div class="field">
-				<div class='ui selection inline dropdown'>
-					<label style='display: none'>Payer status</label>
-					<input name="borroworlent" id="borroworlent" type="hidden">
-					<i class='dropdown icon'></i>
-					<div class='default text'>Who's paying?</div>
-					<div class="menu">
-						<div class='item' data-value="true"><i class='pointing right icon'></i>I lent</div>
-						<div class='item' data-value="false"><i class='pointing left icon'></i>I borrowed</div>
+	<div id="chargeformwrapper">
+		<form class="ui large form charge" action="/payments/addcharge" method="post">
+			<h2 class="ui dividing header">New Charge</h2>
+			<div class="three inline fields">
+				<div class="field">
+					<div class='ui selection inline dropdown' tabindex='0'>
+						<label style='display: none'>Payer status</label>
+						<input name="borroworlent" id="borroworlent" type="hidden">
+						<i class='dropdown icon'></i>
+						<div class='default text'>Who's paying?</div>
+						<div class="menu">
+							<div class='item' data-value="true"><i class='pointing right icon'></i>I lent</div>
+							<div class='item' data-value="false"><i class='pointing left icon'></i>I borrowed</div>
+						</div>
 					</div>
 				</div>
+				<div style='margin-right: 5px'>$</div>
+				<div class="field">
+					<label style='display: none'>Amount</label><input type="number" min="0.01" step="0.01" name="amount" placeholder="5.00">
+				</div>
+				<div id='tofrom' style='margin-right: 5px'>to</div>
+				<div class="field">
+					<input type="text" name="user" placeholder="Username">
+				</div>
 			</div>
-			<div style='margin-right: 5px'>$</div>
 			<div class="field">
-				<label style='display: none'>Amount</label><input type="number" min="0.01" step="0.01" name="amount" placeholder="5.00">
+				<input type="text" name="note" placeholder="Description">
 			</div>
-			<div id='tofrom' style='margin-right: 5px'>to</div>
 			<div class="field">
-				<input type="text" name="user" placeholder="Username">
+				<div class="ui slider checkbox">
+					<input type="checkbox" name="venmousage" value="true">
+					<label>Use Venmo?</label>
+				</div>
 			</div>
-		</div>
-		<div class="field">
-			<input type="text" name="note" placeholder="Description">
-		</div>
-		<div class="field">
-			<div class="ui slider checkbox">
-				<input type="checkbox" name="venmousage" value="true">
-				<label>Use Venmo?</label>
-			</div>
-		</div>
-		<div class='ui error message'></div>
-		<button class="ui blue button" type="submit">Charge!</button>
-	</form>
+			<div class='ui error message'></div>
+			<button id='submitchargebutton' class="ui blue button" type="submit">Charge!</button>
+		</form>
+	</div>
+	<div id="precharge" class='ui center aligned container'>
+		<div id='makechargebutton' class='ui primary massive button'>Make a charge!</div>
+	</div>
 	<div class="ui divider"></div>
 	<div class="ui container">
 		<h2 class="ui header">Current Charges</h2>
@@ -42,13 +47,13 @@
 			<div class="eight wide column">
 				<h3 class="ui small header">Charges owed to you</h3>
 				{{#each owe_you}}
-				<p id='{{id}}'> {{username}} owes you ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
+				<p data-title="Created by {{creator}} on {{date_created}}" id='{{id}}'> {{username}} owes you ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
 				{{/each}}
 			</div>
 			<div class="eight wide column">
 				<h3 class="ui small header">Charges you owe</h3>
 				{{#each you_owe}}
-				<p id='{{id}}'>You owe {{username}} ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
+				<p data-title="Created by {{creator}} on {{date_created}}" id='{{id}}'>You owe {{username}} ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
 				{{/each}}
 			</div>
 		</div>
