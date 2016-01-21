@@ -54,17 +54,20 @@ router.get('/', function (req, res) {
                 creator = charges[transaction]['creator'];
             }
 
-    		if(charges[transaction]['payer']['username'] === username){                                                          // user is  a payer
+    		if(charges[transaction]['payer']['username'] === username){           
+
+                var date_created = moment(charges[transaction]['date_created']).format("dddd, MMMM Do YYYY, h:mm:ss a");
+                                                           // user is  a payer
     			if(charges[transaction]['recipient']['username'] === undefined)                                                  // check if person targetted has an account or no, undefined fs they dont 
-					you_owe.unshift({username:charges[transaction]['recipient'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created:charges[transaction]['date_created'], creator: creator});    				
+					you_owe.unshift({username:charges[transaction]['recipient'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});    				
     			else                                                                                                             // they have an account and it pushes to charges that you owe their name
-    				you_owe.unshift({username:charges[transaction]['recipient']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created:charges[transaction]['date_created'], creator: creator});
+    				you_owe.unshift({username:charges[transaction]['recipient']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});
     		}
     		else if(charges[transaction]['recipient']['username'] === username){                                                 // user is a recipient
     			if(charges[transaction]['payer']['username'] === undefined)                                                      // check if the person targetted has an account
-    				owe_you.unshift({username:charges[transaction]['payer'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created:charges[transaction]['date_created'], creator: creator});
+    				owe_you.unshift({username:charges[transaction]['payer'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});
     			else                                                                                                             // if they have an account it pushes their account username to the array with debts owed to you
-    				owe_you.unshift({username:charges[transaction]['payer']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created:charges[transaction]['date_created'], creator: creator});
+    				owe_you.unshift({username:charges[transaction]['payer']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});
 	    		
     		}
     	}
