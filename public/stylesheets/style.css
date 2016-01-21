@@ -75,8 +75,10 @@ h2.ui.message{
 #precharge{
 	margin-top:-20vh;
 	margin-bottom:10vh;
+	transition:1s;
 }
 #makechargebutton{
+	transition:1s;
 }
 
 .expansion{
@@ -95,4 +97,9 @@ h2.ui.message{
 
 h2.ui.dividing.header{
 	min-width:200px;
+}
+
+#submitchargebutton{
+	opacity:0;
+	margin-left:26.85vw;
 }
