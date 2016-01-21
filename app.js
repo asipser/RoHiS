@@ -15,6 +15,7 @@ var venmo = require('./routes/venmo');
 var payments = require('./routes/payments');
 var settings = require('./routes/settings');
 var statistics = require('./routes/statistics');
+var history = require('./routes/history');
 
 var app = express();
 
@@ -46,6 +47,7 @@ app.use('/venmo', venmo);
 app.use('/payments', payments);
 app.use('/settings', settings);
 app.use('/statistics', statistics);
+app.use('/history', history);
 
 //charge schema
 var Charge = require('./models/charge');

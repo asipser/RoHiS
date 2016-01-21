@@ -1,5 +1,5 @@
 body, body.pushable>.pusher{
-	background: #27ae60;
+	background: #bdc3c7;
 }
 
 #headerpanel, .pusher{
@@ -7,7 +7,7 @@ body, body.pushable>.pusher{
 }
 
 .pusher .dimmed{
-	background-color: #27ae60;
+	background-color: #bdc3c7;
 }
 
 .masthead h1.ui.header{

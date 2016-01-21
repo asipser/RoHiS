@@ -19,13 +19,13 @@
 					<div class="eight wide column">
 						<h3 class="ui small header">Charges owed to you</h3>
 						{{#each owe_you}}
-						<p>{{username}} paid you ${{amount}}</p>
+						<p id="{{id}}">{{username}} paid you ${{amount}}</p>
 						{{/each}}
 					</div>
 					<div class="eight wide column">
 						<h3 class="ui small header">Charges you owe</h3>
 						{{#each you_owe}}
-						<p>You paid {{username}} ${{amount}}</p>
+						<p id="{{id}}">You paid {{username}} ${{amount}}</p>
 						{{/each}}
 					</div>
 				</div>
