@@ -13,8 +13,11 @@ router.get('/', function (req, res) {
     username = req.user.username;
 	var user_has_venmo; // boolean to see if the req.user has venmo.
 
+    var userCharges = []; // Array used to store all charges for one person 
+    var mergedCharges = []; // Array with a merged userCharges where it compiles the same payer recipients under the same piles.
     var you_owe = []; // people u owe
     var owe_you = []; // charges with people that owe u
+
 
     /*// check to see if  venmo has been  linked with account NOT NEEDED SO FAR
     if(req.user['venmo_id'] === undefined)
@@ -26,6 +29,27 @@ router.get('/', function (req, res) {
 	*/
 
     Charge.find({completed:false}, function (err,charges){
+    	for(transaction in charges){
+    		if(charges[transaction]['payer']['username'] === username){                                                          // user is  a payer
+    			if(charges[transaction]['recipient']['username'] === undefined)                                                  // check if person targetted has an account or no, undefined fs they dont 
+					userCharges.push({isPayer: true, payer: charges[transaction]['payer']['username'], recipient:charges[transaction]['recipient'], amount:charges[transaction]['amount']});    				
+    			else                                                                                                             // they have an account and it pushes to charges that you owe their name
+    				userCharges.push({isPayer: true, payer: charges[transaction]['payer']['username'], recipient:charges[transaction]['recipient']['username'], amount:charges[transaction]['amount']});
+    		}
+    		else if(charges[transaction]['recipient']['username'] === username){                                                 // user is a recipient
+    			if(charges[transaction]['payer']['username'] === undefined)                                                      // check if the person targetted has an account
+    				userCharges.push({isPayer: false, payer:charges[transaction]['payer'], recipient: charges[transaction]['recipient']['username'], amount:charges[transaction]['amount']});
+    			else                                                                                                             // if they have an account it pushes their account username to the array with debts owed to you
+    				userCharges.push({isPayer: false, payer:charges[transaction]['payer']['username'], recipient: charges[transaction]['recipient']['username'], amount:charges[transaction]['amount']});
+    		}
+
+    	}
+
+    	
+
+
+
+    	/*
     	for(transaction in charges){
     		if(charges[transaction]['payer']['username'] === username){                                                          // user is  a payer
     			if(charges[transaction]['recipient']['username'] === undefined)                                                  // check if person targetted has an account or no, undefined fs they dont 
@@ -41,10 +65,11 @@ router.get('/', function (req, res) {
 	    		
     		}
     	}
+    	*/
 
     	//console.log(you_owe); // test owe_you and you_owe
     	//console.log(owe_you);
-
+    	console.log(userCharges);
     	res.render('index', {user:req.user, owe_you, you_owe });
     });	
     }
