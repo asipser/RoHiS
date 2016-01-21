@@ -1,5 +1,17 @@
 body, body.pushable>.pusher{
-	background: #bdc3c7;
+	background-color: #7f8c8d;
+}
+
+.background-img{
+	background-image: url('/images/background.png');
+	background-repeat: no-repeat;
+	position: fixed;
+	left: 0;
+	right: 0;
+	z-index: -1;
+	display: block;
+	width:100vw;
+	height:100vh;
 }
 
 #headerpanel, .pusher{
@@ -11,7 +23,7 @@ body, body.pushable>.pusher{
 }
 
 .masthead h1.ui.header{
-	margin-top: 30vh;
+	margin-top: 35vh;
 	font-size: 7em;
 }
 
@@ -30,8 +42,6 @@ body, body.pushable>.pusher{
 	padding-bottom: 5vh;
 	padding-left:5vw;
 	padding-right: 5vw;
-	display: none;
-	background-color: #ecf0f1;
 }
 
 div.ui.grid{
@@ -45,4 +55,14 @@ div.ui.right.aligned.text.container{
 #venmoauthbutton{
 	height:2em;
 	margin: 10px;
+}
+
+h2.ui.message{
+	background: rgba(255, 255, 255, 0.6);
+}
+.ui.secondary.inverted.pointing.menu{
+	border-width:0;
+}
+.ui.vertical.segment{
+	border-bottom:0;
 }
