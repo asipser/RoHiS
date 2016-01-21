@@ -3,6 +3,9 @@ var router = express.Router();
 var Charge = require('../models/charge');
 var Account = require('../models/account');
 var request = require("request");
+var moment = require('moment');
+moment().format();
+
 
 router.get('/', function(req, res, next) {
 
@@ -14,7 +17,7 @@ router.post('/addcharge', function (req, res, next) {
     // search accounts database for the username person entered.
 
     Account.find({username: req.body.user}, function (err, users) {
-        console.log("This is in /addcharge, entered username is " + req.body.user)
+        console.log("This is in / addcharge, entered username is " + req.body.user)
         var recipient;
         var payer;
 
@@ -25,26 +28,32 @@ router.post('/addcharge', function (req, res, next) {
 
         var host_user = (req.user); // user issuing the command
                                     // configures reciept/payer correctly
-         if (req.body.borroworlent === "true")
-        {
+         if (req.body.borroworlent === "true") {
             recipient = host_user;
             payer = target_user;
         }
-        else
-        {
+        else {
             payer = host_user;
             recipient = target_user;
         }
 
-        var d = new Date();     // gets current date
-        var time = d.getTime(); // gets current time 
+        var date_created = moment();
+        var completed = false;
+
+        if (req.body.venmousage) {
+            if (req.body.borroworlent === "false") {
+                completed = true;
+            } 
+        }
 
         var charge = new Charge({ // creates new charge schema
             payer: payer,
             recipient: recipient,
             amount: req.body.amount,
-            completed: false,
-            used_venmo: req.body.venmousage
+            completed: completed,
+            description: req.body.note,
+            used_venmo: req.body.venmousage,
+            date_created: date_created
         });
 
         charge.save(function(err, charge) { // saves data in collection
