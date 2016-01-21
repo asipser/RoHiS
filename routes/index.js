@@ -46,6 +46,7 @@ router.get('/', function (req, res) {
     	
     	for(transaction in charges){
 
+            var date_created = moment(charges[transaction]['date_created']).format("dddd, MMMM Do YYYY, h:mm:ss a");
             var creator;
           
             if (charges[transaction]['creator'] === username) {
@@ -55,8 +56,6 @@ router.get('/', function (req, res) {
             }
 
     		if(charges[transaction]['payer']['username'] === username){           
-
-                var date_created = moment(charges[transaction]['date_created']).format("dddd, MMMM Do YYYY, h:mm:ss a");
                                                            // user is  a payer
     			if(charges[transaction]['recipient']['username'] === undefined)                                                  // check if person targetted has an account or no, undefined fs they dont 
 					you_owe.unshift({username:charges[transaction]['recipient'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});    				
