@@ -13,8 +13,10 @@ var Charge = new Schema({
     cancelled: { type: Boolean, default: false},
     date_created: Date,
     date_completed: Date,
+    date_cancelled: Date,
     used_venmo: Boolean,
     who_cancelled: String,
+    who_completed: String,
     creator: String
 });
 
