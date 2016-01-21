@@ -1,6 +1,7 @@
 $(".chargecomplete").click(function() {
 
 	var charge_id = $(this).parent().attr('id');
+	var thisElement = $(this).parent();
 
 	$.ajax({
 			url: '/chargecomplete',
@@ -11,6 +12,10 @@ $(".chargecomplete").click(function() {
 			success: function(data){
 				if (data === "Success!") {
 					console.log("Success!");
+					thisElement.addClass('animated fadeOutRight');
+					setTimeout(function(){
+						thisElement.css('display', 'none');
+					}, 1000);
 				}
 			},
 			error: function(xhr, status, error) {
@@ -22,6 +27,7 @@ $(".chargecomplete").click(function() {
 $(".chargecancel").click(function() {
 
 	var charge_id = $(this).parent().attr('id');
+	var thisElement = $(this).parent();
 
 	$.ajax({
 			url: '/chargecancel',
@@ -32,6 +38,10 @@ $(".chargecancel").click(function() {
 			success: function(data){
 				if (data === "Success!") {
 					console.log("Success!");
+					thisElement.addClass('animated fadeOutRight');
+					setTimeout(function(){
+						thisElement.css('display', 'none');
+					}, 1000);
 				}
 			},
 			error: function(xhr, status, error) {
