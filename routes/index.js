@@ -238,7 +238,7 @@ router.post('/chargecomplete', function(req, res) {
                 var mailOptions = {
                     from: 'noreply.rohis@gmail.com',
                     to: creator['email'],
-                    subject: "Charge cancelled by " + req.user.first_name + " " + req.user.last_name,
+                    subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
                     text: req.user.first_name + " has marked your charge of $" + profile['amount'] + " for '" + profile['description'] + "' as completed. Check it out at rohis.herokuapp.com!"
                 };
 
@@ -302,7 +302,7 @@ router.post('/chargecancel', function(req, res) {
                 var mailOptions = {
                     from: 'noreply.rohis@gmail.com',
                     to: creator['email'],
-                    subject: "Charge cancelled by " + req.user.first_name + " " + req.user.last_name,
+                    subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
                     text: req.user.first_name + " has cancelled your charge of $" + profile['amount'] + " for '" + profile['description'] + ".' Check it out at rohis.herokuapp.com!"
                 };
 
