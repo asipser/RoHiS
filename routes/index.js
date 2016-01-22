@@ -229,7 +229,29 @@ router.post('/chargecomplete', function(req, res) {
 
         console.log(profile);
 
+        // SEND EMAIL IF PERSON WHO COMPLETED IS NOT THE CREATOR
+
+        if (!(profile['creator'] === profile['who_completed'])) {
+
+            Account.findOne({username: profile['creator']}, function(err, creator) {
+
+                var mailOptions = {
+                    from: 'noreply.rohis@gmail.com',
+                    to: creator['email'],
+                    subject: "Charge cancelled by " + req.user.first_name + " " + req.user.last_name,
+                    text: req.user.first_name + " has marked your charge of $" + profile['amount'] + " for '" + profile['description'] + "' as completed. Check it out at rohis.herokuapp.com!"
+                };
+
+                if (creator['email_notifications']) {
+                    transporter.sendMail(mailOptions);
+                }
+
+            });      
+        }
+
         Account.findOne({username: profile['payer']['username']}, function(err, payer_info) {
+
+            // UPDATES 
 
             if (payer_info) {             // UPDATES AVERAGE PAYMENT TIME FOR THE PAYER IF THE USER EXISTS
 
@@ -269,8 +291,30 @@ router.post('/chargecomplete', function(req, res) {
     
 router.post('/chargecancel', function(req, res) {
 
-    Charge.findOneAndUpdate({_id: req.body.charge_id}, {cancelled: true, date_cancelled: moment(), who_cancelled: req.user.username}, function(err, profile) {
+    Charge.findOneAndUpdate({_id: req.body.charge_id}, {cancelled: true, date_cancelled: moment(), who_cancelled: req.user.username}, {new: true}, function(err, profile) {
+        
+        // SEND EMAIL IF PERSON WHO CANCELLED IS NOT THE CREATOR
+
+        if (!(profile['creator'] === profile['who_cancelled'])) {
+
+            Account.findOne({username: profile['creator']}, function(err, creator) {
+
+                var mailOptions = {
+                    from: 'noreply.rohis@gmail.com',
+                    to: creator['email'],
+                    subject: "Charge cancelled by " + req.user.first_name + " " + req.user.last_name,
+                    text: req.user.first_name + " has cancelled your charge of $" + profile['amount'] + " for '" + profile['description'] + ".' Check it out at rohis.herokuapp.com!"
+                };
+
+                if (creator['email_notifications']) {
+                    transporter.sendMail(mailOptions);
+                }
+
+            });      
+        }
+
         res.send('Success!');
+
     });
 
 });

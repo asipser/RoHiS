@@ -9,3 +9,12 @@ router.get('/', function(req, res, next) {
 });
 
 module.exports = router;
+
+router.get('/noemailspls', function(req, res, next) {
+
+	Account.findOneAndUpdate({username: req.user.username}, {email_notifications: false}, {new: true}, function(err, profile) {
+		console.log(profile);
+		res.redirect('/');
+	});
+
+});
