@@ -68,10 +68,13 @@ h2.ui.message{
 	width: 0px;
 	overflow: hidden;
 }
+div.ui.message.opaque {
+	background-color: rgba(255,255,255,0.3);
+}
 
 #precharge{
 	margin-top:-20vh;
-	margin-bottom:10vh;
+	padding-bottom:10vh;
 	transition:.7s;
 }
 #makechargebutton{
@@ -98,7 +101,7 @@ h2.ui.dividing.header{
 
 #submitchargebutton{
 	opacity:0;
-	margin-left:26.85vw;
+	margin-left:25.83vw;
 }
 
 #popupmenu{
