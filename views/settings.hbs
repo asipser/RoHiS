@@ -8,36 +8,33 @@
 </head>
 <body>
 	{{#if user}}
-	{{> menu-partial}}
-	<div class="pusher">
-		{{> top-bar-partial}}
-		<div class="ui container" id="accountsettings">
-			<h2 class="ui dividing large header"><i class="large settings icon"></i> Account Settings</h2>
-			<div class="ui fluid styled accordion">
-				<div class="title active">
-				    <i class="dropdown icon"></i>
-				    Venmo
-				  </div>
-				  <div class="content active">
-				    <p class="transition visible" style="display: block !important;">Venmo is used to complete payments of loans.<br>
-				    <a href="/venmo/auth">Authorize your venmo</a><br>
-				    Your venmo account is: {{user.venmo_id}}</p>
-				  </div>
-				  <div class="title">
-				    <i class="dropdown icon"></i>
-				    Email
-				  </div>
-				  <div class="content">
-				    <p class="transition hidden">We do not send you emails other than for password recovery purposes.<br>Your email account is: {{user.email}}</p>
-				  </div>
-				  <div class="title">
-				    <i class="dropdown icon"></i>
-				    Reset Password
-				  </div>
-				  <div class="content">
-				    <p class="transition hidden">Coming soon!</p>
-				  </div>
-			</div>
+	{{> top-bar-partial}}
+	<div class="ui container" id="accountsettings">
+		<h2 class="ui dividing large header"><i class="large settings icon"></i> Account Settings</h2>
+		<div class="ui fluid styled accordion">
+			<div class="title active">
+			    <i class="dropdown icon"></i>
+			    Venmo
+			  </div>
+			  <div class="content active">
+			    <p class="transition visible" style="display: block !important;">Venmo is used to complete payments of loans.<br>
+			    <a href="/venmo/auth">Authorize your venmo</a><br>
+			    Your venmo account is: {{user.venmo_id}}</p>
+			  </div>
+			  <div class="title">
+			    <i class="dropdown icon"></i>
+			    Email
+			  </div>
+			  <div class="content">
+			    <p class="transition hidden">We do not send you emails other than for password recovery purposes.<br>Your email account is: {{user.email}}</p>
+			  </div>
+			  <div class="title">
+			    <i class="dropdown icon"></i>
+			    Reset Password
+			  </div>
+			  <div class="content">
+			    <p class="transition hidden">Coming soon!</p>
+			  </div>
 		</div>
 	</div>
 	{{else}}
