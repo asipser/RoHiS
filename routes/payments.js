@@ -41,18 +41,6 @@ router.post('/addcharge', function (req, res, next) {
             recipient = target_user;
         }
 
-        Account.findOne({username: req.user.username}, function (err,profile){
-            console.log(profile);
-            var current_borrowed = profile['total_borrowed'];
-            var current_lent = profile['total_lent'];
-            if (req.body.borroworlent === "true")
-                current_lent += parseInt(req.body.amount);
-            else
-                current_borrowed += parseInt(req.body.amount);
-            console.log("currnent lent: " + current_lent);
-            Account.findOneAndUpdate({username: req.user.username}, {total_borrowed:current_borrowed, total_lent:current_lent}, function(){});           
-        });
-
         var date_created = moment();
         var completed = false;
 
@@ -76,6 +64,20 @@ router.post('/addcharge', function (req, res, next) {
         charge.save(function(err, charge) { // saves data in collection
           if (err) return console.error(err);
           console.log("Saved Charge");
+        });
+
+        // STATISTICS
+
+        Account.findOne({username: req.user.username}, function (err,profile){
+            console.log(profile);
+            var current_borrowed = profile['total_borrowed'];
+            var current_lent = profile['total_lent'];
+            if (req.body.borroworlent === "true")
+                current_lent += parseInt(req.body.amount);
+            else
+                current_borrowed += parseInt(req.body.amount);
+            console.log("currnent lent: " + current_lent);
+            Account.findOneAndUpdate({username: req.user.username}, {total_borrowed:current_borrowed, total_lent:current_lent}, function(){});           
         });
 
         // SENDING EMAIL IF EMAIL_NOTIFICATIONS IS ON FOR THE OTHER USER
