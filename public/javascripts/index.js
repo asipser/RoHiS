@@ -39,7 +39,6 @@ $(document).ready(function(){
 		}, 1020);
 	})
 	$('p').popup();
-
 	
 	$('.ui.search')
 	  .search({
@@ -52,6 +51,13 @@ $(document).ready(function(){
 	      description     : 'username'
 	    },
 	    minCharacters : 2
-	  })
-	;
+	  });
+	  
+	var $chargeamounts = $('.listedchargeamount');
+	for(i=0; i<$chargeamounts.length; i++){
+		var amount = $chargeamounts[i];
+		if($(amount).text().charAt(0) == '-'){
+			$(amount).css('color', 'red');
+		}
+	}
 });
