@@ -5,7 +5,27 @@ var router = express.Router();
 var Charge = require('../models/charge');
 var moment = require('moment');
 moment().format();
+var nodemailer = require('nodemailer');
+var secret = require('../secret/secret');
+var transporter = secret['transporter'];
 
+// router.get('/emailtest', function (req, res) {
+//     var mailOptions = {
+//         from: 'noreply.rohis@gmail.com', // sender address
+//         to: 'rneogy@mit.edu', // list of receivers
+//         subject: "You're a little shit", // Subject line
+//         text: 'Truth.' // plaintext body
+//     };
+
+//     transporter.sendMail(mailOptions, function(error, info){
+//         if(error){
+//             return console.log(error);
+//         }
+//         console.log('Message sent: ' + info.response);
+//     });
+
+//     res.send("hi");
+// });
 
 router.get('/', function (req, res) {
     if(req.user === undefined){
@@ -33,7 +53,6 @@ router.get('/', function (req, res) {
 
     //console.log(req.user.username + " has venmo value of " + user_has_venmo);
 	*/
-
     var find_condition = {
         $and:[
             {completed:false},
@@ -209,7 +228,29 @@ router.post('/chargecomplete', function(req, res) {
 
         console.log(profile);
 
+        // SEND EMAIL IF PERSON WHO COMPLETED IS NOT THE CREATOR
+
+        if (!(profile['creator'] === profile['who_completed'])) {
+
+            Account.findOne({username: profile['creator']}, function(err, creator) {
+
+                var mailOptions = {
+                    from: 'noreply.rohis@gmail.com',
+                    to: creator['email'],
+                    subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
+                    text: req.user.first_name + " has marked your charge of $" + profile['amount'] + " for '" + profile['description'] + "' as completed. Check it out at rohis.herokuapp.com!"
+                };
+
+                if (creator['email_notifications']) {
+                    transporter.sendMail(mailOptions);
+                }
+
+            });      
+        }
+
         Account.findOne({username: profile['payer']['username']}, function(err, payer_info) {
+
+            // UPDATES 
 
             if (payer_info) {             // UPDATES AVERAGE PAYMENT TIME FOR THE PAYER IF THE USER EXISTS
 
@@ -249,8 +290,30 @@ router.post('/chargecomplete', function(req, res) {
     
 router.post('/chargecancel', function(req, res) {
 
-    Charge.findOneAndUpdate({_id: req.body.charge_id}, {cancelled: true, date_cancelled: moment(), who_cancelled: req.user.username}, function(err, profile) {
+    Charge.findOneAndUpdate({_id: req.body.charge_id}, {cancelled: true, date_cancelled: moment(), who_cancelled: req.user.username}, {new: true}, function(err, profile) {
+        
+        // SEND EMAIL IF PERSON WHO CANCELLED IS NOT THE CREATOR
+
+        if (!(profile['creator'] === profile['who_cancelled'])) {
+
+            Account.findOne({username: profile['creator']}, function(err, creator) {
+
+                var mailOptions = {
+                    from: 'noreply.rohis@gmail.com',
+                    to: creator['email'],
+                    subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
+                    text: req.user.first_name + " has cancelled your charge of $" + profile['amount'] + " for '" + profile['description'] + ".' Check it out at rohis.herokuapp.com!"
+                };
+
+                if (creator['email_notifications']) {
+                    transporter.sendMail(mailOptions);
+                }
+
+            });      
+        }
+
         res.send('Success!');
+
     });
 
 });
@@ -260,7 +323,9 @@ router.post('/register', function(req, res) {
     Account.count({username:req.body.username},function(error, count){
         //console.log(req.body);
 
-        Account.register(new Account({ username : req.body.username, first_name: req.body.firstName, last_name: req.body.lastName, email: req.body.email}), req.body.password, function(err, account) { // registers account with initial data passed through the register form, uses express session, passport js, and passport local mongoose
+        var full_name = req.body.firstName + " " + req.body.lastName;
+
+        Account.register(new Account({ username : req.body.username, first_name: req.body.firstName, last_name: req.body.lastName, full_name:full_name, email: req.body.email}), req.body.password, function(err, account) { // registers account with initial data passed through the register form, uses express session, passport js, and passport local mongoose
         if (err) {                              // if there is an error such as a duplicated account or fields left blank. THESE WILL BE DEALT WITH LATER
             console.log("err");
             console.log(err);
@@ -276,7 +341,7 @@ router.post('/register', function(req, res) {
 });
 
 router.get('/login', function(req, res) { 
-    res.render('login', { user : req.user });
+    res.render('index', {user : req.user});
 
 });
 
@@ -300,14 +365,22 @@ router.get('/ping', function(req, res){ // test function to see if tutorial work
 router.get('/usersearch',function(req,res){ // this is a function unused for now, but will be used for the dropdown menu when you enter a username into the charge form. Supplies a list of users that begin with the letters entered in by user
     name = req.query.name;
     console.log(name);
-    var response_data = [];
+    var response_data = {items:[]};
     Account.find({}, function (err, docs) {
         for(user in docs){
             console.log("User: " + docs[user]['full_name']);
-            if(stringStartsWith(docs[user]['full_name'], name)){
-                response_data.push({full_name: docs[user]['full_name'],
-                                    username: docs[user]['username']});
+            if(docs[user]['username'] === req.user.username){
             }
+            else{
+	            if(stringStartsWith(docs[user]['full_name'], name)){
+	                response_data['items'].push({full_name: docs[user]['full_name'],
+	                                    username: docs[user]['username']});
+	            }
+	            else if(stringStartsWith(docs[user]['last_name'], name)){
+	            	 response_data['items'].push({full_name: docs[user]['full_name'],
+	                                    username: docs[user]['username']});
+	            }
+	        }
         }
         res.send(response_data);
     });
@@ -318,6 +391,8 @@ router.get('/usersearch',function(req,res){ // this is a function unused for now
 function stringStartsWith (string, prefix) { // used by usersearch route, boolean function. Inputs are string (complete string you are testing the prefix against, and prefix is the string you are checking if the input string begins with)
     if(string === undefined)
         return false;
-    return string.slice(0, prefix.length) == prefix;
+    return string.slice(0, prefix.length).toLowerCase() == prefix.toLowerCase();
 }
+
+
 module.exports = router;

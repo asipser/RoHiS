@@ -5,6 +5,9 @@ var Account = require('../models/account');
 var request = require("request");
 var moment = require('moment');
 moment().format();
+var nodemailer = require('nodemailer');
+var secret = require('../secret/secret');
+var transporter = secret['transporter'];
 
 
 router.get('/', function(req, res, next) {
@@ -23,6 +26,7 @@ router.post('/addcharge', function (req, res, next) {
 
         var target_user = users[0]; // user that has been requested
                                     //if no accounts have been found then the entered username shall be set target_user
+
         if(users[0] === undefined)
             target_user = req.body.user;
 
@@ -62,8 +66,37 @@ router.post('/addcharge', function (req, res, next) {
           console.log("Saved Charge");
         });
 
+        // STATISTICS
+
+        Account.findOne({username: req.user.username}, function (err,profile){
+            console.log(profile);
+            var current_borrowed = profile['total_borrowed'];
+            var current_lent = profile['total_lent'];
+            if (req.body.borroworlent === "true")
+                current_lent += parseInt(req.body.amount);
+            else
+                current_borrowed += parseInt(req.body.amount);
+            console.log("currnent lent: " + current_lent);
+            Account.findOneAndUpdate({username: req.user.username}, {total_borrowed:current_borrowed, total_lent:current_lent}, function(){});           
+        });
+
+        // SENDING EMAIL IF EMAIL_NOTIFICATIONS IS ON FOR THE OTHER USER
+
+        if (users[0] && users[0]['email_notifications']) {
+            
+            var mailOptions = {
+                from: 'noreply.rohis@gmail.com',
+                to: users[0]['email'],
+                subject: "New charge from " + req.user.first_name + " " + req.user.last_name,
+                text: req.user.first_name + " has added a new charge with you: $" + req.body.amount + " for '" + req.body.note + ".' Check it out at rohis.herokuapp.com!"
+            };
+
+            transporter.sendMail(mailOptions);
+
+        }
 
         // IF VENMO OPTION IS CHECKED (SO FAR ONLY WORKS IF BOTH USERS HAVE VENMO), THEN EITHER CHARGES OR REQUESTS THE OTHER PERSON.
+
 
 
         if (req.body.venmousage) {
@@ -98,7 +131,11 @@ router.post('/addcharge', function (req, res, next) {
         } else {
             console.log("No venmo addition!");
             res.redirect('/');
-        }    
+        }
+
+
+
+
     });
 
    
