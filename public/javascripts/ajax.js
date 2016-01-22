@@ -50,3 +50,24 @@ $(".chargecancel").click(function() {
 		});
 });
 
+$(".chargecompleteall").click(function() {
+
+	$(this).parent().next().children().children("a.chargecomplete").trigger('click');
+	
+	$(this).parent().addClass('animated fadeOutRight');
+	setTimeout(function(){
+		$(this).parent().css('display', 'none');
+	}, 1000);
+
+});
+
+$(".chargecancelall").click(function() {
+
+	$(this).parent().next().children().children("a.chargecancel").trigger('click');
+
+	$(this).parent().addClass('animated fadeOutRight');
+	setTimeout(function(){
+		$(this).parent().css('display', 'none');
+	}, 1000);
+
+});

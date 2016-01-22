@@ -7,6 +7,8 @@
 	<link rel="stylesheet" type="text/css" href="/dist/semantic.min.css">
 	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
 	<link rel="stylesheet" type="text/css" href="/stylesheets/animate.css">
+	<!-- background image source http://www.thedatereport.com/dating/wp-content/uploads/2013/09/Paying-the-Bill-300x174.jpg,
+								 http://www.allmacwallpaper.com/get/iMac-21-inch-wallpapers/Stone-beach-1920x1080/2205-9.jpg-->
 </head>
 <body>
 	{{#if user}}
@@ -17,4 +19,12 @@
 	{{/if}}
 	<script src="/javascripts/ajax.js"></script>
 </body>
+<script>
+$(document).ready(function(){
+	if (location.href.indexOf("#error") > -1) {
+		$("#authenticate_error").text("Your username or password was incorrect.")
+		$("#loginbutton").click();
+	}
+})
+</script>
 </html>

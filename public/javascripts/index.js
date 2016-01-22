@@ -9,6 +9,7 @@ $(document).ready(function(){
 	});
 	$('.ui.accordion').accordion();
 	$('.ui.dropdown').dropdown();
+	$('.ui.checkbox').checkbox();
 	$('.ui.form.charge').form({
 		fields: {
 			borroworlent: 'empty',
@@ -34,8 +35,8 @@ $(document).ready(function(){
 			$('#submitchargebutton').css('opacity', '1');
 		}, 1000);
 		setTimeout(function(){
-			$('precharge').css('display', 'hidden');
-		}, 1000);
+			$('#precharge').hide();
+		}, 1020);
 	})
 	$('p').popup();
 });

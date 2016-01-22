@@ -2,9 +2,9 @@
 	<div id="chargeformwrapper">
 		<form class="ui large form charge" action="/payments/addcharge" method="post">
 			<h2 class="ui dividing header">New Charge</h2>
-			<div class="three inline fields">
+			<div class="ui three fields">
 				<div class="field">
-					<div class='ui selection inline dropdown' tabindex='0'>
+					<div class='ui selection compact dropdown' tabindex='0'>
 						<label style='display: none'>Payer status</label>
 						<input name="borroworlent" id="borroworlent" type="hidden">
 						<i class='dropdown icon'></i>
@@ -15,21 +15,21 @@
 						</div>
 					</div>
 				</div>
-				<div style='margin-right: 5px'>$</div>
-				<div class="field">
-					<label style='display: none'>Amount</label><input type="number" min="0.01" step="0.01" name="amount" placeholder="5.00">
+				<div class="ui field labeled input">
+					<div class='ui label'>$</div>
+					<input type="number" id='chargeamount' name="amount" placeholder="5.00" style='width: 205px'>
 				</div>
-				<div id='tofrom' style='margin-right: 5px'>to</div>
-				<div class="field">
-					<input type="text" name="user" placeholder="Username">
+				<div class="ui labeled input field">
+					<div class='ui label' id='tofrom'>to</div>
+					<input type="text" name="user" id='chargeuser' placeholder="Username">
 				</div>
 			</div>
 			<div class="field">
-				<input type="text" name="note" placeholder="Description">
+				<input type="text" name="note" id='chargedescription' placeholder="Description">
 			</div>
 			<div class="field">
-				<div class="ui slider checkbox">
-					<input type="checkbox" name="venmousage" value="true">
+				<div id='venmobool' class="ui slider checkbox">
+					<input type="checkbox" name="venmousage" value='true'>
 					<label>Use Venmo?</label>
 				</div>
 			</div>
@@ -47,19 +47,26 @@
 			<div class="eight wide column">
 				<h3 class="ui small header">Charges owed to you</h3>
 				{{#each merged_owe_you}}
-				<p data-title="Your running total with {{username}}" id='{{username}}'> {{username}} owes you ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
-				{{#each transactions_info}}
-				<p id='{{id}}' data-title="Created by {{creator}} on {{date_created}}">"{{note}}": ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
-				{{/each}}
+				<p data-title="Your running total with {{username}}" id='{{username}}'> {{username}} owes you ${{amount}} | <a class="chargecompleteall" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancelall" href='#'><i class='remove icon'></i></a> |</p>
+
+				<div>
+					{{#each transactions_info}}
+					<p id='{{id}}' data-title="Created by {{creator}} on {{date_created}}">"{{note}}": ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
+					{{/each}}
+				</div>
 				{{/each}}
 			</div>
+
 			<div class="eight wide column">
-				<h3 class="ui small header">Charges you owe</h3>
+				<h3 class="ui small header">Charges you owe</h3>				
 				{{#each merged_you_owe}}
-				<p data-title="Your running total with {{username}}" id='{{username}}'>You owe {{username}} ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
-				{{#each transactions_info}}
-				<p id='{{id}}' data-title="Created by {{creator}} on {{date_created}}">"{{note}}": ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
-				{{/each}}
+				<p data-title="Your running total with {{username}}" id='{{username}}'>You owe {{username}} ${{amount}} | <a class="chargecompleteall" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancelall" href='#'><i class='remove icon'></i></a> |</p>
+
+				<div>
+					{{#each transactions_info}}
+					<p id='{{id}}' data-title="Created by {{creator}} on {{date_created}}">"{{note}}": ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
+					{{/each}}
+				</div>
 				{{/each}}
 			</div>
 		</div>

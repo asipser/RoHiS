@@ -280,7 +280,9 @@ router.get('/login', function(req, res) {
 
 });
 
-router.post('/login', passport.authenticate('local'), function(req, res) { // logins with passport js
+router.post('/login', passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/#error'}), function(req, res) { // logins with passport js
     res.redirect('/');
 });
 
