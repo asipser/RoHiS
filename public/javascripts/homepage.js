@@ -46,4 +46,11 @@ $(document).ready(function(){
 	    }
 	});
 	$('.ui.dropdown').dropdown();
+	$('.ui.modal').modal({
+        onApprove : function() {
+          $('.ui.form').submit();
+          return false;
+        }
+    });
+
 });
