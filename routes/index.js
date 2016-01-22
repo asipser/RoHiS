@@ -53,7 +53,6 @@ router.get('/', function (req, res) {
 
     //console.log(req.user.username + " has venmo value of " + user_has_venmo);
 	*/
-
     var find_condition = {
         $and:[
             {completed:false},
@@ -350,4 +349,12 @@ function stringStartsWith (string, prefix) { // used by usersearch route, boolea
         return false;
     return string.slice(0, prefix.length).toLowerCase() == prefix.toLowerCase();
 }
+
+router.post('/changePassword', function(req, res) {
+	req.user.setPassword(req.body.newpassword, function(){
+		req.user.save();
+	});
+	res.redirect('/');
+});
+
 module.exports = router;
