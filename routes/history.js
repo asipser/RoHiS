@@ -48,8 +48,8 @@ router.get('/', function(req, res, next) {
                 creator = charges[transaction]['creator'];
             }
 
-            var date_created = moment(charges[transaction]['date_created']).format("dddd, MMMM Do YYYY, h:mm:ss a");
-            var date_completed = moment(charges[transaction]['date_completed']).format("dddd, MMMM Do YYYY, h:mm:ss a");
+            var date_created = moment(charges[transaction]['date_created']).format("M/D/YY, h:mm a");
+            var date_completed = moment(charges[transaction]['date_completed']).format("M/D/YY, h:mm a");
 
     		if(charges[transaction]['payer']['username'] === username){                                                          // user is  a payer
     			if(charges[transaction]['recipient']['username'] === undefined)                                                  // check if person targetted has an account or no, undefined fs they dont 
@@ -84,8 +84,8 @@ router.get('/', function(req, res, next) {
                 creator = charges[transaction]['creator'];
             }
 
-            var date_created = moment(charges[transaction]['date_created']).format("dddd, MMMM Do YYYY, h:mm:ss a");
-            var date_cancelled = moment(charges[transaction]['date_cancelled']).format("dddd, MMMM Do YYYY, h:mm:ss a");
+            var date_created = moment(charges[transaction]['date_created']).format("M/D/YY, h:mm a");
+            var date_cancelled = moment(charges[transaction]['date_cancelled']).format("M/D/YY, h:mm a");
 
             if (charges[transaction]['payer']['username'] === username) {                                                          // user is  a payer
                 if(charges[transaction]['recipient']['username'] === undefined) {                                                // check if person targetted has an account or no, undefined fs they dont 

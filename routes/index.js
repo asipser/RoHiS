@@ -45,8 +45,8 @@ router.get('/', function (req, res) {
 
     	//step 1
     	for(transaction in charges){
-    		
-    		var date_created = moment(charges[transaction]['date_created']).format("dddd, MMMM Do YYYY, h:mm:ss a");
+
+            var date_created = moment(charges[transaction]['date_created']).format("M/D/YY, h:mm a");
             var creator;
           
             if (charges[transaction]['creator'] === username) {
@@ -80,18 +80,19 @@ router.get('/', function (req, res) {
     		var id = you_owe[transaction]['id'];
     		var note = you_owe[transaction]['note'];
     		var date = you_owe[transaction]['date_created'];
+            var creator = you_owe[transaction]['creator'];
 
 
     		for(mergedTransaction in merged_you_owe){
     			if(merged_you_owe[mergedTransaction]['username'] === user){
     				merged_you_owe[mergedTransaction]['amount'] += amount;
-    				merged_you_owe[mergedTransaction]['transactions_info'].push({amount:amount,id:id,note:note,date:date});
+    				merged_you_owe[mergedTransaction]['transactions_info'].push({amount: amount, id: id, note: note, date_created: date, creator: creator});
 
     				in_database = true;
     			}
     		}
     		if(!in_database)
-    			merged_you_owe.push({username:user, amount:amount, transactions_info:[{amount:amount,id:id,note:note,date:date}]});
+    			merged_you_owe.push({username:user, amount:amount, transactions_info:[{amount: amount, id: id, note: note, date_created: date, creator: creator}]});
     	}
 
     	for(transaction in owe_you){
@@ -101,11 +102,12 @@ router.get('/', function (req, res) {
     		var id = owe_you[transaction]['id'];
     		var note = owe_you[transaction]['note'];
     		var date = owe_you[transaction]['date_created'];
+            var creator = owe_you[transaction]['creator'];
 
     		for(mergedTransaction in merged_owe_you){
     			if(merged_owe_you[mergedTransaction]['username'] === user){
     				merged_owe_you[mergedTransaction]['amount'] += amount;
-    				merged_owe_you[mergedTransaction]['transactions_info'].push({amount:amount,id:id,note:note,date:date});
+    				merged_owe_you[mergedTransaction]['transactions_info'].push({amount: amount, id: id, note: note, date_created: date, creator: creator});
 
     				//console.log(merged_owe_you[mergedTransaction]['transactions_info']);
     				
@@ -118,7 +120,7 @@ router.get('/', function (req, res) {
     			}
     		}
     		if(!in_database)
-    			merged_owe_you.push({username:user, amount:amount, transactions_info:[{amount:amount,id:id,note:note,date:date}]});
+    			merged_owe_you.push({username:user, amount:amount, transactions_info:[{amount: amount, id: id, note: note, date_created: date, creator: creator}]});
     	}
 
     	// console.log("printing transactions info:");
