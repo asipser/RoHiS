@@ -2,13 +2,12 @@ var express = require('express');
 var passport = require('passport');
 var Account = require('../models/account');
 var router = express.Router();
-
 var request = require("request");
 
 // DO NOT EDIT PLEASE
 
-var client_id = "3420";
-var client_secret = "nfZrqdjpkb3UDKtFmV4Be8gfqKdnrfsn";
+var client_id = secret['client_id'];
+var client_secret = secret['client_secret'];
 
 // REDIRECTS TO VENMO AUTHENTICATION LOGIN AND REDIRECTS TO /getCode.
 

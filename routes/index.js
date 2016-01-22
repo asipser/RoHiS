@@ -5,7 +5,27 @@ var router = express.Router();
 var Charge = require('../models/charge');
 var moment = require('moment');
 moment().format();
+var nodemailer = require('nodemailer');
+var secret = require('../secret/secret');
+var transporter = secret['transporter'];
 
+// router.get('/emailtest', function (req, res) {
+//     var mailOptions = {
+//         from: 'noreply.rohis@gmail.com', // sender address
+//         to: 'rneogy@mit.edu', // list of receivers
+//         subject: "You're a little shit", // Subject line
+//         text: 'Truth.' // plaintext body
+//     };
+
+//     transporter.sendMail(mailOptions, function(error, info){
+//         if(error){
+//             return console.log(error);
+//         }
+//         console.log('Message sent: ' + info.response);
+//     });
+
+//     res.send("hi");
+// });
 
 router.get('/', function (req, res) {
     if(req.user === undefined){
