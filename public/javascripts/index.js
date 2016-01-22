@@ -29,7 +29,7 @@ $(document).ready(function(){
 		$('#chargeformwrapper').addClass('expansion');
 		$(this).removeClass('massive');
 		$('#precharge').css('margin-top','-37px');
-		$('#precharge').css('margin-bottom','0');
+		$('#precharge').css('padding-bottom','0');
 		$(this).text('Charge!');
 		setTimeout(function(){
 			$('#submitchargebutton').css('opacity', '1');
@@ -39,4 +39,17 @@ $(document).ready(function(){
 		}, 1020);
 	})
 	$('p').popup();
+	$('.ui.search')
+	  .search({
+	    apiSettings: {
+	      url: '//api.github.com/search/repositories?q={query}'
+	    },
+	    fields: {
+	      results : 'items',
+	      title   : 'name',
+	      url     : 'html_url'
+	    },
+	    minCharacters : 3
+	  })
+	;
 });

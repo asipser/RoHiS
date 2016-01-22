@@ -1,60 +1,67 @@
 <div class="ui container" id="chargecenterpanel">
-	<div id="chargeformwrapper">
-		<form class="ui large form charge" action="/payments/addcharge" method="post">
-			<h2 class="ui dividing header">New Charge</h2>
-			<div class="ui three fields">
-				<div class="field">
-					<div class='ui selection compact dropdown' tabindex='0'>
-						<label style='display: none'>Payer status</label>
-						<input name="borroworlent" id="borroworlent" type="hidden">
-						<i class='dropdown icon'></i>
-						<div class='default text'>Who's paying?</div>
-						<div class="menu">
-							<div class='item' data-value="true"><i class='pointing right icon'></i>I lent</div>
-							<div class='item' data-value="false"><i class='pointing left icon'></i>I borrowed</div>
+	<div class='ui message opaque'>
+		<div id="chargeformwrapper">
+			<form class="ui large form charge" action="/payments/addcharge" method="post">
+				<h2 class="ui dividing header">New Charge</h2>
+				<div class="ui three fields">
+					<div class="field">
+						<div class='ui selection dropdown' tabindex='0'>
+							<label style='display: none'>Payer status</label>
+							<input name="borroworlent" id="borroworlent" type="hidden">
+							<i class='dropdown icon'></i>
+							<div class='default text'>Who's paying?</div>
+							<div class="menu">
+								<div class='item' data-value="true"><i class='pointing right icon'></i>I lent</div>
+								<div class='item' data-value="false"><i class='pointing left icon'></i>I borrowed</div>
+							</div>
 						</div>
 					</div>
+					<div class="ui field labeled input">
+						<label style='display: none'>Charge amount</label>
+						<div class='ui label'>$</div>
+						<input type="number" id='chargeamount' min='0.01' step='0.01' name="amount" placeholder="1.23">
+					</div>
+					<div class="ui labeled input field">
+						<div class='ui label' id='tofrom'>to</div>
+						<input type="text" name="user" id='chargeuser' placeholder="Username" style='text-transform: lowercase;'>
+					</div>
 				</div>
-				<div class="ui field labeled input">
-					<div class='ui label'>$</div>
-					<input type="number" id='chargeamount' name="amount" placeholder="5.00" style='width: 205px'>
+				<div class="field">
+					<input type="text" name="note" id='chargedescription' placeholder="Description">
 				</div>
-				<div class="ui labeled input field">
-					<div class='ui label' id='tofrom'>to</div>
-					<input type="text" name="user" id='chargeuser' placeholder="Username">
+				<div class="field">
+					<div id='venmobool' class="ui slider checkbox">
+						<input type="checkbox" name="venmousage" value='true'>
+						<label>Use Venmo?</label>
+					</div>
 				</div>
-			</div>
-			<div class="field">
-				<input type="text" name="note" id='chargedescription' placeholder="Description">
-			</div>
-			<div class="field">
-				<div id='venmobool' class="ui slider checkbox">
-					<input type="checkbox" name="venmousage" value='true'>
-					<label>Use Venmo?</label>
-				</div>
-			</div>
-			<div class='ui error message'></div>
-			<button id='submitchargebutton' class="ui blue button" type="submit">Charge!</button>
-		</form>
-	</div>
-	<div id="precharge" class='ui center aligned container'>
-		<div id='makechargebutton' class='ui primary massive button'>Make a charge!</div>
+				<div class='ui error message'></div>
+				<button id='submitchargebutton' class="ui blue button" type="submit">Charge!</button>
+			</form>
+		</div>
+		<div id="precharge" class='ui center aligned container'>
+			<div id='makechargebutton' class='ui primary massive button'>Make a charge!</div>
+		</div>
 	</div>
 	<div class="ui divider"></div>
-	<div class="ui container">
+	<div class="ui floating message">
 		<h2 class="ui header">Current Charges</h2>
 		<div class="ui grid">
 			<div class="eight wide column">
 				<h3 class="ui small header">Charges owed to you</h3>
-				{{#each merged_owe_you}}
-				<p data-title="Your running total with {{username}}" id='{{username}}'> {{username}} owes you ${{amount}} | <a class="chargecompleteall" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancelall" href='#'><i class='remove icon'></i></a> |</p>
+				<div class='ui cards'>
+					{{#each merged_owe_you}}
+					<div class='ui card'>
+						<p data-title="Your running total with {{username}}" id='{{username}}'> {{username}} owes you ${{amount}} | <a class="chargecompleteall" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancelall" href='#'><i class='remove icon'></i></a> |</p>
 
-				<div>
-					{{#each transactions_info}}
-					<p id='{{id}}' data-title="Created by {{creator}} on {{date_created}}">"{{note}}": ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
+						<div>
+							{{#each transactions_info}}
+							<p id='{{id}}' data-title="Created by {{creator}} on {{date_created}}">"{{note}}": ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
+							{{/each}}
+						</div>
+					</div>
 					{{/each}}
 				</div>
-				{{/each}}
 			</div>
 
 			<div class="eight wide column">

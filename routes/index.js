@@ -266,7 +266,7 @@ router.post('/register', function(req, res) {
         if (err) {                              // if there is an error such as a duplicated account or fields left blank. THESE WILL BE DEALT WITH LATER
             console.log("err");
             console.log(err);
-            res.render('register', { account : account });
+            res.redirect ('/#registererror');
         } else { console.log("successfully added account");
         console.log(account);
         passport.authenticate('local')(req, res, function () {
@@ -284,7 +284,7 @@ router.get('/login', function(req, res) {
 
 router.post('/login', passport.authenticate('local', {
   successRedirect: '/',
-  failureRedirect: '/#error'}), function(req, res) { // logins with passport js
+  failureRedirect: '/#loginerror'}), function(req, res) { // logins with passport js
     res.redirect('/');
 });
 

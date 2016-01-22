@@ -38,7 +38,6 @@
 			<div class="ui subheader">With our <b>detailed statistics</b> on your activity, show your friends that they can <b>trust you</b> with their money.</div>
 		</div></div>
 	</div>
-
 </div>
 <div class="ui modal signup">
 	<div class="ui header">Create an account</div>
@@ -48,16 +47,16 @@
 				<label>Name</label>
 				<div class="two fields">
 					<div class="field">
-						<input type="text" name="firstName" placeholder="First Name">
+						<input type="text" name="firstName" placeholder="First Name" style='border-bottom-right-radius: 0px; border-top-right-radius: 0px;'>
 					</div>
 					<div class="field">
-						<input type="text" name="lastName" placeholder="Last Name">
+						<input type="text" name="lastName" placeholder="Last Name" style='border-bottom-left-radius: 0px; border-top-left-radius: 0px;'>
 					</div>
 				</div>
 			</div>
 			<div class="field">
 				<label>Username</label>
-				<input type="text" name="username" placeholder="Username">
+				<input type="text" name="username" placeholder="Username" style='text-transform: lowercase;'>
 			</div>
 			<div class="field">
 				<label>Email</label>
@@ -69,6 +68,7 @@
 			</div>
 			<div class='ui error message'></div>
 			<button class="ui green button" type="submit">Submit</button>
+			<div id="register_error"></div>
 		</form>
 	</div>
 </div>
@@ -78,7 +78,7 @@
 		<form class="ui large form login" action="/login" method="post" >
 			<div class="field">
 				<label>Username</label>
-				<input type="text" name="username" placeholder="Username">
+				<input type="text" name="username" placeholder="Username" style='text-transform: lowercase;'>
 			</div>
 			<div class="field">
 				<label>Password</label>

@@ -21,10 +21,15 @@
 </body>
 <script>
 $(document).ready(function(){
-	if (location.href.indexOf("#error") > -1) {
-		$("#authenticate_error").text("Your username or password was incorrect.")
+	if (location.href.indexOf("#loginerror") > -1) {
+		$("#authenticate_error").text("Your username or password was incorrect.");
 		$("#loginbutton").click();
 	}
-})
+
+	else if (location.href.indexOf("#registererror") > -1) {
+		$("#register_error").text("The username you have entered already exists. Please try another.");
+		$("#getstartedbutton").click();
+	}
+});
 </script>
 </html>
