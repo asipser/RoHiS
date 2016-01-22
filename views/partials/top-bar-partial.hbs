@@ -1,6 +1,30 @@
 <div class="ui container">
 	<div class="ui large secondary menu">
-		<a class="active item" id='sidebarmenuitem'><i class='sidebar icon'></i>Menu</a>
+		<a class="active item" id='topbarmenuitem'><i class='sidebar icon'></i>Menu</a>
+		<div id='popupmenu' class='ui popup bottom left transition hidden'>
+			<div class='ui selection huge animated list'>
+				<a href="/" class="item">
+					<i class="home icon"></i>
+					Home
+				</a>
+				<a href="/settings" class="item">
+					<i class="settings icon"></i>
+					Account Settings
+				</a>
+				<a href="/statistics" class="item">
+					<i class="line chart icon"></i>
+					Statistics
+				</a>
+				<a href='/history' class='item'>
+					<i class='history icon'></i>
+					History
+				</a>
+				<!--<a class="item">
+					<i class="users icon"></i>
+					Friends
+				</a>-->
+			</div>
+		</div>
 		<div class="item"><a href='/' class="ui huge header">MoneyMatters</a></div>
 		<div class="right item">
 			<div class="ui right aligned text container">Welcome, <a href='/settings'>{{user.username}}</a></div>
@@ -8,3 +32,4 @@
 		</div>
 	</div>
 </div>
+<div class='ui divider'></div>

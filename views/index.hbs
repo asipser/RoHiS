@@ -10,11 +10,8 @@
 </head>
 <body>
 	{{#if user}}
-	{{> menu-partial}}
-	<div class="pusher">
-		{{> top-bar-partial}}
-		{{> charge-center-partial}}
-	</div>
+	{{> top-bar-partial}}
+	{{> charge-center-partial}}
 	{{else}}
 	{{> home-page-partial}}
 	{{/if}}
