@@ -1,6 +1,11 @@
 $(document).ready(function(){
-	$('#sidebarmenuitem').click(function(){
-		$('div.ui.sidebar').sidebar('toggle');
+	$('#topbarmenuitem').popup({
+		inline	: true,
+		hoverable: true,
+		position: 'bottom left',
+		delay: {
+			hide: 300
+		}
 	});
 	$('.ui.accordion').accordion();
 	$('.ui.dropdown').dropdown();
@@ -11,6 +16,13 @@ $(document).ready(function(){
 			user		: 'empty',
 			note		: 'empty'
 		}
+	});
+	$('#borroworlent').change(function(){
+		console.log($(this)[0].value);
+		if($(this)[0].value == 'true')
+			$('#tofrom').text('to');
+		else
+			$('#tofrom').text('from');
 	});
 	$('#makechargebutton').click(function(){
 		$('#chargeformwrapper').addClass('expansion');
