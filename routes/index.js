@@ -259,7 +259,7 @@ router.post('/chargecancel', function(req, res) {
 router.post('/register', function(req, res) {
     Account.count({username:req.body.username},function(error, count){
         //console.log(req.body);
-
+        var name = (req.body.username).toLowerCase();
         Account.register(new Account({ username : req.body.username, first_name: req.body.firstName, last_name: req.body.lastName, email: req.body.email}), req.body.password, function(err, account) { // registers account with initial data passed through the register form, uses express session, passport js, and passport local mongoose
         if (err) {                              // if there is an error such as a duplicated account or fields left blank. THESE WILL BE DEALT WITH LATER
             console.log("err");
@@ -276,7 +276,7 @@ router.post('/register', function(req, res) {
 });
 
 router.get('/login', function(req, res) { 
-    res.render('login', { user : req.user });
+    res.render('index', {user : req.user});
 
 });
 
