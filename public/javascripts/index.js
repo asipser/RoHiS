@@ -29,7 +29,7 @@ $(document).ready(function(){
 		$('#chargeformwrapper').addClass('expansion');
 		$(this).removeClass('massive');
 		$('#precharge').css('margin-top','-37px');
-		$('#precharge').css('margin-bottom','0');
+		$('#precharge').css('padding-bottom','0');
 		$(this).text('Charge!');
 		setTimeout(function(){
 			$('#submitchargebutton').css('opacity', '1');
@@ -39,4 +39,19 @@ $(document).ready(function(){
 		}, 1020);
 	})
 	$('p').popup();
+
+	
+	$('.ui.search')
+	  .search({
+	    apiSettings: {
+	      url: '/usersearch?name={query}'
+	    },
+	    fields: {
+	      results : 'items',
+	      title   : 'full_name',
+	      description     : 'username'
+	    },
+	    minCharacters : 2
+	  })
+	;
 });
