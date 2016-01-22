@@ -17,11 +17,11 @@
 				</div>
 				<div class="ui field labeled input">
 					<div class='ui label'>$</div>
-					<input type="number" id='chargeamount' name="amount" placeholder="5.00" style='width: 205px'>
+					<input type="number" id='chargeamount' min='0.01' step='0.01' name="amount" placeholder="1.23">
 				</div>
 				<div class="ui labeled input field">
 					<div class='ui label' id='tofrom'>to</div>
-					<input type="text" name="user" id='chargeuser' placeholder="Username">
+					<input type="text" name="user" id='chargeuser' placeholder="Username" style='text-transform: lowercase;'>
 				</div>
 			</div>
 			<div class="field">
