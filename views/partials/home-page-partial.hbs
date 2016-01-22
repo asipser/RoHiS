@@ -1,0 +1,86 @@
+<div class="ui vertical masthead center aligned segment" id="headerpanel">
+	<div class="ui container">
+		<div class="ui large secondary pointing menu">
+			<a class="active item" id='homemenuitem'>Home</a>
+			<a class="item" id="aboutmenuitem">About Us</a>
+			<div class="right item">
+				<div class="ui inverted button" id="loginbutton">Login</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="ui text container">
+		<h1 class="ui header">
+			MoneyMatters
+		</h1>
+		<h2>Peer lending, made easy.</h2>
+		<div class="ui huge primary button" id="getstartedbutton">Get Started <i class="right arrow icon"></i></div>
+	</div>
+	<a href='#'><i class="circular inverted chevron down large icon" id='downarrow'></i></a>
+</div>
+<div id="aboutpanel">
+	<div class="ui large three column grid">
+		<div class="column"><div class="ui message">
+			<header class="ui centered header">Keep track of your money</header>
+			<div class="ui horizontal divider"><i class="dollar icon"></i></div>
+			<div class="ui subheader">Easily maintain records of <b>who owes you</b> and <b>who you owe</b> with detailed information about each charge.</div>
+		</div></div>
+		<div class="column"><div class="ui message">
+			<header class="ui centered header">Split bills easily</header>
+			<div class="ui horizontal divider"><i class="food icon"></i></div>
+			<div class="ui subheader">Use our cost sharing calculator to determine <b>who</b> needs to pay <b>what amount</b> to make a <b>fair deal</b>.</div>
+		</div></div>
+		<div class="column"><div class="ui message">
+			<header class="ui centered header">Build a reputation</header>
+			<div class="ui horizontal divider"><i class="line chart icon"></i></div>
+			<div class="ui subheader">With our <b>detailed statistics</b> on your activity, show your friends that they can <b>trust you</b> with their money.</div>
+		</div></div>
+	</div>
+</div>
+<div class="ui modal signup">
+	<div class="ui header">Create an account</div>
+	<div class="ui text content">
+		<form class="ui large form" action="/register" method="post" >
+			<div class="field">
+				<label>Name</label>
+				<div class="two fields">
+					<div class="field">
+						<input type="text" name="firstName" placeholder="First Name">
+					</div>
+					<div class="field">
+						<input type="text" name="lastName" placeholder="Last Name">
+					</div>
+				</div>
+			</div>
+			<div class="field">
+				<label>Username</label>
+				<input type="text" name="username" placeholder="Username">
+			</div>
+			<div class="field">
+				<label>Email</label>
+				<input type="text" name="email" placeholder="foo@bar.io">
+			</div>
+			<div class="field">
+				<label>Password</label>
+				<input type="password" name="password">
+			</div>
+			<button class="ui green button" type="submit">Submit</button>
+		</form>
+	</div>
+</div>
+<div class="ui small modal login">
+	<div class="ui header">Login</div>
+	<div class="ui text content">
+		<form class="ui large form" action="/login" method="post" >
+			<div class="field">
+				<label>Username</label>
+				<input type="text" name="username" placeholder="Username">
+			</div>
+			<div class="field">
+				<label>Password</label>
+				<input type="password" name="password">
+			</div>
+			<button class="ui green button" type="submit">Submit</button>
+		</form>
+	</div>
+</div>
