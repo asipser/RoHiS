@@ -3,6 +3,7 @@ var passport = require('passport');
 var Account = require('../models/account');
 var router = express.Router();
 var request = require("request");
+var secret = require("../secret/secret");
 
 // DO NOT EDIT PLEASE
 
