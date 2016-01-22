@@ -46,21 +46,29 @@
 		<div class="ui grid">
 			<div class="eight wide column">
 				<h3 class="ui small header">Charges owed to you</h3>
-				{{#each merged_owe_you}}
-				<p data-title="Your running total with {{username}}" id='{{username}}'> {{username}} owes you ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
-				{{#each transactions_info}}
-				<p id='{{id}}' data-title="Created by {{creator}} on {{date_created}}">"{{note}}": ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
-				{{/each}}
-				{{/each}}
+					{{#each merged_owe_you}}
+					<p data-title="Your running total with {{username}}" id='{{username}}'> {{username}} owes you ${{amount}} | <a class="chargecompleteall" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancelall" href='#'><i class='remove icon'></i></a> |</p>
+					 
+					<div>
+					{{#each transactions_info}}
+					<p id='{{id}}' data-title="Created by {{creator}} on {{date_created}}">"{{note}}": ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
+					{{/each}}
+					{{/each}}
+					</div>
+
 			</div>
 			<div class="eight wide column">
-				<h3 class="ui small header">Charges you owe</h3>
-				{{#each merged_you_owe}}
-				<p data-title="Your running total with {{username}}" id='{{username}}'>You owe {{username}} ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
-				{{#each transactions_info}}
-				<p id='{{id}}' data-title="Created by {{creator}} on {{date_created}}">"{{note}}": ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
-				{{/each}}
-				{{/each}}
+				<h3 class="ui small header">Charges you owe</h3>				
+					{{#each merged_you_owe}}
+					<p data-title="Your running total with {{username}}" id='{{username}}'>You owe {{username}} ${{amount}} | <a class="chargecompleteall" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancelall" href='#'><i class='remove icon'></i></a> |</p>
+					
+					<div>
+					{{#each transactions_info}}
+					<p id='{{id}}' data-title="Created by {{creator}} on {{date_created}}">"{{note}}": ${{amount}} | <a class="chargecomplete" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancel" href='#'><i class='remove icon'></i></a> |</p>
+					{{/each}}
+					{{/each}}
+					</div>
+			
 			</div>
 		</div>
 	</div>

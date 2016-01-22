@@ -69,13 +69,16 @@ router.get('/', function(req, res, next) {
         Charge.find({cancelled:true}, function (err,charges){
         for(transaction in charges) {
 
-            var who_cancelled;
+            var who_cancelled_h;
+            var who_cancelled_d;
             var creator;
 
             if (charges[transaction]['who_cancelled'] === username) {
-                who_cancelled = "you";
+                who_cancelled_h = "you";
+                who_cancelled_d = "You";
             } else {
-                who_cancelled = charges[transaction]['who_cancelled'];
+                who_cancelled_h = charges[transaction]['who_cancelled'];
+                who_cancelled_d = charges[transaction]['who_cancelled']
             }
 
             if (charges[transaction]['creator'] === username) {
@@ -89,18 +92,18 @@ router.get('/', function(req, res, next) {
 
             if (charges[transaction]['payer']['username'] === username) {                                                          // user is  a payer
                 if(charges[transaction]['recipient']['username'] === undefined) {                                                // check if person targetted has an account or no, undefined fs they dont 
-                    cancelled_you_owe.unshift({amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled: who_cancelled, creator: creator, date_created: date_created, date_cancelled: date_cancelled}); 
+                    cancelled_you_owe.unshift({amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled}); 
                 }                  
                 else {                                                                                                            // they have an account and it pushes to charges that you owe their name
-                    cancelled_you_owe.unshift({amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled: who_cancelled, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
+                    cancelled_you_owe.unshift({amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
                 }
             }
 
             else if (charges[transaction]['recipient']['username'] === username) {                                                 // user is a recipient
                 if(charges[transaction]['payer']['username'] === undefined)                                                      // check if the person targetted has an account
-                    cancelled_owe_you.unshift({amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled: who_cancelled, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
+                    cancelled_owe_you.unshift({amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
                 else                                                                                                             // if they have an account it pushes their account username to the array with debts owed to you
-                    cancelled_owe_you.unshift({amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled: who_cancelled, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
+                    cancelled_owe_you.unshift({amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
                 
             }
         }
