@@ -39,8 +39,7 @@ $(document).ready(function(){
 		}, 1020);
 	})
 	$('p').popup();
-	$('.ui.search')
-	  .search({
+	$('.ui.search').search({
 	    apiSettings: {
 	      url: '//api.github.com/search/repositories?q={query}'
 	    },
@@ -50,6 +49,12 @@ $(document).ready(function(){
 	      url     : 'html_url'
 	    },
 	    minCharacters : 3
-	  })
-	;
+	  });
+	var $chargeamounts = $('.listedchargeamount');
+	for(i=0; i<$chargeamounts.length; i++){
+		var amount = $chargeamounts[i];
+		if($(amount).text().charAt(0) == '-'){
+			$(amount).css('color', 'red');
+		}
+	}
 });
