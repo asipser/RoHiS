@@ -35,13 +35,13 @@
 				<div class="eight wide column">
 					<h3 class="ui small header">Cancelled charges owed to you</h3>
 					{{#each cancelled_owe_you}}
-					<p data-title="Created by {{creator}} on {{date_created}}" data-content="Cancelled by {{who_cancelled_h}} on {{date_cancelled}}" class="{{id}}">{{who_cancelled_d}} cancelled a charge of ${{amount}}</p>
+					<p data-title="Created by {{creator}} on {{date_created}}" data-content="Cancelled by {{who_cancelled_h}} on {{date_cancelled}}" class="{{id}}">{{who_cancelled_d}} cancelled a charge of ${{amount}} with {{with_who}}</p>
 					{{/each}}
 				</div>
 				<div class="eight wide column">
 					<h3 class="ui small header">Cancelled charges you owe</h3>
 					{{#each cancelled_you_owe}}
-					<p data-title="Created by {{creator}} on {{date_created}}" data-content="Cancelled by {{who_cancelled_h}} on {{date_cancelled}}" class="{{id}}">{{who_cancelled_d}} cancelled a charge of ${{amount}}</p>
+					<p data-title="Created by {{creator}} on {{date_created}}" data-content="Cancelled by {{who_cancelled_h}} on {{date_cancelled}}" class="{{id}}">{{who_cancelled_d}} cancelled a charge of ${{amount}} with {{with_who}}</p>
 					{{/each}}
 				</div>
 			</div>

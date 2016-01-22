@@ -72,6 +72,7 @@ router.get('/', function(req, res, next) {
             var who_cancelled_h;
             var who_cancelled_d;
             var creator;
+            var with_who = "you";
 
             if (charges[transaction]['who_cancelled'] === username) {
                 who_cancelled_h = "you";
@@ -87,24 +88,48 @@ router.get('/', function(req, res, next) {
                 creator = charges[transaction]['creator'];
             }
 
+
             var date_created = moment(charges[transaction]['date_created']).format("M/D/YY, h:mm a");
             var date_cancelled = moment(charges[transaction]['date_cancelled']).format("M/D/YY, h:mm a");
 
-            if (charges[transaction]['payer']['username'] === username) {                                                          // user is  a payer
-                if(charges[transaction]['recipient']['username'] === undefined) {                                                // check if person targetted has an account or no, undefined fs they dont 
-                    cancelled_you_owe.unshift({amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled}); 
-                }                  
-                else {                                                                                                            // they have an account and it pushes to charges that you owe their name
-                    cancelled_you_owe.unshift({amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
+            if (charges[transaction]['payer']['username'] === username) {   
+                                                                   // user is  a payer
+                if(charges[transaction]['recipient']['username'] === undefined) {
+                                                                // check if person targetted has an account or no, undefined fs they dont 
+                    if (who_cancelled_h === "you") {
+                        with_who = charges[transaction]['recipient'];
+                    }
+
+                    cancelled_you_owe.unshift({with_who: with_who, amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled}); 
+                } 
+
+                else { 
+
+                    if (who_cancelled_h === "you") {
+                        with_who = charges[transaction]['recipient']['username'];
+                    }
+                                                                                                                           // they have an account and it pushes to charges that you owe their name
+                    cancelled_you_owe.unshift({with_who: with_who, amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
                 }
             }
 
             else if (charges[transaction]['recipient']['username'] === username) {                                                 // user is a recipient
-                if(charges[transaction]['payer']['username'] === undefined)                                                      // check if the person targetted has an account
-                    cancelled_owe_you.unshift({amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
-                else                                                                                                             // if they have an account it pushes their account username to the array with debts owed to you
-                    cancelled_owe_you.unshift({amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
-                
+                if(charges[transaction]['payer']['username'] === undefined) {                                                     // check if the person targetted has an account
+                    
+                    if (who_cancelled_h === "you") {
+                        with_who = charges[transaction]['payer'];
+                    }
+
+                    cancelled_owe_you.unshift({with_who: with_who, amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
+                }
+                else { 
+
+                    if (who_cancelled_h === "you") {
+                        with_who = charges[transaction]['payer']['username'];
+                    }
+                                                                                                                         // if they have an account it pushes their account username to the array with debts owed to you
+                    cancelled_owe_you.unshift({with_who: with_who, amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
+                }
             }
         }
 
