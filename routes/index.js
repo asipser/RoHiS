@@ -259,8 +259,10 @@ router.post('/chargecancel', function(req, res) {
 router.post('/register', function(req, res) {
     Account.count({username:req.body.username},function(error, count){
         //console.log(req.body);
-        var name = (req.body.username).toLowerCase();
-        Account.register(new Account({ username : req.body.username, first_name: req.body.firstName, last_name: req.body.lastName, email: req.body.email}), req.body.password, function(err, account) { // registers account with initial data passed through the register form, uses express session, passport js, and passport local mongoose
+
+        var full_name = req.body.firstName + " " + req.body.lastName;
+
+        Account.register(new Account({ username : req.body.username, first_name: req.body.firstName, last_name: req.body.lastName, full_name:full_name, email: req.body.email}), req.body.password, function(err, account) { // registers account with initial data passed through the register form, uses express session, passport js, and passport local mongoose
         if (err) {                              // if there is an error such as a duplicated account or fields left blank. THESE WILL BE DEALT WITH LATER
             console.log("err");
             console.log(err);
@@ -308,6 +310,10 @@ router.get('/usersearch',function(req,res){ // this is a function unused for now
                 response_data.push({full_name: docs[user]['full_name'],
                                     username: docs[user]['username']});
             }
+            else if(stringStartsWith(docs[user]['last_name'], name)){
+            	 response_data.push({full_name: docs[user]['full_name'],
+                                    username: docs[user]['username']});
+            }
         }
         res.send(response_data);
     });
@@ -318,6 +324,6 @@ router.get('/usersearch',function(req,res){ // this is a function unused for now
 function stringStartsWith (string, prefix) { // used by usersearch route, boolean function. Inputs are string (complete string you are testing the prefix against, and prefix is the string you are checking if the input string begins with)
     if(string === undefined)
         return false;
-    return string.slice(0, prefix.length) == prefix;
+    return string.slice(0, prefix.length).toLowerCase() == prefix.toLowerCase();
 }
 module.exports = router;
