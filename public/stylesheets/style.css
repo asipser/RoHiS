@@ -52,11 +52,6 @@ div.ui.right.aligned.text.container{
 	padding:10px;
 }
 
-#venmoauthbutton{
-	height:2em;
-	margin: 10px;
-}
-
 h2.ui.message{
 	background: rgba(255, 255, 255, 0.6);
 }
@@ -75,14 +70,14 @@ h2.ui.message{
 #precharge{
 	margin-top:-20vh;
 	margin-bottom:10vh;
-	transition:1s;
+	transition:.7s;
 }
 #makechargebutton{
 	transition:1s;
 }
 
 .expansion{
-	animation: expansion 1s;
+	animation: expansion 1.1s;
 	animation-fill-mode: forwards;
 }
 
@@ -106,4 +101,22 @@ h2.ui.dividing.header{
 
 #popupmenu{
 	width: 400px;
+}
+
+.ui.form .fields>.field {
+	padding-right:0px;
+	padding-left:0px;
+}
+
+.ui.label{
+	border-radius: 0px;
+}
+
+.ui.form input[type=number]{
+	border-radius: 0px;
+}
+
+.ui.selection.dropdown{
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
 }
