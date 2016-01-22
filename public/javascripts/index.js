@@ -39,17 +39,19 @@ $(document).ready(function(){
 		}, 1020);
 	})
 	$('p').popup();
+
+	
 	$('.ui.search')
 	  .search({
 	    apiSettings: {
-	      url: '//api.github.com/search/repositories?q={query}'
+	      url: '/usersearch?name={query}'
 	    },
 	    fields: {
 	      results : 'items',
-	      title   : 'name',
-	      url     : 'html_url'
+	      title   : 'full_name',
+	      description     : 'username'
 	    },
-	    minCharacters : 3
+	    minCharacters : 2
 	  })
 	;
 });

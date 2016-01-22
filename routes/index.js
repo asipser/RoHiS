@@ -302,18 +302,22 @@ router.get('/ping', function(req, res){ // test function to see if tutorial work
 router.get('/usersearch',function(req,res){ // this is a function unused for now, but will be used for the dropdown menu when you enter a username into the charge form. Supplies a list of users that begin with the letters entered in by user
     name = req.query.name;
     console.log(name);
-    var response_data = [];
+    var response_data = {items:[]};
     Account.find({}, function (err, docs) {
         for(user in docs){
             console.log("User: " + docs[user]['full_name']);
-            if(stringStartsWith(docs[user]['full_name'], name)){
-                response_data.push({full_name: docs[user]['full_name'],
-                                    username: docs[user]['username']});
+            if(docs[user]['username'] === req.user.username){
             }
-            else if(stringStartsWith(docs[user]['last_name'], name)){
-            	 response_data.push({full_name: docs[user]['full_name'],
-                                    username: docs[user]['username']});
-            }
+            else{
+	            if(stringStartsWith(docs[user]['full_name'], name)){
+	                response_data['items'].push({full_name: docs[user]['full_name'],
+	                                    username: docs[user]['username']});
+	            }
+	            else if(stringStartsWith(docs[user]['last_name'], name)){
+	            	 response_data['items'].push({full_name: docs[user]['full_name'],
+	                                    username: docs[user]['username']});
+	            }
+	        }
         }
         res.send(response_data);
     });
