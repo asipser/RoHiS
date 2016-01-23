@@ -5,6 +5,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/dist/semantic.min.css">
 	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+	<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
 </head>
 <body>
 	{{#if user}}
@@ -18,10 +19,10 @@
 			</div>
 			<div class="content active">
 				<div class="transition visible" style="display: block !important;"><div>Venmo is used to complete payments of loans.</div><br>
-					<div href='/venmo/auth' class='ui labeled icon button'>
+					<a href='/venmo/auth' class='ui labeled icon button'>
 						<i class='sign in icon'></i>
 						Authorize your venmo
-					</div><br><br>
+					</a><br><br>
 					Your venmo account is: {{user.venmo_id}}
 				</div>
 			</div>
