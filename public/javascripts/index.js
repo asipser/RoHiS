@@ -72,7 +72,34 @@ $(document).ready(function(){
 					prompt : 'Please put the same value in both fields'
 				}
 				]
+			},
+			newpassword: {
+				identifier: 'newpassword',
+				rules: [
+				{
+					type : 'empty',
+					prompt: 'Please enter a password' 
+				},
+				{
+					type: 'minLength[6]',
+					prompt : 'Your password must be at least {ruleValue} characters'
+				}
+				]
 			}
 		}
 	});
+
+	var $amounts = $('.dbamount')
+	for(var i=0;i<$amounts.length;i++){
+		var currentAmount = $amounts[i];
+		$(currentAmount).text(
+		parseFloat($(currentAmount).text()).toFixed(2)
+		);
+	};
+
+	if($('#venmobool').attr('data') == 'true'){
+		$('#venmobool').removeClass('disabled');
+	}else{
+		$('#venmobool').popup();
+	}
 });

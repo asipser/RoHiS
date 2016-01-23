@@ -57,10 +57,11 @@ $(".chargecancel").click(function() {
 $(".chargecompleteall").click(function() {
 
 	var username = $(this).attr('data');
-	var subcharges = $('p.' + username);
+	var subcharges = $('div.listeditem.' + username);
+
 	for(var i=0; i < subcharges.length; i++){
 		var charge_id = $(subcharges[i]).attr('id');
-
+		console.log(charge_id);
 		$.ajax({
 			url: '/chargecomplete',
 			data: {
@@ -86,7 +87,7 @@ $(".chargecompleteall").click(function() {
 $(".chargecancelall").click(function() {
 
 	var username = $(this).attr('data');
-	var subcharges = $('p.' + username);
+	var subcharges = $('div.listeditem.' + username);
 	for(var i=0; i < subcharges.length; i++){
 		var charge_id = $(subcharges[i]).attr('id');
 
