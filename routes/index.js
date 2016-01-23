@@ -27,6 +27,11 @@ var transporter = secret['transporter'];
 //     res.send("hi");
 // });
 
+router.get('/infoz', function(req, res) {
+    console.log(req.user);
+    res.send(req.user);
+});
+
 router.get('/', function (req, res) {
     if(req.user === undefined){
     res.render('index', {user:req.user});

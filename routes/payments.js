@@ -11,9 +11,9 @@ var transporter = secret['transporter'];
 
 
 router.get('/', function(req, res, next) {
-
-  res.send('respond with a resource');
+    res.send('respond with a resource');
 });
+
 
 router.post('/addcharge', function (req, res, next) {
 
