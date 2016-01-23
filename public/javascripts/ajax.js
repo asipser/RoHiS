@@ -3,10 +3,12 @@ $(".chargecomplete").click(function() {
 	var charge_id = $(this).parent().parent().attr('id');
 	var thisElement = $(this).parent().parent();
 	var chargeAmount = parseFloat($(this).siblings('.listedchargeamount').text());
+	console.log(chargeAmount);
 	var username = $(this).attr('data');
 	var totalAmount = parseFloat($('.dbamount.' + username).text());
+	console.log(totalAmount);
 	var newAmount = totalAmount - chargeAmount;
-
+	console.log(newAmount);
 	console.log(charge_id);
 
 	$.ajax({
@@ -26,7 +28,7 @@ $(".chargecomplete").click(function() {
 				}
 			},
 			error: function(xhr, status, error) {
-				console.log("A problem occurred.");
+				console.log("A problem occurred" + error);
 			}
 		});
 	if(newAmount == 0){

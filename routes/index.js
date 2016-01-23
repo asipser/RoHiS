@@ -275,11 +275,11 @@ router.post('/chargecomplete', function(req, res) {
                 console.log(new_avg);
 
                 Account.findOneAndUpdate({username: profile['payer']['username']}, {statistics: {num_charges: previous_num + 1, average_time: new_avg}}, function() {
-                    
+                    res.send('Success!');
                 });
 
             } else {                    // OTHERWISE SKIP UPDATING
-              
+              res.send('Success!');
             }
 
         });
