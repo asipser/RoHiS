@@ -392,6 +392,7 @@ router.get('/usersearch',function(req,res){ // this is a function unused for now
 	            }
 	        }
         }
+        response_data['items'].unshift({full_name:req.query.name, username:'Create Custom User'});
         res.send(response_data);
     });
 
