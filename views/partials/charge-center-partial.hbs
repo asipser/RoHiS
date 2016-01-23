@@ -23,14 +23,14 @@
 					</div>
 					<div class="ui labeled input field">
 						<div class='ui label' id='tofrom'>to</div>
-						<input type="text" name="user" id='chargeuser' placeholder="Username" style='text-transform: lowercase;'>
+						<input type="text" name="user" id='chargeuser' placeholder="Username">
 					</div>
 				</div>
 				<div class="field">
 					<input type="text" name="note" id='chargedescription' placeholder="Description" maxlength='10'>
 				</div>
 				<div class="field">
-					<div id='venmobool' class="ui slider checkbox">
+					<div id='venmobool' data='{{venmo}}' data-content='You must authenticate your venmo account in settings in order to use venmo' class="ui disabled slider checkbox">
 						<input type="checkbox" name="venmousage" value='true'>
 						<label>Use Venmo?</label>
 					</div>
@@ -45,10 +45,13 @@
 	</div>
 	<div class="ui divider"></div>
 	<div class="ui raised segment">
-		<h2 class="ui header">Current Charges</h2>
-		<div class="ui grid">
+		<div class="ui center aligned divided two column grid">
 			<div class="eight wide column">
 				<h3 class="ui small header">Charges owed to you</h3>
+				{{!-- <div class='ui massive statistic'>
+					<div class='value'><i class='meh icon'></i></div>
+					<div class='label'>No one owes you money!</div>
+				</div> --}}
 				<div class='ui two cards'>
 					{{#each merged_owe_you}}
 					<div class='ui card {{username}}'>
@@ -61,17 +64,16 @@
 									<div class='ui statistic'>
 										<div class='label'>owes you a total of</div>
 										<div class='value'>
-											${{amount}}
+											$<span class='dbamount'>{{amount}}</span>
 										</div>
 									</div>
-									{{!-- <p data-title="Your running total with {{username}}" id='{{username}}'> {{username}} owes you ${{amount}} | <a class="chargecompleteall" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancelall" href='#'><i class='remove icon'></i></a> |</p> --}}
 								</div>
 								<div class='hidden content'>
 									{{#each transactions_info}}
-									<p id='{{id}}' data-title="Created by {{creator}} on {{date_created}}" class='{{../username}}'>
+									<div id='{{id}}' data-title="Created by {{creator}} on {{date_created}}" class='listeditem {{../username}}'>
 										<span class='left floated'>"{{note}}":</span>
-										<span class='right floated'>$<span class='listedchargeamount'>{{amount}}</span> | <a class="chargecomplete"><i class='green checkmark icon'></i></a>| <a class="chargecancel"><i class='red remove icon'></i></a>|</span>
-									</p>
+										<span class='right floated'>$<span class='listedchargeamount'>{{amount}}</span> | <a class="chargecomplete"><i class='green checkmark icon'></i></a>| <a class="chargecancel"><i class='red remove icon'></i></a>|</span><br>
+									</div>
 									{{/each}}
 								</div>
 							</div>
@@ -86,10 +88,13 @@
 					{{/each}}
 				</div>
 			</div>
-
 			<div class="eight wide column">
 				<h3 class="ui small header">Charges you owe</h3>
-				<div class='ui two cards'>
+				{{!-- <div class='ui massive statistic'>
+					<div class='value'>$0</div>
+					<div class='label'>= 0 stress <i class='smile icon'></i></div>
+				</div>
+ --}}				<div class='ui two cards'>
 					{{#each merged_you_owe}}
 					<div class='ui card {{username}}'>
 						<div class='content'>
@@ -101,17 +106,16 @@
 									<div class='ui statistic'>
 										<div class='label'>lent you a total of</div>
 										<div class='value'>
-											${{amount}}
+											$<span class='dbamount'>{{amount}}</span>
 										</div>
 									</div>
-									{{!-- <p data-title="Your running total with {{username}}" id='{{username}}'> {{username}} owes you ${{amount}} | <a class="chargecompleteall" href='#'><i class='checkmark icon'></i></a> | <a class="chargecancelall" href='#'><i class='remove icon'></i></a> |</p> --}}
 								</div>
 								<div class='hidden content'>
 									{{#each transactions_info}}
-									<p id='{{id}}' data-title="Created by {{creator}} on {{date_created}}" class='{{../username}}'>
+									<div id='{{id}}' data-title="Created by {{creator}} on {{date_created}}" class='listeditem {{../username}}'>
 										<span class='left floated'>"{{note}}":</span>
-										<span class='right floated'>$<span class='listedchargeamount'>{{amount}}</span> | <a class="chargecomplete"><i class='green checkmark icon'></i></a>| <a class="chargecancel"><i class='red remove icon'></i></a>|</span>
-									</p>
+										<span class='right floated'>$<span class='listedchargeamount'>{{amount}}</span> | <a class="chargecomplete"><i class='green checkmark icon'></i></a>| <a class="chargecancel"><i class='red remove icon'></i></a>|</span><br>
+									</div>
 									{{/each}}
 								</div>
 							</div>

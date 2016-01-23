@@ -25,7 +25,7 @@ router.post('/changePassword', function(req, res) {
 	res.redirect('/');
 });
 
-router.get('/forgotPassword', function(req, res) {
+router.post('/forgotPassword', function(req, res) {
 
 	var text = "";
 
@@ -34,22 +34,28 @@ router.get('/forgotPassword', function(req, res) {
     for (var i=0; i < 6; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
 
-    Account.findOne({username: "data1013"}, function (err, profile) {
+    Account.findOne({username: req.body.username}, function (err, profile) {
 
-    	profile.setPassword(text, function() {
-			profile.save();
-		});
+    	if (profile) {
 
-		var mailOptions = {
-			from: 'noreply.rohis@gmail.com',
-			to: profile['email'],
-			subject: "MoneyMatters Temporary Password",
-			text: "If you are receiving this email, then you have forgotten your MoneyMatters password. Please use the following temporary password of length SIX to log in: '" + text + "'. You may reset your password via your account settings at rohis.herokuapp.com/settings."
+	    	profile.setPassword(text, function() {
+				profile.save();
+			});
+
+			var mailOptions = {
+				from: 'noreply.rohis@gmail.com',
+				to: profile['email'],
+				subject: "MoneyMatters Temporary Password",
+				text: "If you are receiving this email, then you have forgotten your MoneyMatters password. Please use the following temporary password of length SIX to log in: '" + text + "'. You may reset your password via your account settings at rohis.herokuapp.com/settings."
+			}
+
+			transporter.sendMail(mailOptions);
+
+			res.redirect('/');
+
+		} else {
+			res.redirect('/#forgotpwnouser');
 		}
-
-		transporter.sendMail(mailOptions);
-
-		res.send(profile);
 
     });
 

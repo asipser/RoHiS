@@ -41,23 +41,65 @@ $(document).ready(function(){
 	$('p').popup();
 	
 	$('.ui.search')
-	  .search({
-	    apiSettings: {
-	      url: '/usersearch?name={query}'
-	    },
-	    fields: {
-	      results : 'items',
-	      title   : 'full_name',
-	      description     : 'username'
-	    },
-	    minCharacters : 2
-	  });
-	  
+	.search({
+		apiSettings: {
+			url: '/usersearch?name={query}'
+		},
+		fields: {
+			results : 'items',
+			title   : 'full_name',
+			description     : 'username'
+		},
+		minCharacters : 2
+	});
+
 	var $chargeamounts = $('.listedchargeamount');
 	for(i=0; i<$chargeamounts.length; i++){
 		var amount = $chargeamounts[i];
 		if($(amount).text().charAt(0) == '-'){
 			$(amount).css('color', 'red');
 		}
+	};
+
+	$('.ui.form.changepassword').form({
+		on: 'blur',
+		fields: {
+			match: {
+				identifier  : 'confirmpassword',
+				rules: [
+				{
+					type   : 'match[newpassword]',
+					prompt : 'Please put the same value in both fields'
+				}
+				]
+			},
+			newpassword: {
+				identifier: 'newpassword',
+				rules: [
+				{
+					type : 'empty',
+					prompt: 'Please enter a password' 
+				},
+				{
+					type: 'minLength[6]',
+					prompt : 'Your password must be at least {ruleValue} characters'
+				}
+				]
+			}
+		}
+	});
+
+	var $amounts = $('.dbamount')
+	for(var i=0;i<$amounts.length;i++){
+		var currentAmount = $amounts[i];
+		$(currentAmount).text(
+		parseFloat($(currentAmount).text()).toFixed(2)
+		);
+	};
+
+	if($('#venmobool').attr('data') == 'true'){
+		$('#venmobool').removeClass('disabled');
+	}else{
+		$('#venmobool').popup();
 	}
 });

@@ -132,5 +132,13 @@ h2.ui.dividing.header{
 }
 
 .ui.raised.segment{
-	min-height: 100px;
+	min-height: 50vh;
+}
+
+.ui.card>.content>.header:not(.ui), .ui.cards>.card>.content>.header:not(.ui){
+	text-transform: capitalize;
+}
+.ui.card>.content, .ui.cards>.card>.content {
+	padding:0.5em;
+	text-align: center;
 }

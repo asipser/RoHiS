@@ -49,15 +49,11 @@ router.get('/', function (req, res) {
     var final_merged_you_owe = []; // merges similarities between merged_you_ owe and merged_owe_you
     var final_merged_owe_you = [];  			// ex asips appears in both of them, moving it to only one of them
 
-
-    /*// check to see if  venmo has been  linked with account NOT NEEDED SO FAR
-    if(req.user['venmo_id'] === undefined)
-    	user_has_venmo = false;
-    else
+    if (req.user['venmo_id'])
     	user_has_venmo = true;
+    else
+    	user_has_venmo = false;
 
-    //console.log(req.user.username + " has venmo value of " + user_has_venmo);
-	*/
     var find_condition = {
         $and:[
             {completed:false},
@@ -210,7 +206,7 @@ router.get('/', function (req, res) {
     	console.log("NEW merged_you_owe");
     	console.log(merged_you_owe); // test owe_you and you_owe
 
-    	res.render('index', {user:req.user, merged_owe_you, merged_you_owe });
+    	res.render('index', {venmo: user_has_venmo, user:req.user, merged_owe_you, merged_you_owe });
 
     });	
     }

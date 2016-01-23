@@ -9,6 +9,18 @@ $(document).ready(function(){
 	$('#loginbutton').click(function(){
 		$('.ui.modal.login').modal('show');
 	});
+	$('#noaccountbutton').click(function(){
+		$('.ui.modal.login').modal('hide');
+		$('.ui.modal.signup').modal('show');
+	});
+	$('#alreadyhaveaccount').click(function(){
+		$('.ui.modal.signup').modal('hide');
+		$('.ui.modal.login').modal('show');
+	});
+	$('#recoverylink').click(function(){
+		$('.ui.modal.login').modal('hide');
+		$('.ui.modal.recovery').modal('show');
+	})
 	$('#aboutmenuitem').click(function(){
 		$('#aboutpanel').show();
 		$('html,body').animate({
