@@ -61,7 +61,7 @@ $(document).ready(function(){
 		}
 	};
 
-	$('ui.form.changepassword').form({
+	$('.ui.form.changepassword').form({
 		on: 'blur',
 		fields: {
 			match: {
