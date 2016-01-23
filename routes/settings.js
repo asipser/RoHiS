@@ -8,14 +8,33 @@ var transporter = secret['transporter'];
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.render('settings', {user:req.user});
+
+	Account.findOne({username: req.user.username}, function (err, profile) {
+		var email_on = profile['email_notifications'];
+		res.render('settings', {user:req.user, email_on: email_on});
+	});
+
+ 	
 });
 
-router.get('/noemailspls', function(req, res, next) {
-	Account.findOneAndUpdate({username: req.user.username}, {email_notifications: false}, {new: true}, function(err, profile) {
-		console.log(profile);
-		res.redirect('/');
-	});
+router.post('/email', function(req, res, next) {
+
+	if (req.body.emailcheck === "true") {
+
+		Account.findOneAndUpdate({username: req.user.username}, {email_notifications: true}, {new: true}, function(err, profile) {
+			console.log(profile);
+			res.redirect('/settings/');
+		});
+
+	} else {
+
+		Account.findOneAndUpdate({username: req.user.username}, {email_notifications: false}, {new: true}, function(err, profile) {
+			console.log(profile);
+			res.redirect('/settings/');
+		});
+
+	}
+
 });
 
 router.post('/changePassword', function(req, res) {
