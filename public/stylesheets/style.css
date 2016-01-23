@@ -74,8 +74,8 @@ div.ui.message.opaque {
 }
 
 #precharge{
-	margin-top:-20vh;
-	padding-bottom:10vh;
+	margin-top:-15vh;
+	padding-bottom:5vh;
 	transition:.7s;
 }
 #makechargebutton{
@@ -141,4 +141,17 @@ h2.ui.dividing.header{
 .ui.card>.content, .ui.cards>.card>.content {
 	padding:0.5em;
 	text-align: center;
+}
+
+.ui.list>a.item i.icon{
+	color: rgba(255,255,255, 0.8);
+}
+
+.ui.form input[type=text]{
+	border-radius:0px;
+}
+
+#chargedescription{
+	border-bottom-right-radius:1px;
+	border-top-right-radius:1px;
 }
