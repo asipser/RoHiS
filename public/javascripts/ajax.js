@@ -4,7 +4,7 @@ $(".chargecomplete").click(function() {
 	var thisElement = $(this).parent().parent();
 	var chargeAmount = parseFloat($(this).siblings('.listedchargeamount').text());
 	console.log(chargeAmount);
-	var username = $(this).attr('data');
+	var username = $(this).attr('data').split(' ').join('.');
 	var totalAmount = parseFloat($('.dbamount.' + username).text());
 	console.log(totalAmount);
 	var newAmount = totalAmount - chargeAmount;
@@ -49,7 +49,7 @@ $(".chargecancel").click(function() {
 	var charge_id = $(this).parent().parent().attr('id');
 	var thisElement = $(this).parent().parent();
 	var chargeAmount = parseFloat($(this).siblings('.listedchargeamount').text());
-	var username = $(this).attr('data');
+	var username = $(this).attr('data').split(' ').join('.');
 	var totalAmount = parseFloat($('.dbamount.' + username).text());
 	var newAmount = totalAmount - chargeAmount;
 
@@ -89,7 +89,8 @@ $(".chargecancel").click(function() {
 
 $(".chargecompleteall").click(function() {
 
-	var username = $(this).attr('data');
+	var username = $(this).attr('data').split(' ').join('.');
+	console.log(username);
 	var subcharges = $('div.listeditem.' + username);
 
 	for(var i=0; i < subcharges.length; i++){
@@ -119,8 +120,10 @@ $(".chargecompleteall").click(function() {
 
 $(".chargecancelall").click(function() {
 
-	var username = $(this).attr('data');
+	var username = $(this).attr('data').split(' ').join('.');
+	console.log(username);
 	var subcharges = $('div.listeditem.' + username);
+
 	for(var i=0; i < subcharges.length; i++){
 		var charge_id = $(subcharges[i]).attr('id');
 
