@@ -53,15 +53,15 @@ router.get('/', function(req, res, next) {
 
     		if(charges[transaction]['payer']['username'] === username){                                                          // user is  a payer
     			if(charges[transaction]['recipient']['username'] === undefined)                                                  // check if person targetted has an account or no, undefined fs they dont 
-					history_you_owe.unshift({username:charges[transaction]['recipient'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_completed: who_completed, creator: creator, date_created: date_created, date_completed: date_completed});    				
+					history_you_owe.unshift({description: charges[transaction]['description'], username:charges[transaction]['recipient'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_completed: who_completed, creator: creator, date_created: date_created, date_completed: date_completed});    				
     			else                                                                                                             // they have an account and it pushes to charges that you owe their name
-    				history_you_owe.unshift({username:charges[transaction]['recipient']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_completed: who_completed, creator: creator, date_created: date_created, date_completed: date_completed});
+    				history_you_owe.unshift({description: charges[transaction]['description'], username:charges[transaction]['recipient']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_completed: who_completed, creator: creator, date_created: date_created, date_completed: date_completed});
     		}
     		else if (charges[transaction]['recipient']['username'] === username){                                                 // user is a recipient
     			if(charges[transaction]['payer']['username'] === undefined)                                                      // check if the person targetted has an account
-    				history_owe_you.unshift({username:charges[transaction]['payer'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_completed: who_completed, creator: creator, date_created: date_created, date_completed: date_completed});
+    				history_owe_you.unshift({description: charges[transaction]['description'], username:charges[transaction]['payer'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_completed: who_completed, creator: creator, date_created: date_created, date_completed: date_completed});
     			else                                                                                                             // if they have an account it pushes their account username to the array with debts owed to you
-    				history_owe_you.unshift({username:charges[transaction]['payer']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_completed: who_completed, creator: creator, date_created: date_created, date_completed: date_completed});
+    				history_owe_you.unshift({description: charges[transaction]['description'], username:charges[transaction]['payer']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_completed: who_completed, creator: creator, date_created: date_created, date_completed: date_completed});
 	    		
     		}
     	}
@@ -100,7 +100,7 @@ router.get('/', function(req, res, next) {
                         with_who = charges[transaction]['recipient'];
                     }
 
-                    cancelled_you_owe.unshift({with_who: with_who, amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled}); 
+                    cancelled_you_owe.unshift({description: charges[transaction]['description'], with_who: with_who, amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled}); 
                 } 
 
                 else { 
@@ -109,7 +109,7 @@ router.get('/', function(req, res, next) {
                         with_who = charges[transaction]['recipient']['username'];
                     }
                                                                                                                            // they have an account and it pushes to charges that you owe their name
-                    cancelled_you_owe.unshift({with_who: with_who, amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
+                    cancelled_you_owe.unshift({description: charges[transaction]['description'], with_who: with_who, amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
                 }
             }
 
@@ -120,7 +120,7 @@ router.get('/', function(req, res, next) {
                         with_who = charges[transaction]['payer'];
                     }
 
-                    cancelled_owe_you.unshift({with_who: with_who, amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
+                    cancelled_owe_you.unshift({description: charges[transaction]['description'], with_who: with_who, amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
                 }
                 else { 
 
@@ -128,7 +128,7 @@ router.get('/', function(req, res, next) {
                         with_who = charges[transaction]['payer']['username'];
                     }
                                                                                                                          // if they have an account it pushes their account username to the array with debts owed to you
-                    cancelled_owe_you.unshift({with_who: with_who, amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
+                    cancelled_owe_you.unshift({description: charges[transaction]['description'], with_who: with_who, amount:charges[transaction]['amount'], id:charges[transaction]['_id'], who_cancelled_h: who_cancelled_h, who_cancelled_d: who_cancelled_d, creator: creator, date_created: date_created, date_cancelled: date_cancelled});
                 }
             }
         }
