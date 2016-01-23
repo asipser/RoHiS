@@ -49,7 +49,7 @@ router.post('/forgotPassword', function(req, res) {
 
 		transporter.sendMail(mailOptions);
 
-		res.send(profile);
+		res.redirect('/');
 
     });
 
