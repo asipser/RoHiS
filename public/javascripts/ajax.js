@@ -2,6 +2,10 @@ $(".chargecomplete").click(function() {
 
 	var charge_id = $(this).parent().parent().attr('id');
 	var thisElement = $(this).parent().parent();
+	var chargeAmount = parseFloat($(this).siblings('.listedchargeamount').text());
+	var username = $(this).attr('data');
+	var totalAmount = parseFloat($('.dbamount.' + username).text());
+	var newAmount = totalAmount - chargeAmount;
 
 	console.log(charge_id);
 
@@ -15,6 +19,7 @@ $(".chargecomplete").click(function() {
 				if (data === "Success!") {
 					console.log("Success!");
 					thisElement.addClass('animated fadeOutRight');
+					$('.dbamount.' + username).text(newAmount.toFixed(2));
 					setTimeout(function(){
 						thisElement.css('display', 'none');
 					}, 1000);
@@ -24,12 +29,27 @@ $(".chargecomplete").click(function() {
 				console.log("A problem occurred.");
 			}
 		});
+	if(newAmount == 0){
+		$('div.ui.card.' + username).addClass('animated fadeOutRight');
+		setTimeout(function(){
+			$('div.ui.card.' + username).css('display', 'none');
+		}, 1000);
+	}else if(newAmount < 0){
+		location.reload();
+	}
 });
 
 $(".chargecancel").click(function() {
 
 	var charge_id = $(this).parent().parent().attr('id');
 	var thisElement = $(this).parent().parent();
+
+	var charge_id = $(this).parent().parent().attr('id');
+	var thisElement = $(this).parent().parent();
+	var chargeAmount = parseFloat($(this).siblings('.listedchargeamount').text());
+	var username = $(this).attr('data');
+	var totalAmount = parseFloat($('.dbamount.' + username).text());
+	var newAmount = totalAmount - chargeAmount;
 
 	console.log(charge_id);
 
@@ -43,6 +63,7 @@ $(".chargecancel").click(function() {
 				if (data === "Success!") {
 					console.log("Success!");
 					thisElement.addClass('animated fadeOutRight');
+					$('.dbamount.' + username).text(newAmount.toFixed(2));
 					setTimeout(function(){
 						thisElement.css('display', 'none');
 					}, 1000);
@@ -52,6 +73,14 @@ $(".chargecancel").click(function() {
 				console.log("A problem occurred.");
 			}
 		});
+	if(newAmount == 0){
+		$('div.ui.card.' + username).addClass('animated fadeOutRight');
+		setTimeout(function(){
+			$('div.ui.card.' + username).css('display', 'none');
+		}, 1000);
+	}else if(newAmount < 0){
+		location.reload();
+	}
 });
 
 $(".chargecompleteall").click(function() {
