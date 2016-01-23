@@ -202,7 +202,8 @@ router.get('/', function (req, res) {
 
     		});
     	});
-
+		// Account.findOneAndUpdate({username:req.user.username},{you_owe:merged_you_owe,owe_you:merged_owe_you}, function(){});
+		//above done so that ajax post for /createcharge can return updated list
 		console.log('NEW merged_owe_you');
     	console.log(merged_owe_you);
 
@@ -278,14 +279,22 @@ router.post('/chargecomplete', function(req, res) {
                 console.log(new_avg);
 
                 Account.findOneAndUpdate({username: profile['payer']['username']}, {statistics: {num_charges: previous_num + 1, average_time: new_avg}}, function() {
-                    res.send('Success!');
+                    
                 });
 
             } else {                    // OTHERWISE SKIP UPDATING
-                res.send('Success!');
+              
             }
 
         });
+
+
+		// Account.findOne({req.user.username},function(err,acc){ USED FOR UPDATING CHARGES ON WBSITE, STASHED FOR LATER IF RUPAYAN FAILS
+		// 	var you_owe = acc['you_owe'];
+		// 	var owe_you = acc['owe_you'];
+
+
+		// });
 
     });
 
