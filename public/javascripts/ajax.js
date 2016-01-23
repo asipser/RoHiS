@@ -12,25 +12,25 @@ $(".chargecomplete").click(function() {
 	console.log(charge_id);
 
 	$.ajax({
-			url: '/chargecomplete',
-			data: {
-				charge_id: charge_id
-			},
-			type: 'POST',
-			success: function(data){
-				if (data === "Success!") {
-					console.log("Success!");
-					thisElement.addClass('animated fadeOutRight');
-					$('.dbamount.' + username).text(newAmount.toFixed(2));
-					setTimeout(function(){
-						thisElement.css('display', 'none');
-					}, 1000);
-				}
-			},
-			error: function(xhr, status, error) {
-				console.log("A problem occurred" + error);
+		url: '/chargecomplete',
+		data: {
+			charge_id: charge_id
+		},
+		type: 'POST',
+		success: function(data){
+			if (data === "Success!") {
+				console.log("Success!");
+				thisElement.addClass('animated fadeOutRight');
+				$('.dbamount.' + username).text(newAmount.toFixed(2));
+				setTimeout(function(){
+					thisElement.css('display', 'none');
+				}, 1000);
 			}
-		});
+		},
+		error: function(xhr, status, error) {
+			console.log("A problem occurred" + error);
+		}
+	});
 	if(newAmount == 0){
 		$('div.ui.card.' + username).addClass('animated fadeOutRight');
 		setTimeout(function(){
@@ -56,25 +56,25 @@ $(".chargecancel").click(function() {
 	console.log(charge_id);
 
 	$.ajax({
-			url: '/chargecancel',
-			data: {
-				charge_id: charge_id
-			},
-			type: 'POST',
-			success: function(data){
-				if (data === "Success!") {
-					console.log("Success!");
-					thisElement.addClass('animated fadeOutRight');
-					$('.dbamount.' + username).text(newAmount.toFixed(2));
-					setTimeout(function(){
-						thisElement.css('display', 'none');
-					}, 1000);
-				}
-			},
-			error: function(xhr, status, error) {
-				console.log("A problem occurred.");
+		url: '/chargecancel',
+		data: {
+			charge_id: charge_id
+		},
+		type: 'POST',
+		success: function(data){
+			if (data === "Success!") {
+				console.log("Success!");
+				thisElement.addClass('animated fadeOutRight');
+				$('.dbamount.' + username).text(newAmount.toFixed(2));
+				setTimeout(function(){
+					thisElement.css('display', 'none');
+				}, 1000);
 			}
-		});
+		},
+		error: function(xhr, status, error) {
+			console.log("A problem occurred.");
+		}
+	});
 	if(newAmount == 0){
 		$('div.ui.card.' + username).addClass('animated fadeOutRight');
 		setTimeout(function(){
@@ -84,6 +84,8 @@ $(".chargecancel").click(function() {
 		location.reload();
 	}
 });
+
+
 
 $(".chargecompleteall").click(function() {
 
@@ -143,3 +145,26 @@ $(".chargecancelall").click(function() {
 		$('div.ui.card.' + username).css('display', 'none');
 	}, 1000);
 });
+
+	// $("#email_change_button").click(function() {
+
+	// 	var emailcheck = $("#emailcheck").val();
+
+	// 	$.ajax({
+	// 			url: '/settings/email',
+	// 			data: {
+	// 				emailcheck: emailcheck
+	// 			},
+	// 			type: 'POST',
+	// 			success: function(data){
+	// 				if (data === "Success!") {
+	// 					$("#email_change_success").text("Success!");
+	// 				}
+	// 			},
+	// 			error: function(xhr, status, error) {
+	// 				console.log("A problem occurred.");
+	// 			}
+	// 		});
+	// });
+
+	//});

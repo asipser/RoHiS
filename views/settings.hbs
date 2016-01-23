@@ -32,12 +32,13 @@
 			</div>
 			<div class="content">
 				<div class="transition hidden"><p>We do not send you emails other than for notifications and password recovery purposes.<br>Your email account is: {{user.email}}</p>
-				<form>
+				<form action="/settings/email" method="post">
 					<div class="ui toggle checkbox">
-					  <input type="checkbox" name="emailcheck" checked>
+					  <input type="checkbox" id="emailcheck" name="emailcheck" value="true">
 					  <label>Allow email notification</label>
 					</div><br><br>
-					<div class='ui compact button' type='submit'>Save Changes</div>
+					<button class='ui compact button' type='submit' id="email_change_button">Save Changes</button>
+					<div id="email_change_success"></div>
 				</form>
 				</div>
 			</div>
@@ -62,5 +63,6 @@
 	{{/if}}
 	<script src="/dist/semantic.min.js"></script>
 	<script src="/javascripts/index.js"></script>
+	<script src="/javascripts/ajax.js"></script>
 </body>
 </html>
