@@ -96,8 +96,23 @@
 		<div class='ui basic button' id='noaccountbutton'>Don't have an account?</div>
 		<div style='float: right'>
 			<i class='icon help'></i>
-			<a href='#'>Forgot your password?</a>
+			<a id='recoverylink'>Forgot your password?</a>
 		</div>
+	</div>
+</div>
+<div class='ui small modal recovery'>
+	<div class='ui header'>Password Recovery</div>
+	<div class='ui text content'>
+	<form class='ui large form recovery' action='/settings/forgotPassword' method='post'>
+	<div class='field'>
+		<label>Enter your username:</label>
+		<input type="text" name="username" placeholder="Username" style='text-transform: lowercase;'>
+	</div>
+	<button class='ui button' type='submit'>Submit</button>
+	</form>
+	</div>
+	<div class='ui bottom attached message'>
+		You will receive an email with a temporary recovery password.
 	</div>
 </div>
 <script src="/javascripts/homepage.js"></script>

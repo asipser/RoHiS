@@ -17,6 +17,10 @@ $(document).ready(function(){
 		$('.ui.modal.signup').modal('hide');
 		$('.ui.modal.login').modal('show');
 	});
+	$('#recoverylink').click(function(){
+		$('.ui.modal.login').modal('hide');
+		$('.ui.modal.recovery').modal('show');
+	})
 	$('#aboutmenuitem').click(function(){
 		$('#aboutpanel').show();
 		$('html,body').animate({
