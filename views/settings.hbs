@@ -17,17 +17,28 @@
 				Venmo
 			</div>
 			<div class="content active">
-				<p class="transition visible" style="display: block !important;">Venmo is used to complete payments of loans.<br>
-					<a href="/venmo/auth">Authorize your venmo</a><br>
+				<div class="transition visible" style="display: block !important;"><div>Venmo is used to complete payments of loans.</div><br>
+					<div href='/venmo/auth' class='ui labeled icon button'>
+						<i class='sign in icon'></i>
+						Authorize your venmo
+					</div><br><br>
 					Your venmo account is: {{user.venmo_id}}
-				</p>
+				</div>
 			</div>
 			<div class="title">
 				<i class="dropdown icon"></i>
 				Email
 			</div>
 			<div class="content">
-				<p class="transition hidden">We do not send you emails other than for password recovery purposes.<br>Your email account is: {{user.email}}</p>
+				<div class="transition hidden"><p>We do not send you emails other than for notifications and password recovery purposes.<br>Your email account is: {{user.email}}</p>
+				<form>
+					<div class="ui toggle checkbox">
+					  <input type="checkbox" name="emailcheck" checked>
+					  <label>Allow email notification</label>
+					</div><br><br>
+					<div class='ui compact button' type='submit'>Save Changes</div>
+				</form>
+				</div>
 			</div>
 			<div class="title">
 				<i class="dropdown icon"></i>

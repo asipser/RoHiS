@@ -142,3 +142,7 @@ h2.ui.dividing.header{
 	padding:0.5em;
 	text-align: center;
 }
+
+.ui.list>a.item i.icon{
+	color: rgba(255,255,255, 0.8);
+}
