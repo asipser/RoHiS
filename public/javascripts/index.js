@@ -41,23 +41,38 @@ $(document).ready(function(){
 	$('p').popup();
 	
 	$('.ui.search')
-	  .search({
-	    apiSettings: {
-	      url: '/usersearch?name={query}'
-	    },
-	    fields: {
-	      results : 'items',
-	      title   : 'full_name',
-	      description     : 'username'
-	    },
-	    minCharacters : 2
-	  });
-	  
+	.search({
+		apiSettings: {
+			url: '/usersearch?name={query}'
+		},
+		fields: {
+			results : 'items',
+			title   : 'full_name',
+			description     : 'username'
+		},
+		minCharacters : 2
+	});
+
 	var $chargeamounts = $('.listedchargeamount');
 	for(i=0; i<$chargeamounts.length; i++){
 		var amount = $chargeamounts[i];
 		if($(amount).text().charAt(0) == '-'){
 			$(amount).css('color', 'red');
 		}
-	}
+	};
+
+	$('ui.form.changepassword').form({
+		on: 'blur',
+		fields: {
+			match: {
+				identifier  : 'confirmpassword',
+				rules: [
+				{
+					type   : 'match[newpassword]',
+					prompt : 'Please put the same value in both fields'
+				}
+				]
+			}
+		}
+	});
 });
