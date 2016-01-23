@@ -19,6 +19,7 @@
 	{{/if}}
 	<script src="/javascripts/ajax.js"></script>
 </body>
+
 <script>
 $(document).ready(function(){
 	if (location.href.indexOf("#loginerror") > -1) {
@@ -30,6 +31,12 @@ $(document).ready(function(){
 		$("#register_error").text("The username you have entered already exists. Please try another.");
 		$("#getstartedbutton").click();
 	}
+
+	else if (location.href.indexOf("#forgotpwnouser") > -1) {
+		$("#forgot_password_error").text("The username you have entered does not exist. Please try again.");
+		$("#recoverylink").click();
+	}
+
 });
 </script>
 </html>
