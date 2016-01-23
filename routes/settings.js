@@ -25,7 +25,7 @@ router.post('/changePassword', function(req, res) {
 	res.redirect('/');
 });
 
-router.get('/forgotPassword', function(req, res) {
+router.post('/forgotPassword', function(req, res) {
 
 	var text = "";
 
@@ -34,7 +34,7 @@ router.get('/forgotPassword', function(req, res) {
     for (var i=0; i < 6; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
 
-    Account.findOne({username: "data1013"}, function (err, profile) {
+    Account.findOne({username: req.body.username}, function (err, profile) {
 
     	profile.setPassword(text, function() {
 			profile.save();
