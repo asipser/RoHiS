@@ -19,7 +19,7 @@ router.post('/addcharge', function (req, res, next) {
 
     // search accounts database for the username person entered.
 
-    Account.find({username: req.body.user}, function (err, users) {
+    Account.find({username: req.body.user.toLowerCase()}, function (err, users) {
         console.log("This is in / addcharge, entered username is " + req.body.user)
         var recipient;
         var payer;
@@ -28,7 +28,7 @@ router.post('/addcharge', function (req, res, next) {
                                     //if no accounts have been found then the entered username shall be set target_user
 
         if(users[0] === undefined)
-            target_user = req.body.user;
+            target_user = req.body.user.toLowerCase();
 
         var host_user = (req.user); // user issuing the command
                                     // configures reciept/payer correctly
