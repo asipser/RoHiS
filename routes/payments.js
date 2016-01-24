@@ -70,15 +70,44 @@ router.post('/addcharge', function (req, res, next) {
 
         Account.findOne({username: req.user.username}, function (err,profile){
             console.log(profile);
-            var current_borrowed = profile['total_borrowed'];
-            var current_lent = profile['total_lent'];
+            var current_borrowed = profile['current_borrowed'];
+            var current_lent = profile['current_lent'];
+
             if (req.body.borroworlent === "true")
                 current_lent += parseInt(req.body.amount);
             else
                 current_borrowed += parseInt(req.body.amount);
-            console.log("currnent lent: " + current_lent);
-            Account.findOneAndUpdate({username: req.user.username}, {current_borrowed:current_borrowed, current_lent:current_lent}, function(){});           
+            console.log("current lent: " + current_lent);
+
+            var current_total = current_lent - current_borrowed;
+            var number_changes = profile['number_changes'] + 1;
+            var graph_current_total = profile['graph_current_total'];
+            var new_data = {"changes": number_changes, "current_total": current_total};
+            graph_current_total.push(new_data);
+
+            Account.findOneAndUpdate({username: req.user.username}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed: current_borrowed, current_lent: current_lent}, function(){});           
         });
+
+        if (!(users[0] === undefined)) {
+            Account.findOne({username: req.body.user.toLowerCase()}, function (err,profile){
+                console.log(profile);
+                var current_borrowed = profile['current_borrowed'];
+                var current_lent = profile['current_lent'];
+
+                if (req.body.borroworlent === "true")
+                    current_borrowed += parseInt(req.body.amount);
+                else
+                    current_lent += parseInt(req.body.amount);
+
+                var current_total = current_lent - current_borrowed;
+                var number_changes = profile['number_changes'] + 1;
+                var graph_current_total = profile['graph_current_total'];
+                var new_data = {"changes": number_changes, "current_total": current_total};
+                graph_current_total.push(new_data);
+
+                Account.findOneAndUpdate({username: req.body.user.toLowerCase()}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed: current_borrowed, current_lent: current_lent}, function(){});           
+            });
+        }
 
         // SENDING EMAIL IF EMAIL_NOTIFICATIONS IS ON FOR THE OTHER USER
 
