@@ -70,8 +70,8 @@ router.post('/addcharge', function (req, res, next) {
 
         Account.findOne({username: req.user.username}, function (err,profile){
             console.log(profile);
-            var current_borrowed = profile['total_borrowed'];
-            var current_lent = profile['total_lent'];
+            var current_borrowed = profile['current_borrowed'];
+            var current_lent = profile['current_lent'];
             if (req.body.borroworlent === "true")
                 current_lent += parseInt(req.body.amount);
             else

@@ -309,70 +309,96 @@ router.post('/chargecomplete', function(req, res) {
         });
     });
 
-	//STATISTICS
-	// 	Charge.findOne({_id: req.body.charge_id},function(err,charge){
-	// 		Account.findOne({username: req.user.username}, function (err,profile){
-	// 	        if(charge['payer']['username'] === req.user.username){           
-	// 				if(charge['recipient']['username'] !== undefined){
+	Charge.findOne({_id: req.body.charge_id},function(err,charge){
+		var charge_amount = charge['amount'];
+        if(charge['payer']['username'] === req.user.username){    // user is borrowing money 
+        	Account.findOne({username: req.user.username}, function (err,profile){
+				var current_borrowed = profile['current_borrowed'];
+		        var current_lent = profile['current_lent'];
+		        var greatest_loan = profile['greatest_loan']; 
+		        var smallest_loan = profile['smallest_loan'];
+		        var highest_debt = profile['highest_debt']; 
+		        var smallest_debt = profile['smallest_debt'];
+	            current_borrowed -= charge_amount; // CHANGING CURRENT BORROWED HERE
+	            if(highest_debt === null){
+	                highest_debt = charge_amount;
+	                smallest_debt = charge_amount;
+	                average_debt = charge_amount;
+	            }
+	            if (highest_debt < charge_amount)
+	                highest_debt = charge_amount;
+	            if(charge_amount < smallest_loan)
+	                smallest_debt = charge_amount;
+	            Account.findOneAndUpdate({username: req.user.username}, {current_borrowed:current_borrowed, current_lent:current_lent, greatest_loan:greatest_loan,smallest_loan:smallest_loan,highest_debt:highest_debt,smallest_debt:smallest_debt}, function(){});           
+			});      
+			if(charge['recipient']['username'] !== undefined && charge['recipient']['username'] !== req.user.username){	  // other user is lending money
+				Account.findOne({username: charge['recipient']['username']}, function (err,recipient){
+					var r_current_borrowed = recipient['current_borrowed']; // R stands for Recipient 
+			        var r_current_lent = recipient['current_lent'];
+			        var r_greatest_loan = recipient['greatest_loan']; 
+			        var r_smallest_loan = recipient['smallest_loan'];
+			        var r_highest_debt = recipient['highest_debt']; 
+			        var r_smallest_debt = recipient['smallest_debt'];
+		            r_current_lent -= charge_amount; // CHANGING CURRENT LENT OF OTHER PERSON HERE
+		            if(r_greatest_loan === null){
+		                r_greatest_loan = charge_amount;
+		                r_smallest_loan = charge_amount;
+		                r_average_loan = charge_amount;
+		            }
+		            if (r_greatest_loan < charge_amount)
+		                r_greatest_loan = charge_amount;
+		            if(charge_amount < r_smallest_loan)
+		                r_smallest_loan = charge_amount;
+		            Account.findOneAndUpdate({username: charge['recipient']['username']}, {current_borrowed:r_current_borrowed, current_lent:r_current_lent, greatest_loan:r_greatest_loan, smallest_loan:r_smallest_loan,highest_debt:r_highest_debt,smallest_debt:r_smallest_debt}, function(){});           
+				}); 
+			}                                                  // check if person targetted has an account or no, undefined fs they dont 					                                                                                                          // they have an account and it pushes to charges that you owe their name	    				
+		}
+		else if(charge['recipient']['username'] === req.user.username){                                                 // user is a recipient
+			Account.findOne({username: req.user.username}, function (err,profile){
+				var current_borrowed = profile['current_borrowed'];
+		        var current_lent = profile['current_lent'];
+		        var greatest_loan = profile['greatest_loan']; 
+		        var smallest_loan = profile['smallest_loan'];
+		        var highest_debt = profile['highest_debt']; 
+		        var smallest_debt = profile['smallest_debt'];
+	            current_lent -= charge_amount; // CHANGING CURRENT LENT HERE
+	            if(greatest_loan === null){
+	                greatest_loan = charge_amount;
+	                smallest_loan = charge_amount;
+	                average_loan = charge_amount;
+	            }
+	            if (greatest_loan < charge_amount)
+	                greatest_loan = charge_amount;
+	            if(charge_amount < smallest_loan)
+	                smallest_loan = charge_amount;
+	            Account.findOneAndUpdate({username: req.user.username}, {current_borrowed:current_borrowed, current_lent:current_lent, greatest_loan:greatest_loan,smallest_loan:smallest_loan,highest_debt:highest_debt,smallest_debt:smallest_debt}, function(){});           
+			}); 
+			if(charge['payer']['username'] !== undefined && charge['payer']['username'] !== req.user.username){
+				Account.findOne({username: charge['payer']['username']}, function (err,payer){
+					var p_current_borrowed = payer['current_borrowed'];
+			        var p_current_lent = payer['current_lent'];
+			        var p_greatest_loan = payer['greatest_loan']; 
+			        var p_smallest_loan = payer['smallest_loan'];
+			        var p_highest_debt = payer['highest_debt']; 
+			        var p_smallest_debt = payer['smallest_debt'];
+		            p_current_borrowed -= charge_amount; // CHANGING OTHER PERSON'S CURRENT BORROWED HERE
+		            if(p_highest_debt === null){
+		                p_highest_debt = charge_amount;
+		                p_smallest_debt = charge_amount;
+		                p_average_debt = charge_amount;
+		            }
+		            if (p_highest_debt < charge_amount)
+		                p_highest_debt = charge_amount;
+		            if(charge_amount < p_smallest_loan)
+		                p_smallest_debt = charge_amount;
+		            Account.findOneAndUpdate({username: charge['payer']['username']}, {current_borrowed:p_current_borrowed, current_lent:p_current_lent, greatest_loan:p_greatest_loan,smallest_loan:p_smallest_loan,highest_debt:p_highest_debt,smallest_debt:p_smallest_debt}, function(){});           
+				});  
+			}
+
+		}
 
 
-	// 				}                                                  // check if person targetted has an account or no, undefined fs they dont 					                                                                                                          // they have an account and it pushes to charges that you owe their name	    				
-	// 			}
-	// 			else if(charge['recipient']['username'] === req.user.username){                                                 // user is a recipient
-	// 				if(charge['payer']['username'] !== undefined){
-	// 				}
-	// 			}                                                                                                            // if they have an account it pushes their account username to the array with debts owed to you
-	//         	var current_borrowed = profile['total_borrowed'];
-	// 	        var current_lent = profile['total_lent'];
-	// 	        var total_loans = profile['total_loans'];
-	// 	        var total_debts = profile['total_debts'];
-	// 	        var greatest_loan = profile['greatest_loan']; 
-	// 	        var smallest_loan = profile['smallest_loan'];
-	// 	        var highest_debt = profile['highest_debt']; 
-	// 	        var smallest_debt = profile['smallest_debt'];
-
-	// 	        var average_loan = profile['average_loan'];
-	// 	        var average_debt = profile['average_debt'];
-
-	// 	        console.log(req.body.borroworlent);
-
-	// 	        if (req.body.borroworlent === "true"){
-	// 	            total_loans++;
-	// 	            current_lent += parseInt(req.body.amount);
-	// 	            if(greatest_loan === null){1
-	// 	                greatest_loan = parseInt(req.body.amount);
-	// 	                smallest_loan = parseInt(req.body.amount);
-	// 	                average_loan = parseInt(req.body.amount);
-	// 	            }
-	// 	            else if (greatest_loan < parseInt(req.body.amount))
-	// 	                greatest_loan = parseInt(req.body.amount);
-	// 	            if(parseInt(req.body.amount) < smallest_loan)
-	// 	                smallest_loan = parseInt(req.body.amount);
-
-	// 	            average_loan = current_lent / total_loans;
-	// 	        }
-	// 	        else{
-	// 	            total_debts++;
-	// 	            current_borrowed += parseInt(req.body.amount);
-	// 	            if(highest_debt === null){
-	// 	                highest_debt = parseInt(req.body.amount);
-	// 	                smallest_debt = parseInt(req.body.amount);
-	// 	                average_debt = parseInt(req.body.amount);
-	// 	            }
-	// 	            else if (highest_debt < parseInt(req.body.amount))
-	// 	                highest_debt = parseInt(req.body.amount);
-	// 	            if(parseInt(req.body.amount) < smallest_loan)
-	// 	                smallest_debt = parseInt(req.body.amount);
-		            
-	// 	            average_debt = (current_borrowed / total_debts);
-	// 	        }
-
-	//         console.log("currnent lent: " + current_lent);
-
-	//         Account.findOneAndUpdate({username: req.user.username}, {total_borrowed:current_borrowed, total_lent:current_lent, greatest_loan:greatest_loan,smallest_loan:smallest_loan,highest_debt:highest_debt,smallest_debt:smallest_debt, average_loan:average_loan,average_debt:average_debt,total_debts:total_debts,total_loans:total_loans}, function(){});           
-	//     });
-
-	// });
+    });
 
 });
 
