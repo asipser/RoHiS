@@ -134,7 +134,7 @@ $(".chargecompleteall").click(function() {
 	}
 
 	multiple_charges(charge_ids.shift());
-	//}
+	
 
 
 	$('div.ui.card.' + username).addClass('animated fadeOutRight');
@@ -150,28 +150,35 @@ $(".chargecancelall").click(function() {
 	var subcharges = $('div.listeditem.' + username);
 	var totalAmount = parseFloat($('.dbamount.' + username).text());
 
+	var counter = subcharges.length;
+	var charge_ids = [];
+
+	var total = "true";
+
 	for(var i=0; i < subcharges.length; i++){
 		var charge_id = $(subcharges[i]).attr('id');
+		charge_ids.push(charge_id);
+	}
 
-		var total;
-
-		if (i === 0) {
-			total = "true";
-		} else {
-			total = "sent";
-		}
+	function multiple_charges(charge_id) {
 
 		$.ajax({
 			url: '/chargecancel',
 			data: {
 				charge_id: charge_id,
 				total: total,
-				totalAmount: totalAmount
+				totalAmount: totalAmount,
 			},
 			type: 'POST',
 			success: function(data){
 				if (data === "Success!") {
 					console.log("Success!");
+					counter -= 1;
+					total = "sent";
+					
+					if (counter > 0) {
+						multiple_charges(charge_ids.shift());
+					}
 				}
 			},
 			error: function(xhr, status, error) {
@@ -179,6 +186,10 @@ $(".chargecancelall").click(function() {
 			}
 		});
 	}
+
+	multiple_charges(charge_ids.shift());
+
+
 	$('div.ui.card.' + username).addClass('animated fadeOutRight');
 	setTimeout(function(){
 		$('div.ui.card.' + username).css('display', 'none');
