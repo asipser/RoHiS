@@ -73,10 +73,9 @@ router.post('/addcharge', function (req, res, next) {
             var current_borrowed = profile['current_borrowed'];
             var current_lent = profile['current_lent'];
             if (req.body.borroworlent === "true")
-                current_lent += parseInt(req.body.amount);
+                current_lent += parseFloat(req.body.amount);
             else
-                current_borrowed += parseInt(req.body.amount);
-            console.log("current lent: " + current_lent);
+                current_borrowed += parseFloat(req.body.amount);
 
             var current_total = current_lent - current_borrowed;
             var number_changes = profile['number_changes'] + 1;
@@ -84,7 +83,9 @@ router.post('/addcharge', function (req, res, next) {
             var new_data = {"changes": number_changes, "current_total": current_total};
             graph_current_total.push(new_data);
 
-            Account.findOneAndUpdate({username: req.user.username}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed: current_borrowed, current_lent: current_lent}, function(){});           
+            Account.findOneAndUpdate({username: req.user.username}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed: current_borrowed, current_lent: current_lent}, {new: true}, function(err, test){
+                console.log(test)
+            });           
         });
 
         if (!(users[0] === undefined)) {
@@ -94,9 +95,9 @@ router.post('/addcharge', function (req, res, next) {
                 var current_lent = profile['current_lent'];
 
                 if (req.body.borroworlent === "true")
-                    current_borrowed += parseInt(req.body.amount);
+                    current_borrowed += parseFloat(req.body.amount);
                 else
-                    current_lent += parseInt(req.body.amount);
+                    current_lent += parseFloat(req.body.amount);
 
                 var current_total = current_lent - current_borrowed;
                 var number_changes = profile['number_changes'] + 1;
