@@ -235,7 +235,26 @@ router.post('/chargecomplete', function(req, res) {
 		            else if(charge_amount < smallest_debt)
 		                smallest_debt = charge_amount;
 		            console.log("current_borrowed after: " + current_borrowed);
-		            Account.findOneAndUpdate({username: req.user.username}, {current_borrowed:current_borrowed, current_lent:current_lent, greatest_loan:greatest_loan,smallest_loan:smallest_loan,highest_debt:highest_debt,smallest_debt:smallest_debt}, function(){});           
+
+                    var number_changes = profile['number_changes'];
+                    var graph_current_total = profile['graph_current_total'];
+                    var current_total;
+
+                    // if (req.body.totalAmount) {
+                    //     if (req.body.counter == 1) {
+                    //         number_changes += 1;
+                    //         current_total = current_lent - current_borrowed - req.body.totalAmount + charge_amount;
+                    //         var new_data = {"changes": number_changes, "current_total": current_total};
+                    //         graph_current_total.push(new_data);
+                    //     }
+                    // } else {
+                        number_changes += 1;
+                        current_total = current_lent - current_borrowed;
+                        var new_data = {"changes": number_changes, "current_total": current_total};
+                        graph_current_total.push(new_data);
+                    // }
+
+		            Account.findOneAndUpdate({username: req.user.username}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:current_borrowed, current_lent:current_lent, greatest_loan:greatest_loan,smallest_loan:smallest_loan,highest_debt:highest_debt,smallest_debt:smallest_debt}, function(){});           
 				});      
 				if(charge['recipient']['username'] !== undefined){	  // other user is lending money
 					Account.findOne({username: charge['recipient']['username']}, function (err,recipient){
@@ -256,7 +275,26 @@ router.post('/chargecomplete', function(req, res) {
 			                r_greatest_loan = charge_amount;
 			            if(charge_amount < r_smallest_loan)
 			                r_smallest_loan = charge_amount;
-			            Account.findOneAndUpdate({username: charge['recipient']['username']}, {current_borrowed:r_current_borrowed, current_lent:r_current_lent, greatest_loan:r_greatest_loan, smallest_loan:r_smallest_loan,highest_debt:r_highest_debt,smallest_debt:r_smallest_debt}, function(){});           
+
+                        var number_changes = recipient['number_changes'];
+                        var graph_current_total = recipient['graph_current_total'];
+                        var current_total;
+
+                        // if (req.body.totalAmount) {
+                        //     if (req.body.counter == 1) {
+                        //         number_changes += 1;
+                        //         current_total = r_current_lent - r_current_borrowed - req.body.totalAmount + charge_amount;
+                        //         var new_data = {"changes": number_changes, "current_total": current_total};
+                        //         graph_current_total.push(new_data);
+                        //     }
+                        // } else {
+                            number_changes += 1;
+                            current_total = r_current_lent - r_current_borrowed;
+                            var new_data = {"changes": number_changes, "current_total": current_total};
+                            graph_current_total.push(new_data);
+                        // }
+
+			            Account.findOneAndUpdate({username: charge['recipient']['username']}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:r_current_borrowed, current_lent:r_current_lent, greatest_loan:r_greatest_loan, smallest_loan:r_smallest_loan,highest_debt:r_highest_debt,smallest_debt:r_smallest_debt}, function(){});           
 					}); 
 				}                                                  // check if person targetted has an account or no, undefined fs they dont 					                                                                                                          // they have an account and it pushes to charges that you owe their name	    				
 			}
@@ -278,7 +316,26 @@ router.post('/chargecomplete', function(req, res) {
 		                greatest_loan = charge_amount;
 		            if(charge_amount < smallest_loan)
 		                smallest_loan = charge_amount;
-		            Account.findOneAndUpdate({username: req.user.username}, {current_borrowed:current_borrowed, current_lent:current_lent, greatest_loan:greatest_loan,smallest_loan:smallest_loan,highest_debt:highest_debt,smallest_debt:smallest_debt}, function(){});           
+
+                    var number_changes = profile['number_changes'];
+                    var graph_current_total = profile['graph_current_total'];
+                    var current_total;
+
+                    // if (req.body.totalAmount) {
+                    //     if (req.body.counter == 1) {
+                    //         number_changes += 1;
+                    //         current_total = current_lent - current_borrowed - req.body.totalAmount + charge_amount;
+                    //         var new_data = {"changes": number_changes, "current_total": current_total};
+                    //         graph_current_total.push(new_data);
+                    //     }
+                    // } else {
+                        number_changes += 1;
+                        current_total = current_lent - current_borrowed;
+                        var new_data = {"changes": number_changes, "current_total": current_total};
+                        graph_current_total.push(new_data);
+                    // }
+
+		            Account.findOneAndUpdate({username: req.user.username}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:current_borrowed, current_lent:current_lent, greatest_loan:greatest_loan,smallest_loan:smallest_loan,highest_debt:highest_debt,smallest_debt:smallest_debt}, function(){});           
 				}); 
 				if(charge['payer']['username'] !== undefined){
 					console.log("Editing " + charge['payer']['username'] + "charge shit");
@@ -299,7 +356,26 @@ router.post('/chargecomplete', function(req, res) {
 			                p_highest_debt = charge_amount;
 			            if(charge_amount < p_smallest_debt)
 			                p_smallest_debt = charge_amount;
-			            Account.findOneAndUpdate({username: charge['payer']['username']}, {current_borrowed:p_current_borrowed, current_lent:p_current_lent, greatest_loan:p_greatest_loan,smallest_loan:p_smallest_loan,highest_debt:p_highest_debt,smallest_debt:p_smallest_debt}, function(){});           
+
+                        var number_changes = payer['number_changes'];
+                        var graph_current_total = payer['graph_current_total'];
+                        var current_total;
+
+                        // if (req.body.totalAmount) {
+                        //     if (req.body.counter == 1) {
+                        //         number_changes += 1;
+                        //         current_total = p_current_lent - p_current_borrowed - req.body.totalAmount + charge_amount;
+                        //         var new_data = {"changes": number_changes, "current_total": current_total};
+                        //         graph_current_total.push(new_data);
+                        //     }
+                        // } else {
+                            number_changes += 1;
+                            current_total = p_current_lent - p_current_borrowed;
+                            var new_data = {"changes": number_changes, "current_total": current_total};
+                            graph_current_total.push(new_data);
+                        // }
+
+			            Account.findOneAndUpdate({username: charge['payer']['username']}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:p_current_borrowed, current_lent:p_current_lent, greatest_loan:p_greatest_loan,smallest_loan:p_smallest_loan,highest_debt:p_highest_debt,smallest_debt:p_smallest_debt}, function(){});           
 					});  
 				}
 			}
@@ -406,7 +482,26 @@ router.post('/chargecancel', function(req, res) {
 			        console.log("current_borrowed before: " + current_borrowed);
 		            current_borrowed -= charge_amount; // CHANGING CURRENT BORROWED HERE
 		            console.log("current_borrowed after: " + current_borrowed);
-		            Account.findOneAndUpdate({username: req.user.username}, {current_borrowed:current_borrowed, current_lent:current_lent}, function(){});           
+
+                    var number_changes = profile['number_changes'];
+                    var graph_current_total = profile['graph_current_total'];
+                    var current_total;
+
+                    // if (req.body.totalAmount) {
+                    //     if (req.body.counter == 1) {
+                    //         number_changes += 1;
+                    //         current_total = current_lent - current_borrowed - req.body.totalAmount + charge_amount;
+                    //         var new_data = {"changes": number_changes, "current_total": current_total};
+                    //         graph_current_total.push(new_data);
+                    //     }
+                    // } else {
+                        number_changes += 1;
+                        current_total = current_lent - current_borrowed;
+                        var new_data = {"changes": number_changes, "current_total": current_total};
+                        graph_current_total.push(new_data);
+                    // }
+
+		            Account.findOneAndUpdate({username: req.user.username}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:current_borrowed, current_lent:current_lent}, function(){});           
 				});      
 				if(charge['recipient']['username'] !== undefined){	  // other user is lending money
 					Account.findOne({username: charge['recipient']['username']}, function (err,recipient){
@@ -414,7 +509,26 @@ router.post('/chargecancel', function(req, res) {
 						var r_current_borrowed = recipient['current_borrowed']; // R stands for Recipient 
 				        var r_current_lent = recipient['current_lent'];
 			            r_current_lent -= charge_amount; // CHANGING CURRENT LENT OF OTHER PERSON HERE
-			            Account.findOneAndUpdate({username: charge['recipient']['username']}, {current_borrowed:r_current_borrowed, current_lent:r_current_lent}, function(){});           
+
+                        var number_changes = recipient['number_changes'];
+                        var graph_current_total = recipient['graph_current_total'];
+                        var current_total;
+
+                        // if (req.body.totalAmount) {
+                        //     if (req.body.counter == 1) {
+                        //         number_changes += 1;
+                        //        current_total = r_current_lent - r_current_borrowed - req.body.totalAmount + charge_amount;
+                        //         var new_data = {"changes": number_changes, "current_total": current_total};
+                        //         graph_current_total.push(new_data);
+                        //     }
+                        // } else {
+                            number_changes += 1;
+                            current_total = r_current_lent - r_current_borrowed;
+                            var new_data = {"changes": number_changes, "current_total": current_total};
+                            graph_current_total.push(new_data);
+                        // }
+
+			            Account.findOneAndUpdate({username: charge['recipient']['username']}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:r_current_borrowed, current_lent:r_current_lent}, function(){});           
 					}); 
 				}                                                  // check if person targetted has an account or no, undefined fs they dont 					                                                                                                          // they have an account and it pushes to charges that you owe their name	    				
 			}
@@ -423,7 +537,26 @@ router.post('/chargecancel', function(req, res) {
 					var current_borrowed = profile['current_borrowed'];
 			        var current_lent = profile['current_lent'];
 		            current_lent -= charge_amount; // CHANGING CURRENT LENT HERE
-		            Account.findOneAndUpdate({username: req.user.username}, {current_borrowed:current_borrowed, current_lent:current_lent}, function(){});           
+
+                    var number_changes = profile['number_changes'];
+                    var graph_current_total = profile['graph_current_total'];
+                    var current_total;
+
+                    // if (req.body.totalAmount) {
+                    //     if (req.body.counter == 1) {
+                    //         number_changes += 1;
+                    //         current_total = current_lent - current_borrowed - req.body.totalAmount + charge_amount;
+                    //         var new_data = {"changes": number_changes, "current_total": current_total};
+                    //         graph_current_total.push(new_data);
+                    //     }
+                    // } else {
+                        number_changes += 1;
+                        current_total = current_lent - current_borrowed;
+                        var new_data = {"changes": number_changes, "current_total": current_total};
+                        graph_current_total.push(new_data);
+                    // }
+
+		            Account.findOneAndUpdate({username: req.user.username}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:current_borrowed, current_lent:current_lent}, function(){});           
 				}); 
 				if(charge['payer']['username'] !== undefined){
 					console.log("This is an error....");
@@ -431,7 +564,26 @@ router.post('/chargecancel', function(req, res) {
 						var p_current_borrowed = payer['current_borrowed'];
 				        var p_current_lent = payer['current_lent'];
 			            p_current_borrowed -= charge_amount; // CHANGING OTHER PERSON'S CURRENT BORROWED HERE
-			            Account.findOneAndUpdate({username: charge['payer']['username']}, {current_borrowed:p_current_borrowed, current_lent:p_current_lent}, function(){});           
+
+                        var number_changes = payer['number_changes'];
+                        var graph_current_total = payer['graph_current_total'];
+                        var current_total;
+
+                        // if (req.body.totalAmount) {
+                        //     if (req.body.counter == 1) {
+                        //         number_changes += 1;
+                        //         current_total = p_current_lent - p_current_borrowed - req.body.totalAmount + charge_amount;
+                        //         var new_data = {"changes": number_changes, "current_total": current_total};
+                        //         graph_current_total.push(new_data);
+                        //     }
+                        // } else {
+                            number_changes += 1;
+                            current_total = p_current_lent - p_current_borrowed;
+                            var new_data = {"changes": number_changes, "current_total": current_total};
+                            graph_current_total.push(new_data);
+                        // }
+
+			            Account.findOneAndUpdate({username: charge['payer']['username']}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:p_current_borrowed, current_lent:p_current_lent}, function(){});           
 					});  
 				}
 			}
