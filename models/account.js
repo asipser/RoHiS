@@ -16,7 +16,15 @@ var Account = new Schema({
     email_notifications: { type : Boolean, default : true },
     statistics: { type: Object, default: {num_charges: 0, average_time: 0}},
     total_lent: {type:Number,default:0},
-    total_borrowed: {type:Number,default:0}
+    total_borrowed: {type:Number,default:0},
+    total_loans: {type:Number,default:0},
+    total_debts: {type:Number,default:0},
+    average_loan: {type:Number,default:null},
+    average_debt: {type:Number,default:null},
+    greatest_loan: {type:Number, default:null},
+    smallest_loan: {type:Number, default:null},
+    highest_debt: {type:Number, default:null},
+    smallest_debt: {type:Number, default:null}
     // you_owe: Object,
     // owe_you: Object
 
