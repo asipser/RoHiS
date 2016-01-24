@@ -440,7 +440,7 @@ router.post('/register', function(req, res) {
 
         var full_name = req.body.firstName + " " + req.body.lastName;
 
-        Account.register(new Account({ username : req.body.username, first_name: req.body.firstName, last_name: req.body.lastName, full_name:full_name, email: req.body.email}), req.body.password, function(err, account) { // registers account with initial data passed through the register form, uses express session, passport js, and passport local mongoose
+        Account.register(new Account({ username : req.body.username, first_name: req.body.firstName, last_name: req.body.lastName, full_name:full_name, email: req.body.email, date_created: moment()}), req.body.password, function(err, account) { // registers account with initial data passed through the register form, uses express session, passport js, and passport local mongoose
         if (err) {                              // if there is an error such as a duplicated account or fields left blank. THESE WILL BE DEALT WITH LATER
             console.log("err");
             console.log(err);

@@ -25,8 +25,6 @@ var Account = new Schema({
     smallest_loan: {type:Number, default:null},
     highest_debt: {type:Number, default:null},
     smallest_debt: {type:Number, default:null}
-    // you_owe: Object,
-    // owe_you: Object
 
 });
 

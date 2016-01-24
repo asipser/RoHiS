@@ -66,6 +66,20 @@ router.post('/addcharge', function (req, res, next) {
           console.log("Saved Charge");
         });
 
+        // STATISTICS
+
+        Account.findOne({username: req.user.username}, function (err,profile){
+            console.log(profile);
+            var current_borrowed = profile['total_borrowed'];
+            var current_lent = profile['total_lent'];
+            if (req.body.borroworlent === "true")
+                current_lent += parseInt(req.body.amount);
+            else
+                current_borrowed += parseInt(req.body.amount);
+            console.log("currnent lent: " + current_lent);
+            Account.findOneAndUpdate({username: req.user.username}, {current_borrowed:current_borrowed, current_lent:current_lent}, function(){});           
+        });
+
         // SENDING EMAIL IF EMAIL_NOTIFICATIONS IS ON FOR THE OTHER USER
 
         if (users[0] && users[0]['email_notifications']) {
