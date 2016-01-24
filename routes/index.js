@@ -231,7 +231,7 @@ router.post('/chargecomplete', function(req, res) {
 		}
 		else{
 			var charge_amount = charge['amount'];
-			console.log("charge amount: " + charge_amount);
+			console.log("Main user has returned the charge amount: of" + charge_amount);
 		    if(charge['payer']['username'] === req.user.username){    // user is borrowing money 
 	        	Account.findOne({username: req.user.username}, function (err,profile){
 					var current_borrowed = profile['current_borrowed'];
@@ -262,7 +262,7 @@ router.post('/chargecomplete', function(req, res) {
 				});      
 				if(charge['recipient']['username'] !== undefined){	  // other user is lending money
 					Account.findOne({username: charge['recipient']['username']}, function (err,recipient){
-						console.log("error here");
+						console.log("The user with name: " + charge['recipient']['username'] + " has gotten his money back (finished lending");
 						var r_current_borrowed = recipient['current_borrowed']; // R stands for Recipient 
 				        var r_current_lent = recipient['current_lent'];
 				        var r_greatest_loan = recipient['greatest_loan']; 
@@ -292,6 +292,7 @@ router.post('/chargecomplete', function(req, res) {
 			}
 			else if(charge['recipient']['username'] === req.user.username){                                                 // user is a recipient
 				Account.findOne({username: req.user.username}, function (err,profile){
+					console.log("Main user has gotten the money back with amount: of" + charge_amount);
 					var current_borrowed = profile['current_borrowed'];
 			        var current_lent = profile['current_lent'];
 			        var greatest_loan = profile['greatest_loan']; 
@@ -317,7 +318,7 @@ router.post('/chargecomplete', function(req, res) {
 		            Account.findOneAndUpdate({username: req.user.username}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:current_borrowed, current_lent:current_lent, greatest_loan:greatest_loan,smallest_loan:smallest_loan,highest_debt:highest_debt,smallest_debt:smallest_debt}, function(){});           
 				}); 
 				if(charge['payer']['username'] !== undefined){
-					console.log("This is an error....");
+					console.log("Editing " + charge['payer']['username'] + "charge shit");
 					Account.findOne({username: charge['payer']['username']}, function (err,payer){
 						var p_current_borrowed = payer['current_borrowed'];
 				        var p_current_lent = payer['current_lent'];
@@ -434,8 +435,55 @@ router.post('/chargecomplete', function(req, res) {
 // WHEN YOU CLICK THE X NEXT TO A CHARGE
 
 router.post('/chargecancel', function(req, res) {
+	//STATISTICS FOR CURRENT LENT / BORROWED
+	Charge.findOne({_id: req.body.charge_id},function(err,charge){
+		if(charge['completed'] || charge['canccelled']){
+			res.send("Already Done");
+		}
+		else{
+			var charge_amount = charge['amount'];
+			console.log("charge cancel amount: " + charge_amount);
+		    if(charge['payer']['username'] === req.user.username){    // user is borrowing money 
+	        	Account.findOne({username: req.user.username}, function (err,profile){
+					var current_borrowed = profile['current_borrowed'];
+			        var current_lent = profile['current_lent'];
+			        console.log("current_borrowed before: " + current_borrowed);
+		            current_borrowed -= charge_amount; // CHANGING CURRENT BORROWED HERE
+		            console.log("current_borrowed after: " + current_borrowed);
+		            Account.findOneAndUpdate({username: req.user.username}, {current_borrowed:current_borrowed, current_lent:current_lent}, function(){});           
+				});      
+				if(charge['recipient']['username'] !== undefined){	  // other user is lending money
+					Account.findOne({username: charge['recipient']['username']}, function (err,recipient){
+						console.log("error here");
+						var r_current_borrowed = recipient['current_borrowed']; // R stands for Recipient 
+				        var r_current_lent = recipient['current_lent'];
+			            r_current_lent -= charge_amount; // CHANGING CURRENT LENT OF OTHER PERSON HERE
+			            Account.findOneAndUpdate({username: charge['recipient']['username']}, {current_borrowed:r_current_borrowed, current_lent:r_current_lent}, function(){});           
+					}); 
+				}                                                  // check if person targetted has an account or no, undefined fs they dont 					                                                                                                          // they have an account and it pushes to charges that you owe their name	    				
+			}
+			else if(charge['recipient']['username'] === req.user.username){                                                 // user is a recipient
+				Account.findOne({username: req.user.username}, function (err,profile){
+					var current_borrowed = profile['current_borrowed'];
+			        var current_lent = profile['current_lent'];
+		            current_lent -= charge_amount; // CHANGING CURRENT LENT HERE
+		            Account.findOneAndUpdate({username: req.user.username}, {current_borrowed:current_borrowed, current_lent:current_lent}, function(){});           
+				}); 
+				if(charge['payer']['username'] !== undefined){
+					console.log("This is an error....");
+					Account.findOne({username: charge['payer']['username']}, function (err,payer){
+						var p_current_borrowed = payer['current_borrowed'];
+				        var p_current_lent = payer['current_lent'];
+			            p_current_borrowed -= charge_amount; // CHANGING OTHER PERSON'S CURRENT BORROWED HERE
+			            Account.findOneAndUpdate({username: charge['payer']['username']}, {current_borrowed:p_current_borrowed, current_lent:p_current_lent}, function(){});           
+					});  
+				}
+			}
+    	}
+    });
 
 	Charge.findOneAndUpdate({_id: req.body.charge_id}, {cancelled: true, date_cancelled: moment(), who_cancelled: req.user.username}, {new: true}, function(err, profile) {
+
 
         // SEND EMAIL IF PERSON WHO CANCELLED IS NOT THE CREATOR
 
