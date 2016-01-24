@@ -38,179 +38,156 @@ router.get('/', function (req, res) {
 	}
 	else{
 		var username = req.user.username;
-	var user_has_venmo; // boolean to see if the req.user has venmo.
+		var user_has_venmo; // boolean to see if the req.user has venmo.
 
-    var userCharges = []; // Array used to store all charges for one person 
-    var mergedCharges = []; // Array with a merged userCharges where it compiles the same payer recipients under the same piles.
-    var you_owe = []; // people u owe
-    var owe_you = []; // charges with people that owe u
-    var merged_you_owe = []; // merged charges one way within you_owe
-    var merged_owe_you = []; // merged charges one way within array owe_you
-    var final_merged_you_owe = []; // merges similarities between merged_you_ owe and merged_owe_you
-    var final_merged_owe_you = [];  			// ex asips appears in both of them, moving it to only one of them
+	    var userCharges = []; // Array used to store all charges for one person 
+	    var mergedCharges = []; // Array with a merged userCharges where it compiles the same payer recipients under the same piles.
+	    var you_owe = []; // people u owe
+	    var owe_you = []; // charges with people that owe u
+	    var merged_you_owe = []; // merged charges one way within you_owe
+	    var merged_owe_you = []; // merged charges one way within array owe_you
 
-    if (req.user['venmo_id'])
-    	user_has_venmo = true;
-    else
-    	user_has_venmo = false;
+	    if (req.user['venmo_id'])
+	    	user_has_venmo = true;
+	    else
+	    	user_has_venmo = false;
 
-    var find_condition = {
-    	$and:[
-    	{completed:false},
-    	{cancelled:false}
-    	]
-    }
+	    var find_condition = {
+	    	$and:[
+	    	{completed:false},
+	    	{cancelled:false}
+	    	]
+	    }
 
-    Charge.find(find_condition, function (err,charges){
+	    Charge.find(find_condition, function (err,charges){
 
-    	//step 1
-    	for(transaction in charges){
+	    	//step 1
+		    	for(transaction in charges){
 
-    		var date_created = moment(charges[transaction]['date_created']).format("M/D/YY, h:mm a");
-    		var creator;
+		    		var date_created = moment(charges[transaction]['date_created']).format("M/D/YY, h:mm a");
+		    		var creator;
 
-    		if (charges[transaction]['creator'] === username) {
-    			creator = "you";
-    		} else {
-    			creator = charges[transaction]['creator'];
-    		}
+		    		if (charges[transaction]['creator'] === username) {
+		    			creator = "you";
+		    		} else {
+		    			creator = charges[transaction]['creator'];
+		    		}
 
-    		if(charges[transaction]['payer']['username'] === username){           
-                                                           // user is  a payer
-    			if(charges[transaction]['recipient']['username'] === undefined)                                                  // check if person targetted has an account or no, undefined fs they dont 
-    				you_owe.unshift({username:charges[transaction]['recipient'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});    				
-    			else                                                                                                             // they have an account and it pushes to charges that you owe their name
-    				you_owe.unshift({username:charges[transaction]['recipient']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});
-    		}
-    		else if(charges[transaction]['recipient']['username'] === username){                                                 // user is a recipient
-    			if(charges[transaction]['payer']['username'] === undefined)                                                      // check if the person targetted has an account
-    				owe_you.unshift({username:charges[transaction]['payer'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});
-    			else                                                                                                             // if they have an account it pushes their account username to the array with debts owed to you
-    				owe_you.unshift({username:charges[transaction]['payer']['username'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});
-
-    		}
-    	}
-
-    	//step 2
-
-    	for(transaction in you_owe){
-    		var user = you_owe[transaction]['username'];
-    		var amount = you_owe[transaction]['amount'];
-    		var in_database = false;
-    		var id = you_owe[transaction]['id'];
-    		var note = you_owe[transaction]['note'];
-    		var date = you_owe[transaction]['date_created'];
-    		var creator = you_owe[transaction]['creator'];
+		    		if(charges[transaction]['payer']['username'] === username){   // user is borrowing money        
+		    			if(charges[transaction]['recipient']['username'] === undefined)                                                  // check if person targetted has an account or no, undefined fs they dont 
+		    				you_owe.unshift({username:charges[transaction]['recipient'], name:charges[transaction]['recipient'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});    				
+		    			else{
+		    				var displayName = getDisplayName(charges[transaction]['recipient']);                                                                                                             // they have an account and it pushes to charges that you owe their name
+		    				you_owe.unshift({username:charges[transaction]['recipient']['username'], name: displayName, amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});
+		    			}
+		    		}
+		    		else if(charges[transaction]['recipient']['username'] === username){                                                 // user is a recipient
+		    			if(charges[transaction]['payer']['username'] === undefined)                                                      // check if the person targetted has an account
+		    				owe_you.unshift({username:charges[transaction]['payer'], name:charges[transaction]['payer'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});
+		    			else{                                                                                                            // if they have an account it pushes their account username to the array with debts owed to you
+		    				var displayName = getDisplayName(charges[transaction]['payer']);  
+		    				owe_you.unshift({username:charges[transaction]['payer']['username'], name:displayName, amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});
+		    			}
+		    		}
+		    	}
 
 
-    		for(mergedTransaction in merged_you_owe){
-    			if(merged_you_owe[mergedTransaction]['username'] === user){
-    				merged_you_owe[mergedTransaction]['amount'] += amount;
-    				merged_you_owe[mergedTransaction]['transactions_info'].push({amount: amount, id: id, note: note, date_created: date, creator: creator});
+	    	//step 2
 
-    				in_database = true;
-    			}
-    		}
-    		if(!in_database)
-    			merged_you_owe.push({username:user, amount:amount, transactions_info:[{amount: amount, id: id, note: note, date_created: date, creator: creator}]});
-    	}
-
-    	for(transaction in owe_you){
-    		var user = owe_you[transaction]['username']; //username
-    		var amount = owe_you[transaction]['amount'];
-    		var in_database = false;
-    		var id = owe_you[transaction]['id'];
-    		var note = owe_you[transaction]['note'];
-    		var date = owe_you[transaction]['date_created'];
-    		var creator = owe_you[transaction]['creator'];
-
-    		for(mergedTransaction in merged_owe_you){
-    			if(merged_owe_you[mergedTransaction]['username'] === user){
-    				merged_owe_you[mergedTransaction]['amount'] += amount;
-    				merged_owe_you[mergedTransaction]['transactions_info'].push({amount: amount, id: id, note: note, date_created: date, creator: creator});
-
-    				//console.log(merged_owe_you[mergedTransaction]['transactions_info']);
-    				
-    				// merged_owe_you[mergedTransaction]['amounts'].push(amount);
-    				// merged_owe_you[mergedTransaction]['ids'].push(id);
-    				// merged_owe_you[mergedTransaction]['notes'].push(note);
-    				// merged_owe_you[mergedTransaction]['dates'].push(date);
-
-    				in_database = true;
-    			}
-    		}
-    		if(!in_database)
-    			merged_owe_you.push({username:user, amount:amount, transactions_info:[{amount: amount, id: id, note: note, date_created: date, creator: creator}]});
-    	}
-
-    	// console.log("printing transactions info:");
-    	// var x = merged_owe_you[0]['transactions_info']
-    	// console.log(x);
-    	// x = negateElements(merged_owe_you[0]['transactions_info']);
-    	// console.log(x);
-
-    	// console.log('merged_owe_you');
-    	// console.log(merged_owe_you);
+		    	for(transaction in you_owe){
+		    		var user = you_owe[transaction]['username'];
+		    		var displayName = you_owe[transaction]['name'];
+		    		var amount = you_owe[transaction]['amount'];
+		    		var in_database = false;
+		    		var id = you_owe[transaction]['id'];
+		    		var note = you_owe[transaction]['note'];
+		    		var date = you_owe[transaction]['date_created'];
+		    		var creator = you_owe[transaction]['creator'];
 
 
-    	// console.log("merged_you_owe");
-    	// console.log(merged_you_owe); // test owe_you and you_owe
+		    		for(mergedTransaction in merged_you_owe){
+		    			if(merged_you_owe[mergedTransaction]['username'] === user){
+		    				merged_you_owe[mergedTransaction]['amount'] += amount;
+		    				merged_you_owe[mergedTransaction]['transactions_info'].push({amount: amount, id: id, note: note, date_created: date, creator: creator});
 
-    	//step 3
+		    				in_database = true;
+		    			}
+		    		}
+		    		if(!in_database)
+		    			merged_you_owe.push({username:user, name:displayName, amount:amount, transactions_info:[{amount: amount, id: id, note: note, date_created: date, creator: creator}]});
+		    	}
 
-    	merged_owe_you.forEach(function(transaction_owe_you){
-    		var merge_username = transaction_owe_you['username'];
-    		var owe_you_amount = transaction_owe_you['amount'];
-    		var owe_you_transactions_info = transaction_owe_you['transactions_info'];
+		    	for(transaction in owe_you){
+		    		var user = owe_you[transaction]['username']; //username
+		    		var displayName = owe_you[transaction]['name'];
+		    		var amount = owe_you[transaction]['amount'];
+		    		var in_database = false;
+		    		var id = owe_you[transaction]['id'];
+		    		var note = owe_you[transaction]['note'];
+		    		var date = owe_you[transaction]['date_created'];
+		    		var creator = owe_you[transaction]['creator'];
 
-    		merged_you_owe.forEach(function(transaction_you_owe){
-    			var cross_check_username = transaction_you_owe['username']; // cross check  this username with merge username
-    			var you_owe_amount = transaction_you_owe['amount'];
-    			var you_owe_transactions_info = transaction_you_owe['transactions_info'];
-    			if(merge_username === cross_check_username){
-    				if(owe_you_amount > you_owe_amount){
-    					you_owe_transactions_info = negateElements(transaction_you_owe['transactions_info']); // negates values to show clarity
-    					you_owe_transactions_info.forEach(function(individual_transaction){transaction_owe_you['transactions_info'].push(individual_transaction);});
-    					//console.log(transaction_owe_you['transactions_info']);
-    					transaction_owe_you['amount'] = owe_you_amount - you_owe_amount;
-    					var arr = merged_you_owe;
-						var idx = arr.indexOf(transaction_you_owe); // INDEX OF THE CURRENT TRANSACTION IN MERGED YOU OWE, used to SPLICE out DATA
-						// be careful, .indexOf() will return -1 if the item is not found
-						if (idx !== -1) 
-							arr.splice(idx, 1);						
-						else
-							console.log("Error, current you_owe_transaction not found in array, bug happened here");
+		    		for(mergedTransaction in merged_owe_you){
+		    			if(merged_owe_you[mergedTransaction]['username'] === user){
+		    				merged_owe_you[mergedTransaction]['amount'] += amount;
+		    				merged_owe_you[mergedTransaction]['transactions_info'].push({amount: amount, id: id, note: note, date_created: date, creator: creator});
+		    				in_database = true;
+		    			}
+		    		}
+		    		if(!in_database)
+		    			merged_owe_you.push({username:user, name:displayName, amount:amount, transactions_info:[{amount: amount, id: id, note: note, date_created: date, creator: creator}]});
+	    		}
+
+	    	//step 3
+
+	    	merged_owe_you.forEach(function(transaction_owe_you){
+	    		var merge_username = transaction_owe_you['username'];
+	    		var owe_you_amount = transaction_owe_you['amount'];
+	    		var owe_you_transactions_info = transaction_owe_you['transactions_info'];
+
+	    		merged_you_owe.forEach(function(transaction_you_owe){
+	    			var cross_check_username = transaction_you_owe['username']; // cross check  this username with merge username
+	    			var you_owe_amount = transaction_you_owe['amount'];
+	    			var you_owe_transactions_info = transaction_you_owe['transactions_info'];
+	    			if(merge_username === cross_check_username){
+	    				if(owe_you_amount > you_owe_amount){
+	    					you_owe_transactions_info = negateElements(transaction_you_owe['transactions_info']); // negates values to show clarity
+	    					you_owe_transactions_info.forEach(function(individual_transaction){transaction_owe_you['transactions_info'].push(individual_transaction);});
+	    					//console.log(transaction_owe_you['transactions_info']);
+	    					transaction_owe_you['amount'] = owe_you_amount - you_owe_amount;
+	    					var arr = merged_you_owe;
+							var idx = arr.indexOf(transaction_you_owe); // INDEX OF THE CURRENT TRANSACTION IN MERGED YOU OWE, used to SPLICE out DATA
+							if (idx !== -1) 
+								arr.splice(idx, 1);						
+							else
+								console.log("Error, current you_owe_transaction not found in array, bug happened here");
+						}
+						else{
+	    					owe_you_transactions_info = negateElements(transaction_owe_you['transactions_info']); // negates values to show clarity
+	    					owe_you_transactions_info.forEach(function(individual_transaction){transaction_you_owe['transactions_info'].push(individual_transaction);});
+	    					//console.log(transaction_you_owe['transactions_info']);
+	    					transaction_you_owe['amount'] = you_owe_amount - owe_you_amount;
+	    					var arr = merged_owe_you;
+							var idx = arr.indexOf(transaction_owe_you); // INDEX OF THE CURRENT TRANSACTION IN MERGED YOU OWE, used to SPLICE out DATA
+							if (idx !== -1) 
+								arr.splice(idx, 1);						
+							else
+								console.log("Error, current owe_you_transaction not found in array, bug happened here");
+						}
 					}
-					else{
-    					owe_you_transactions_info = negateElements(transaction_owe_you['transactions_info']); // negates values to show clarity
-    					owe_you_transactions_info.forEach(function(individual_transaction){transaction_you_owe['transactions_info'].push(individual_transaction);});
-    					//console.log(transaction_you_owe['transactions_info']);
-    					transaction_you_owe['amount'] = you_owe_amount - owe_you_amount;
-    					var arr = merged_owe_you;
-						var idx = arr.indexOf(transaction_owe_you); // INDEX OF THE CURRENT TRANSACTION IN MERGED YOU OWE, used to SPLICE out DATA
-						// be careful, .indexOf() will return -1 if the item is not found
-						if (idx !== -1) 
-							arr.splice(idx, 1);						
-						else
-							console.log("Error, current owe_you_transaction not found in array, bug happened here");
-					}
-				}
 
+				});
 			});
-});
-		// Account.findOneAndUpdate({username:req.user.username},{you_owe:merged_you_owe,owe_you:merged_owe_you}, function(){});
-		//above done so that ajax post for /createcharge can return updated list
-		// console.log('NEW merged_owe_you');
-		// console.log(merged_owe_you);
 
-		// console.log("NEW merged_you_owe");
-  //   	console.log(merged_you_owe); // test owe_you and you_owe
+			console.log("merged you owe:");
+			console.log(merged_you_owe);
+			console.log("merged owe you");
+			console.log(merged_owe_you);
 
-    	res.render('index', {venmo: user_has_venmo, user:req.user, merged_owe_you, merged_you_owe });
+	    	res.render('index', {venmo: user_has_venmo, user:req.user, merged_owe_you, merged_you_owe });
 
-    });	
-}
-
+	    });	
+	}
 });
 
 function negateElements(input_array){
@@ -222,11 +199,18 @@ function negateElements(input_array){
 	return input_array;
 }
 
+
+
+function getDisplayName(target_user){
+
+	return target_user['first_name'] + " " + target_user['last_name'].charAt(0).toUpperCase() + ".";
+}
+
 // WHEN YOU CLICK THE CHECK BUTTON NEXT TO A CHARGE
 
 router.post('/chargecomplete', function(req, res) {
 	Charge.findOne({_id: req.body.charge_id},function(err,charge){
-		if(charge['completed'] || charge['canccelled']){
+		if(charge['completed'] || charge['cancelled']){
 			res.send("Already Done");
 		}
 		else{
@@ -409,7 +393,7 @@ router.post('/chargecomplete', function(req, res) {
 router.post('/chargecancel', function(req, res) {
 	//STATISTICS FOR CURRENT LENT / BORROWED
 	Charge.findOne({_id: req.body.charge_id},function(err,charge){
-		if(charge['completed'] || charge['canccelled']){
+		if(charge['completed'] || charge['cancelled']){
 			res.send("Already Done");
 		}
 		else{
@@ -572,7 +556,7 @@ router.get('/usersearch',function(req,res){ // this is a function unused for now
 				}
 			}
 		}
-		response_data['items'].unshift({full_name:req.query.name, username:'Create Custom User'});
+		response_data['items'].unshift({full_name:'Charge Custom User', username:req.query.name});
 		res.send(response_data);
 	});
 
