@@ -310,7 +310,7 @@ router.post('/chargecomplete', function(req, res) {
                             graph_current_total.push(new_data);
                         // }
 
-			            // Account.findOneAndUpdate({username: charge['recipient']['username']}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:r_current_borrowed, current_lent:r_current_lent, greatest_loan:r_greatest_loan, smallest_loan:r_smallest_loan,highest_debt:r_highest_debt,smallest_debt:r_smallest_debt}, function(){});           
+			            Account.findOneAndUpdate({username: charge['recipient']['username']}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:r_current_borrowed, current_lent:r_current_lent, greatest_loan:r_greatest_loan, smallest_loan:r_smallest_loan,highest_debt:r_highest_debt,smallest_debt:r_smallest_debt}, function(){});           
 					}); 
 				}                                                  // check if person targetted has an account or no, undefined fs they dont 					                                                                                                          // they have an account and it pushes to charges that you owe their name	    				
 			}
@@ -507,7 +507,7 @@ router.post('/chargecancel', function(req, res) {
                     //     if (req.body.counter == 1) {
                     //         number_changes += 1;
                     //         current_total = current_lent - current_borrowed - req.body.totalAmount + charge_amount;
-                            var new_data = {"changes": number_changes, "current_total": current_total};
+                    //         var new_data = {"changes": number_changes, "current_total": current_total};
                     //         graph_current_total.push(new_data);
                     //     }
                     // } else {
@@ -533,7 +533,7 @@ router.post('/chargecancel', function(req, res) {
                         // if (req.body.totalAmount) {
                         //     if (req.body.counter == 1) {
                         //         number_changes += 1;
-                                current_total = r_current_lent - r_current_borrowed - req.body.totalAmount + charge_amount;
+                        //        current_total = r_current_lent - r_current_borrowed - req.body.totalAmount + charge_amount;
                         //         var new_data = {"changes": number_changes, "current_total": current_total};
                         //         graph_current_total.push(new_data);
                         //     }
