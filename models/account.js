@@ -20,7 +20,10 @@ var Account = new Schema({
     greatest_loan: {type:Number, default:null},
     smallest_loan: {type:Number, default:null},
     highest_debt: {type:Number, default:null},
-    smallest_debt: {type:Number, default:null}
+    smallest_debt: {type:Number, default:null},
+    date_created: Date,
+    number_changes: { type: Number, default: 0},
+    graph_current_total: { type: Array, default : [{"changes": 0, "current_total": 0}]}
 
 });
 

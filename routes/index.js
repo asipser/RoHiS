@@ -333,6 +333,7 @@ router.post('/chargecomplete', function(req, res) {
 			});      
 			if(charge['recipient']['username'] !== undefined && charge['recipient']['username'] !== req.user.username){	  // other user is lending money
 				Account.findOne({username: charge['recipient']['username']}, function (err,recipient){
+					console.log("error here");
 					var r_current_borrowed = recipient['current_borrowed']; // R stands for Recipient 
 			        var r_current_lent = recipient['current_lent'];
 			        var r_greatest_loan = recipient['greatest_loan']; 
@@ -374,6 +375,7 @@ router.post('/chargecomplete', function(req, res) {
 	            Account.findOneAndUpdate({username: req.user.username}, {current_borrowed:current_borrowed, current_lent:current_lent, greatest_loan:greatest_loan,smallest_loan:smallest_loan,highest_debt:highest_debt,smallest_debt:smallest_debt}, function(){});           
 			}); 
 			if(charge['payer']['username'] !== undefined && charge['payer']['username'] !== req.user.username){
+				console.log("This is an error....");
 				Account.findOne({username: charge['payer']['username']}, function (err,payer){
 					var p_current_borrowed = payer['current_borrowed'];
 			        var p_current_lent = payer['current_lent'];
