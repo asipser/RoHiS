@@ -114,7 +114,7 @@ $(".chargecompleteall").click(function() {
 				charge_id: charge_id,
 				total: total,
 				totalAmount: totalAmount,
-				i: i
+				counter: counter
 			},
 			type: 'POST',
 			success: function(data){
@@ -169,7 +169,7 @@ $(".chargecancelall").click(function() {
 				charge_id: charge_id,
 				total: total,
 				totalAmount: totalAmount,
-				i: i
+				counter: counter
 			},
 			type: 'POST',
 			success: function(data){
