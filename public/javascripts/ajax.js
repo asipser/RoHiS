@@ -14,7 +14,8 @@ $(".chargecomplete").click(function() {
 	$.ajax({
 		url: '/chargecomplete',
 		data: {
-			charge_id: charge_id
+			charge_id: charge_id,
+			total: "false"
 		},
 		type: 'POST',
 		success: function(data){
@@ -58,7 +59,8 @@ $(".chargecancel").click(function() {
 	$.ajax({
 		url: '/chargecancel',
 		data: {
-			charge_id: charge_id
+			charge_id: charge_id,
+			total: "false"
 		},
 		type: 'POST',
 		success: function(data){
@@ -92,14 +94,26 @@ $(".chargecompleteall").click(function() {
 	var username = $(this).attr('data').split(' ').join('.');
 	console.log(username);
 	var subcharges = $('div.listeditem.' + username);
+	var totalAmount = parseFloat($('.dbamount.' + username).text());
 
 	for(var i=0; i < subcharges.length; i++){
 		var charge_id = $(subcharges[i]).attr('id');
 		console.log(charge_id);
+
+		var total;
+
+		if (i === 0) {
+			total = "true";
+		} else {
+			total = "sent";
+		}
+
 		$.ajax({
 			url: '/chargecomplete',
 			data: {
-				charge_id: charge_id
+				charge_id: charge_id,
+				total: total,
+				totalAmount: totalAmount
 			},
 			type: 'POST',
 			success: function(data){
@@ -123,14 +137,25 @@ $(".chargecancelall").click(function() {
 	var username = $(this).attr('data').split(' ').join('.');
 	console.log(username);
 	var subcharges = $('div.listeditem.' + username);
+	var totalAmount = parseFloat($('.dbamount.' + username).text());
 
 	for(var i=0; i < subcharges.length; i++){
 		var charge_id = $(subcharges[i]).attr('id');
 
+		var total;
+
+		if (i === 0) {
+			total = "true";
+		} else {
+			total = "sent";
+		}
+
 		$.ajax({
 			url: '/chargecancel',
 			data: {
-				charge_id: charge_id
+				charge_id: charge_id,
+				total: total,
+				totalAmount: totalAmount
 			},
 			type: 'POST',
 			success: function(data){

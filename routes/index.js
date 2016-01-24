@@ -232,22 +232,46 @@ router.post('/chargecomplete', function(req, res) {
 
         // SEND EMAIL IF PERSON WHO COMPLETED IS NOT THE CREATOR
 
-        if (!(profile['creator'] === profile['who_completed'])) {
+        if (req.body.total === "false") {
 
-            Account.findOne({username: profile['creator']}, function(err, creator) {
+            if (!(profile['creator'] === profile['who_completed'])) {
 
-                var mailOptions = {
-                    from: 'noreply.rohis@gmail.com',
-                    to: creator['email'],
-                    subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
-                    text: req.user.first_name + " has marked your charge of $" + profile['amount'] + " for '" + profile['description'] + "' as completed. Check it out at rohis.herokuapp.com!"
-                };
+                Account.findOne({username: profile['creator']}, function(err, creator) {
 
-                if (creator['email_notifications']) {
-                    transporter.sendMail(mailOptions);
-                }
+                    var mailOptions = {
+                        from: 'noreply.rohis@gmail.com',
+                        to: creator['email'],
+                        subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
+                        text: req.user.first_name + " has marked your charge of $" + profile['amount'] + " for '" + profile['description'] + "' as completed. Check it out at rohis.herokuapp.com!"
+                    };
 
-            });      
+                    if (creator['email_notifications']) {
+                        transporter.sendMail(mailOptions);
+                    }
+
+                });      
+            }
+
+        } else if (req.body.total === "true") {
+
+            if (!(profile['creator'] === profile['who_completed'])) {
+
+                Account.findOne({username: profile['creator']}, function(err, creator) {
+
+                    var mailOptions = {
+                        from: 'noreply.rohis@gmail.com',
+                        to: creator['email'],
+                        subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
+                        text: req.user.first_name + " has marked your cumulative charge of $" + req.body.totalAmount + " as completed. Check it out at rohis.herokuapp.com!"
+                    };
+
+                    if (creator['email_notifications']) {
+                        transporter.sendMail(mailOptions);
+                    }
+
+                });      
+            }
+
         }
 
         Account.findOne({username: profile['payer']['username']}, function(err, payer_info) {
@@ -304,23 +328,48 @@ router.post('/chargecancel', function(req, res) {
         
         // SEND EMAIL IF PERSON WHO CANCELLED IS NOT THE CREATOR
 
-        if (!(profile['creator'] === profile['who_cancelled'])) {
+        if (req.body.total === "false") {
 
-            Account.findOne({username: profile['creator']}, function(err, creator) {
+            if (!(profile['creator'] === profile['who_cancelled'])) {
 
-                var mailOptions = {
-                    from: 'noreply.rohis@gmail.com',
-                    to: creator['email'],
-                    subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
-                    text: req.user.first_name + " has cancelled your charge of $" + profile['amount'] + " for '" + profile['description'] + ".' Check it out at rohis.herokuapp.com!"
-                };
+                Account.findOne({username: profile['creator']}, function(err, creator) {
 
-                if (creator['email_notifications']) {
-                    transporter.sendMail(mailOptions);
-                }
+                    var mailOptions = {
+                        from: 'noreply.rohis@gmail.com',
+                        to: creator['email'],
+                        subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
+                        text: req.user.first_name + " has cancelled your charge of $" + profile['amount'] + " for '" + profile['description'] + ".' Check it out at rohis.herokuapp.com!"
+                    };
 
-            });      
+                    if (creator['email_notifications']) {
+                        transporter.sendMail(mailOptions);
+                    }
+
+                });      
+            }
+
+        } else if (req.body.total === "true") {
+
+            if (!(profile['creator'] === profile['who_cancelled'])) {
+
+                Account.findOne({username: profile['creator']}, function(err, creator) {
+
+                    var mailOptions = {
+                        from: 'noreply.rohis@gmail.com',
+                        to: creator['email'],
+                        subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
+                        text: req.user.first_name + " has cancelled your cumulative charge of $" + req.body.totalAmount + ". Check it out at rohis.herokuapp.com!"
+                    };
+
+                    if (creator['email_notifications']) {
+                        transporter.sendMail(mailOptions);
+                    }
+
+                });      
+            }
+
         }
+
 
         res.send('Success!');
 
