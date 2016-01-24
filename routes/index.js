@@ -226,99 +226,102 @@ function negateElements(input_array){
 
 router.post('/chargecomplete', function(req, res) {
 	Charge.findOne({_id: req.body.charge_id},function(err,charge){
-		var charge_amount = charge['amount'];
-		console.log("charge amount: " + charge_amount);
-	    if(charge['payer']['username'] === req.user.username){    // user is borrowing money 
-        	Account.findOne({username: req.user.username}, function (err,profile){
-				var current_borrowed = profile['current_borrowed'];
-		        var current_lent = profile['current_lent'];
-		        var greatest_loan = profile['greatest_loan']; 
-		        var smallest_loan = profile['smallest_loan'];
-		        var highest_debt = profile['highest_debt']; 
-		        var smallest_debt = profile['smallest_debt'];
-		        console.log("current_borrowed before: " + current_borrowed);
-	            current_borrowed -= charge_amount; // CHANGING CURRENT BORROWED HERE
-	            if(highest_debt === null){
-	                highest_debt = charge_amount;
-	                smallest_debt = charge_amount;
-	            }
-	            else if (highest_debt < charge_amount)
-	                highest_debt = charge_amount;
-	            else if(charge_amount < smallest_debt)
-	                smallest_debt = charge_amount;
-	            console.log("current_borrowed after: " + current_borrowed);
-	            Account.findOneAndUpdate({username: req.user.username}, {current_borrowed:current_borrowed, current_lent:current_lent, greatest_loan:greatest_loan,smallest_loan:smallest_loan,highest_debt:highest_debt,smallest_debt:smallest_debt}, function(){});           
-			});      
-			if(charge['recipient']['username'] !== undefined){	  // other user is lending money
-				Account.findOne({username: charge['recipient']['username']}, function (err,recipient){
-					console.log("error here");
-					var r_current_borrowed = recipient['current_borrowed']; // R stands for Recipient 
-			        var r_current_lent = recipient['current_lent'];
-			        var r_greatest_loan = recipient['greatest_loan']; 
-			        var r_smallest_loan = recipient['smallest_loan'];
-			        var r_highest_debt = recipient['highest_debt']; 
-			        var r_smallest_debt = recipient['smallest_debt'];
-		            r_current_lent -= charge_amount; // CHANGING CURRENT LENT OF OTHER PERSON HERE
-		            if(r_greatest_loan === null){
-		                r_greatest_loan = charge_amount;
-		                r_smallest_loan = charge_amount;
-		                r_average_loan = charge_amount;
-		            }
-		            if (r_greatest_loan < charge_amount)
-		                r_greatest_loan = charge_amount;
-		            if(charge_amount < r_smallest_loan)
-		                r_smallest_loan = charge_amount;
-		            Account.findOneAndUpdate({username: charge['recipient']['username']}, {current_borrowed:r_current_borrowed, current_lent:r_current_lent, greatest_loan:r_greatest_loan, smallest_loan:r_smallest_loan,highest_debt:r_highest_debt,smallest_debt:r_smallest_debt}, function(){});           
-				}); 
-			}                                                  // check if person targetted has an account or no, undefined fs they dont 					                                                                                                          // they have an account and it pushes to charges that you owe their name	    				
+		if(charge['completed'] || charge['canccelled']){
+			res.send("Already Done");
 		}
-		else if(charge['recipient']['username'] === req.user.username){                                                 // user is a recipient
-			Account.findOne({username: req.user.username}, function (err,profile){
-				var current_borrowed = profile['current_borrowed'];
-		        var current_lent = profile['current_lent'];
-		        var greatest_loan = profile['greatest_loan']; 
-		        var smallest_loan = profile['smallest_loan'];
-		        var highest_debt = profile['highest_debt']; 
-		        var smallest_debt = profile['smallest_debt'];
-	            current_lent -= charge_amount; // CHANGING CURRENT LENT HERE
-	            if(greatest_loan === null){
-	                greatest_loan = charge_amount;
-	                smallest_loan = charge_amount;
-	            }
-	            if (greatest_loan < charge_amount)
-	                greatest_loan = charge_amount;
-	            if(charge_amount < smallest_loan)
-	                smallest_loan = charge_amount;
-	            Account.findOneAndUpdate({username: req.user.username}, {current_borrowed:current_borrowed, current_lent:current_lent, greatest_loan:greatest_loan,smallest_loan:smallest_loan,highest_debt:highest_debt,smallest_debt:smallest_debt}, function(){});           
-			}); 
-			if(charge['payer']['username'] !== undefined){
-				console.log("This is an error....");
-				Account.findOne({username: charge['payer']['username']}, function (err,payer){
-					var p_current_borrowed = payer['current_borrowed'];
-			        var p_current_lent = payer['current_lent'];
-			        var p_greatest_loan = payer['greatest_loan']; 
-			        var p_smallest_loan = payer['smallest_loan'];
-			        var p_highest_debt = payer['highest_debt']; 
-			        var p_smallest_debt = payer['smallest_debt'];
-		            p_current_borrowed -= charge_amount; // CHANGING OTHER PERSON'S CURRENT BORROWED HERE
-		            if(p_highest_debt === null){
-		                p_highest_debt = charge_amount;
-		                p_smallest_debt = charge_amount;
-		                p_average_debt = charge_amount;
-		            }
-		            if (p_highest_debt < charge_amount)
-		                p_highest_debt = charge_amount;
-		            if(charge_amount < p_smallest_debt)
-		                p_smallest_debt = charge_amount;
-		            Account.findOneAndUpdate({username: charge['payer']['username']}, {current_borrowed:p_current_borrowed, current_lent:p_current_lent, greatest_loan:p_greatest_loan,smallest_loan:p_smallest_loan,highest_debt:p_highest_debt,smallest_debt:p_smallest_debt}, function(){});           
-				});  
+		else{
+			var charge_amount = charge['amount'];
+			console.log("charge amount: " + charge_amount);
+		    if(charge['payer']['username'] === req.user.username){    // user is borrowing money 
+	        	Account.findOne({username: req.user.username}, function (err,profile){
+					var current_borrowed = profile['current_borrowed'];
+			        var current_lent = profile['current_lent'];
+			        var greatest_loan = profile['greatest_loan']; 
+			        var smallest_loan = profile['smallest_loan'];
+			        var highest_debt = profile['highest_debt']; 
+			        var smallest_debt = profile['smallest_debt'];
+			        console.log("current_borrowed before: " + current_borrowed);
+		            current_borrowed -= charge_amount; // CHANGING CURRENT BORROWED HERE
+		            if(highest_debt === null){
+		                highest_debt = charge_amount;
+		                smallest_debt = charge_amount;
+		           }
+		            else if (highest_debt < charge_amount)
+		                highest_debt = charge_amount;
+		            else if(charge_amount < smallest_debt)
+		                smallest_debt = charge_amount;
+		            console.log("current_borrowed after: " + current_borrowed);
+		            Account.findOneAndUpdate({username: req.user.username}, {current_borrowed:current_borrowed, current_lent:current_lent, greatest_loan:greatest_loan,smallest_loan:smallest_loan,highest_debt:highest_debt,smallest_debt:smallest_debt}, function(){});           
+				});      
+				if(charge['recipient']['username'] !== undefined){	  // other user is lending money
+					Account.findOne({username: charge['recipient']['username']}, function (err,recipient){
+						console.log("error here");
+						var r_current_borrowed = recipient['current_borrowed']; // R stands for Recipient 
+				        var r_current_lent = recipient['current_lent'];
+				        var r_greatest_loan = recipient['greatest_loan']; 
+				        var r_smallest_loan = recipient['smallest_loan'];
+				        var r_highest_debt = recipient['highest_debt']; 
+				        var r_smallest_debt = recipient['smallest_debt'];
+			            r_current_lent -= charge_amount; // CHANGING CURRENT LENT OF OTHER PERSON HERE
+			            if(r_greatest_loan === null){
+			                r_greatest_loan = charge_amount;
+			                r_smallest_loan = charge_amount;
+			                r_average_loan = charge_amount;
+			            }
+			            if (r_greatest_loan < charge_amount)
+			                r_greatest_loan = charge_amount;
+			            if(charge_amount < r_smallest_loan)
+			                r_smallest_loan = charge_amount;
+			            Account.findOneAndUpdate({username: charge['recipient']['username']}, {current_borrowed:r_current_borrowed, current_lent:r_current_lent, greatest_loan:r_greatest_loan, smallest_loan:r_smallest_loan,highest_debt:r_highest_debt,smallest_debt:r_smallest_debt}, function(){});           
+					}); 
+				}                                                  // check if person targetted has an account or no, undefined fs they dont 					                                                                                                          // they have an account and it pushes to charges that you owe their name	    				
 			}
-		}
+			else if(charge['recipient']['username'] === req.user.username){                                                 // user is a recipient
+				Account.findOne({username: req.user.username}, function (err,profile){
+					var current_borrowed = profile['current_borrowed'];
+			        var current_lent = profile['current_lent'];
+			        var greatest_loan = profile['greatest_loan']; 
+			        var smallest_loan = profile['smallest_loan'];
+			        var highest_debt = profile['highest_debt']; 
+			        var smallest_debt = profile['smallest_debt'];
+		            current_lent -= charge_amount; // CHANGING CURRENT LENT HERE
+		            if(greatest_loan === null){
+		                greatest_loan = charge_amount;
+		                smallest_loan = charge_amount;
+		            }
+		            if (greatest_loan < charge_amount)
+		                greatest_loan = charge_amount;
+		            if(charge_amount < smallest_loan)
+		                smallest_loan = charge_amount;
+		            Account.findOneAndUpdate({username: req.user.username}, {current_borrowed:current_borrowed, current_lent:current_lent, greatest_loan:greatest_loan,smallest_loan:smallest_loan,highest_debt:highest_debt,smallest_debt:smallest_debt}, function(){});           
+				}); 
+				if(charge['payer']['username'] !== undefined){
+					console.log("This is an error....");
+					Account.findOne({username: charge['payer']['username']}, function (err,payer){
+						var p_current_borrowed = payer['current_borrowed'];
+				        var p_current_lent = payer['current_lent'];
+				        var p_greatest_loan = payer['greatest_loan']; 
+				        var p_smallest_loan = payer['smallest_loan'];
+				        var p_highest_debt = payer['highest_debt']; 
+				        var p_smallest_debt = payer['smallest_debt'];
+			            p_current_borrowed -= charge_amount; // CHANGING OTHER PERSON'S CURRENT BORROWED HERE
+			            if(p_highest_debt === null){
+			                p_highest_debt = charge_amount;
+			                p_smallest_debt = charge_amount;
+			                p_average_debt = charge_amount;
+			            }
+			            if (p_highest_debt < charge_amount)
+			                p_highest_debt = charge_amount;
+			            if(charge_amount < p_smallest_debt)
+			                p_smallest_debt = charge_amount;
+			            Account.findOneAndUpdate({username: charge['payer']['username']}, {current_borrowed:p_current_borrowed, current_lent:p_current_lent, greatest_loan:p_greatest_loan,smallest_loan:p_smallest_loan,highest_debt:p_highest_debt,smallest_debt:p_smallest_debt}, function(){});           
+					});  
+				}
+			}
+    	}
     });
 	Charge.findOneAndUpdate({_id: req.body.charge_id}, {completed: true, date_completed: moment(), who_completed: req.user.username}, {new: true}, function(err, profile) {
-
 		//console.log(profile);
-
         // SEND EMAIL IF PERSON WHO COMPLETED IS NOT THE CREATOR
 
         if (req.body.total === "false") {
