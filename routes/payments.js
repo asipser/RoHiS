@@ -66,61 +66,6 @@ router.post('/addcharge', function (req, res, next) {
           console.log("Saved Charge");
         });
 
-        // STATISTICS
-
-        Account.findOne({username: req.user.username}, function (err,profile){
-            console.log(profile);
-            var current_borrowed = profile['total_borrowed'];
-            var current_lent = profile['total_lent'];
-            var total_loans = profile['total_loans'];
-            var total_debts = profile['total_debts'];
-            var greatest_loan = profile['greatest_loan']; 
-            var smallest_loan = profile['smallest_loan'];
-            var highest_debt = profile['highest_debt']; 
-            var smallest_debt = profile['smallest_debt'];
-
-            var average_loan = profile['average_loan'];
-            var average_debt = profile['average_debt'];
-
-            console.log(req.body.borroworlent);
-
-            if (req.body.borroworlent === "true"){
-                total_loans++;
-                current_lent += parseInt(req.body.amount);
-                if(greatest_loan === null){1
-                    greatest_loan = parseInt(req.body.amount);
-                    smallest_loan = parseInt(req.body.amount);
-                    average_loan = parseInt(req.body.amount);
-                }
-                else if (greatest_loan < parseInt(req.body.amount))
-                    greatest_loan = parseInt(req.body.amount);
-                if(parseInt(req.body.amount) < smallest_loan)
-                    smallest_loan = parseInt(req.body.amount);
-
-                average_loan = current_lent / total_loans;
-            }
-            else{
-                total_debts++;
-                current_borrowed += parseInt(req.body.amount);
-                if(highest_debt === null){
-                    highest_debt = parseInt(req.body.amount);
-                    smallest_debt = parseInt(req.body.amount);
-                    average_debt = parseInt(req.body.amount);
-                }
-                else if (highest_debt < parseInt(req.body.amount))
-                    highest_debt = parseInt(req.body.amount);
-                if(parseInt(req.body.amount) < smallest_loan)
-                    smallest_debt = parseInt(req.body.amount);
-
-                average_debt = (current_borrowed / total_debts);
-
-            }
-
-            console.log("currnent lent: " + current_lent);
-
-            Account.findOneAndUpdate({username: req.user.username}, {total_borrowed:current_borrowed, total_lent:current_lent, greatest_loan:greatest_loan,smallest_loan:smallest_loan,highest_debt:highest_debt,smallest_debt:smallest_debt, average_loan:average_loan,average_debt:average_debt,total_debts:total_debts,total_loans:total_loans}, function(){});           
-        });
-
         // SENDING EMAIL IF EMAIL_NOTIFICATIONS IS ON FOR THE OTHER USER
 
         if (users[0] && users[0]['email_notifications']) {
