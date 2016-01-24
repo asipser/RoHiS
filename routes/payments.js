@@ -77,7 +77,7 @@ router.post('/addcharge', function (req, res, next) {
             else
                 current_borrowed += parseInt(req.body.amount);
             console.log("currnent lent: " + current_lent);
-            Account.findOneAndUpdate({username: req.user.username}, {total_borrowed:current_borrowed, total_lent:current_lent}, function(){});           
+            Account.findOneAndUpdate({username: req.user.username}, {current_borrowed:current_borrowed, current_lent:current_lent}, function(){});           
         });
 
         // SENDING EMAIL IF EMAIL_NOTIFICATIONS IS ON FOR THE OTHER USER

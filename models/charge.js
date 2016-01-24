@@ -17,7 +17,7 @@ var Charge = new Schema({
     used_venmo: Boolean,
     who_cancelled: String,
     who_completed: String,
-    creator: String
+    creator: String,
 });
 
 module.exports = mongoose.model('Charge', Charge);
