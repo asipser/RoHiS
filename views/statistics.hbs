@@ -51,8 +51,20 @@ https://cdnjs.cloudflare.com/ajax/libs/plottable.js/2.0.0/plottable.css">
 
 	var plot = new Plottable.Plots.Area()
 		.x(function(d) { return d.changes; }, xScale)
-		.y(function(d) { return d.current_total; }, yScale)
-		.attr("fill", function(d) { return (d.y > 0 ? "#0000FF" : "#FF0000"); }, colorScale);
+		.y(function(d) { return d.current_total; }, yScale);
+
+	var pzi = new Plottable.Interactions.PanZoom();
+	pzi.addXScale(xScale);
+	pzi.addYScale(yScale);
+	pzi.attachTo(plot);
+
+	var pziXAxis = new Plottable.Interactions.PanZoom();
+	pziXAxis.addXScale(xScale);
+	pziXAxis.attachTo(xAxis);
+
+	var pziYAxis = new Plottable.Interactions.PanZoom();
+	pziYAxis.addYScale(yScale);
+	pziYAxis.attachTo(yAxis);
 
 	$.ajax({
 		url: '/statistics/usergraph',
