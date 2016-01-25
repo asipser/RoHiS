@@ -201,3 +201,8 @@ input[type=number]::-webkit-outer-spin-button {
 .chargelist::-webkit-scrollbar { 
     display: none; 
 }
+
+#stats_graph{
+	width: 15vw;
+	height: 30vh;
+}

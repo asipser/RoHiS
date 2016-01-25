@@ -22,14 +22,32 @@
 	<div class="ui container" id="statisticspanel">
 		<h2 class="ui dividing large header"><i class="large line chart icon"></i> Statistics</h2>
 		<div class="ui three column grid">
-			<div class="column"><div class='ui segment'>
-			{{user.statistics.average_time}}
+			<div class="column"><div class='ui center aligned segment'>
+				<div class='ui small statistic'>
+					<div class='statisticsreturntime value' data='{{user.statistics.average_time}}'>0</div>
+					<div class='label'>Average return</div>
+				</div>
 			</div></div>
-			<div class="column"><div class='ui segment'>
-			<p>{{user.statistics.greatest_loan}}</p>
-			<p>{{user.statistics.smallest_loan}}</p>
-			<p>{{user.statistics.highest_debt}}</p>
-			<p>{{user.statistics.smallest_debt}}</p>
+			<div class="column"><div class='ui center aligned segment'>
+				<div class='ui orange statistic'>
+					<div class='label'>Greatest Loan</div>
+					<div class='statisticspage value' data='{{user.greatest_loan}}'>0</div>
+				</div>
+				<br>
+				<div class='ui olive statistic'>
+					<div class='label'>Smallest Loan</div>
+					<div class='statisticspage value' data='{{user.smallest_loan}}'>0</div>
+				</div>
+				<br>
+				<div class='ui orange statistic'>
+					<div class='label'>Greatest Debt</div>
+					<div class='statisticspage value' data='{{user.highest_debt}}'>0</div>
+				</div>
+				<br>
+				<div class='ui olive statistic'>
+					<div class='label'>Smallest Debt</div>
+					<div class='statisticspage value' data='{{user.smallest_debt}}'>0</div>
+				</div>
 			</div></div>
 			<div class="column">
 				<div class='ui segment'>

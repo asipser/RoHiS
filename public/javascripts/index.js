@@ -12,7 +12,6 @@ $(document).ready(function(){
 	$('.ui.checkbox').checkbox();
 
 	var notFormUserName = 'not[' + $('#getusername').text() + ']';
-	console.log(notFormUserName);
 	$('.ui.form.charge').form({
 		fields: {
 			borroworlent: {
@@ -346,6 +345,7 @@ $(document).ready(function(){
 					}
 				});
 			}
+			location.reload();
 		});
 	}
 
@@ -419,5 +419,13 @@ $(document).ready(function(){
 		$('div.ui.toggle.checkbox').checkbox('check');
 	}else{
 		$('div.ui.toggle.checkbox').checkbox('uncheck');
+	}
+
+	$('div.statisticsreturntime').text((parseFloat($('div.statisticsreturntime').attr('data'))/(60000)).toFixed(2));
+
+	var stats = $('div.statisticspage.value');
+	for(var i=0;i<stats.length;i++){
+		if($(stats[i]).attr('data'))
+			$(stats[i]).text($(stats[i]).attr('data'));
 	}
 });
