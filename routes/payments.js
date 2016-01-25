@@ -167,12 +167,6 @@ router.post('/addcharge', function (req, res, next) {
                                 res.redirect('/');
                             });
                         }
-                    } else {
-                        email = "FILL IN LATER";
-                        var parameters = {access_token: access_token, email: email, note: note, amount: amount};
-                        request.post({url: url, formData: parameters}, function(err, response, body) {
-                            res.redirect('/');
-                        });
                     }
 
                 });
