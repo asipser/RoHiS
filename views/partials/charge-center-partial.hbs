@@ -1,3 +1,42 @@
+<script>
+	var starClick = function(element){
+		if($(element).hasClass('empty')){
+			$('.star.icon').addClass('empty');
+			$(element).removeClass('empty');
+		}else{
+			$(element).addClass('empty');
+		}
+	};
+	var exitCard = function(element){
+		if($(element).closest('.card').siblings().length == 9){
+			$('#addbuttoncard').show();
+		}
+		$(element).closest('.card').remove();
+	};
+	var chargeOnChange = function(){
+		var individualCharges = $('input.indcharge');
+		var sharedCharges = $('div.content.sharedcharges');
+		var totalCharges = 0;
+
+		for(var i=0;i<individualCharges.length;i++){
+			var currentInd = parseFloat($(individualCharges[i]).val());
+			var currentShared = parseFloat($(sharedCharges[i]).text());
+			if(currentInd){
+				totalCharges += currentInd;
+			}
+			if(currentShared){
+				totalCharges += currentShared;
+			}
+		}
+
+		$('#totalremoved').text(totalCharges.toFixed(2));
+
+		var totalBill = parseFloat($('#totalbill').val());
+		if(totalBill){
+			$('#totalshared').text((totalBill - totalCharges).toFixed(2));
+		}
+	};
+</script>
 <div class="ui container" id="chargecenterpanel">
 	<div class='ui message opaque'>
 		<div id="chargeformwrapper">
@@ -30,13 +69,6 @@
 						<input type="text" name="note" id='chargedescription' placeholder="Description" maxlength='10'>
 					</div>
 				</div>
-				{{!-- <div class="ui search">
-				  <div class="ui icon input">
-				    <input class="prompt" type="text" placeholder="Search user...">
-				    <i class="search icon"></i>
-				  </div>
-				  <div class="results"></div>
-				</div> --}}
 				<div class="field">
 					<div id='venmobool' data='{{venmo}}' data-content='You must authenticate your venmo account in settings in order to use venmo' class="ui disabled slider checkbox">
 						<input type="checkbox" name="venmousage" value='true'>
@@ -47,8 +79,135 @@
 				<button id='submitchargebutton' class="ui blue button" type="submit">Charge!</button>
 			</form>
 		</div>
+		<div id='splitformwrapper'>
+			<div class='ui tabular three top attached steps menu'>
+				<div class="active step item" data-tab='step-1' id='step1tab'>
+					<i class="users icon"></i>
+					<div class="content">
+						<div class="title">People</div>
+						<div class="description">Choose who was involved in this charge</div>
+					</div>
+				</div>
+				<div class="step disabled item" data-tab='step-2' id='step2tab'>
+					<i class="wizard icon"></i>
+					<div class="content">
+						<div class="title">Bill Wizard</div>
+						<div class="description">Enter payment information</div>
+					</div>
+				</div>
+				<div class="step disabled item" data-tab='step-3' id='step3tab'>
+					<i class="info icon"></i>
+					<div class="content">
+						<div class="title">Confirm Charges</div>
+						<div class="description">Verify charge details</div>
+					</div>
+				</div>
+			</div>
+			<div class='ui attached raised segment'>
+				<div class='ui container'>
+					<div class="ui active tab" data-tab='step-1'>
+						<div class='ui right floated vertical buttons'>
+							<div class='green ui button' id='steponedonebutton'>Next</div>
+							<div class='red ui button cancelbutton' id='steponecancelbutton'>Cancel</div>
+						</div>
+						<div class='ui compact error message' style='display: none;'></div>
+						<div class='ui container'>
+							<div class='ui cards' id='usercards'>
+								<div id='firstcard' class='standard card'>
+									<div class='content'>
+										<div class='header'>{{user.username}} (You)</div>
+									</div>
+									<div class='content'>
+										<i class='massive smile icon'></i>
+									</div>
+									<div class='extra content'>
+										<span class='right floated'>Paid the bill <i onclick="starClick($(this))" class='empty star icon'></i></span>
+									</div>
+								</div>
+								{{> user-card-partial}}
+								<div class='card' id='addbuttoncard'>
+									<div class='content'>
+										<div id='addnewcardbutton' class='ui massive icon circular button'><i class='add user icon'></i></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="ui tab" data-tab='step-2'>
+						<div class='ui stacked segment'>
+							<div class='ui three cards' id='step2cards' style='margin-bottom: 5vh'>
+								<!-- Charged cards go here -->
+							</div>
+						</div>
+						<div class='ui container'>
+							<div class='ui horizontal segments'>
+								<div class='ui center aligned segment'>
+									<div class='ui huge labeled input'>
+										<div class='ui label' style='border-top-left-radius: .28571429rem; border-bottom-left-radius: .28571429rem;'>$</div>
+										<input type='number' id='totalbill' onchange='chargeOnChange()' placeholder='Input Total Bill Here' style='text-align: center'></input>
+									</div>
+									<div>-<br>$<span id='totalremoved'>0</span> individual/shared charges</div>
+									<div class='ui statistic'>
+										<div class='value'>
+											$<span id='totalshared'>0</span>
+										</div>
+										<div class='label'>
+											split between <span id='numpeoplesplit'>2</span> people
+										</div>
+									</div>
+								</div>
+								<div class='ui segment'>
+									<div class='ui right floated buttons'>
+										<div class='ui blue button' id='sharedchargebutton'><br>Add Shared Charge</div>
+										<div class='ui vertical buttons'>
+											<div class='ui positive button' id='step2nextbutton' style='border-top-left-radius: 0; border-bottom-left-radius: 0;'>Next</div>
+											<div class='ui negative button cancelbutton' style='border-top-left-radius: 0; border-bottom-left-radius: 0;'>Cancel</div>
+										</div>
+									</div>
+									<div class='ui form' id='sharedchargeform'>
+										<div class='fields'>
+											<div class='twelve wide field'>
+												<label class='label'>Charge amount</label>
+												<div class='ui labeled input'>
+													<div class='ui label' style='border-top-left-radius: .28571429rem; border-bottom-left-radius: .28571429rem;'>$</div>
+													<input type='number' id='sharedchargeamount' placeholder='1.23' style='border-top-right-radius: .28571429rem; border-bottom-right-radius: .28571429rem;'>
+												</div>
+											</div>
+										</div>
+										<div class='fields'>
+											<div class='sixteen wide field'>
+												<label>Participants</label>
+												<select multiple='' class='ui dropdown' id='participantdropdown'>
+													<option value=''>Select Participants</option>
+												</select>
+											</div>
+										</div>
+										<div class='ui error message' style='display: none'>Please fill out all fields!</div>
+										<button class='ui button' id='submitsharedchargebutton'>Submit</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="ui tab" data-tab='step-3'>
+						<div class='ui segment'>
+							<div class='ui three cards' id='step3cards' style='margin-bottom: 5vh'>
+								<!-- Final cards go here -->
+							</div>
+							<div class='ui bottom attached buttons'>
+								<div class='ui negative button cancelbutton'>Cancel</div>
+								<div class='ui positive button' id='step3confirmbutton'>Confirm</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div id="precharge" class='ui center aligned container'>
-			<div id='makechargebutton' class='ui primary massive button'>Make a charge!</div>
+			<div class='ui buttons'>
+				<div id='makechargebutton' class='ui primary massive button'><i class='user icon'></i> Make a charge!</div>
+				<div id='splitchargebutton' class='ui purple massive button'><i class='users icon'></i> Split a charge!</div>
+			</div>
 		</div>
 	</div>
 	<div class="ui divider"></div>
@@ -102,43 +261,43 @@
 					<div class='value'>$0</div>
 					<div class='label'>= 0 stress <i class='smile icon'></i></div>
 				</div>
- --}}				<div class='ui two cards'>
-					{{#each merged_you_owe}}
-					<div class='ui card {{username}}'>
-						<div class='content'>
-							<div class='header'>{{username}}</div>
-						</div>
-						<div class='center aligned content'>
-							<div class='ui slide masked reveal'>
-								<div class='visible content'>
-									<div class='ui statistic'>
-										<div class='label'>lent you a total of</div>
-										<div class='value'>
-											$<span class='dbamount {{username}}'>{{amount}}</span>
-										</div>
+				--}}				<div class='ui two cards'>
+				{{#each merged_you_owe}}
+				<div class='ui card {{username}}'>
+					<div class='content'>
+						<div class='header'>{{username}}</div>
+					</div>
+					<div class='center aligned content'>
+						<div class='ui slide masked reveal'>
+							<div class='visible content'>
+								<div class='ui statistic'>
+									<div class='label'>lent you a total of</div>
+									<div class='value'>
+										$<span class='dbamount {{username}}'>{{amount}}</span>
 									</div>
-								</div>
-								<div class='hidden content'>
-									{{#each transactions_info}}
-									<div id='{{id}}' data-title="Created by {{creator}} on {{date_created}}" class='listeditem {{../username}}'>
-										<span class='left floated'>"{{note}}":</span>
-										<span class='right floated'>$<span class='listedchargeamount'>{{amount}}</span> | <a class="chargecomplete" data='{{../username}}'><i class='green checkmark icon'></i></a>| <a data='{{../username}}' class="chargecancel"><i class='red remove icon'></i></a>|</span><br>
-									</div>
-									{{/each}}
 								</div>
 							</div>
-						</div>
-						<div class='extra content'>
-							<div class='ui two buttons'>
-								<div class="ui green button chargecompleteall" data='{{username}}'>Complete</div>
-								<div class="ui basic red button chargecancelall" data='{{username}}'>Remove</div>
+							<div class='hidden content'>
+								{{#each transactions_info}}
+								<div id='{{id}}' data-title="Created by {{creator}} on {{date_created}}" class='listeditem {{../username}}'>
+									<span class='left floated'>"{{note}}":</span>
+									<span class='right floated'>$<span class='listedchargeamount'>{{amount}}</span> | <a class="chargecomplete" data='{{../username}}'><i class='green checkmark icon'></i></a>| <a data='{{../username}}' class="chargecancel"><i class='red remove icon'></i></a>|</span><br>
+								</div>
+								{{/each}}
 							</div>
 						</div>
 					</div>
-					{{/each}}
+					<div class='extra content'>
+						<div class='ui two buttons'>
+							<div class="ui green button chargecompleteall" data='{{username}}'>Complete</div>
+							<div class="ui basic red button chargecancelall" data='{{username}}'>Remove</div>
+						</div>
+					</div>
 				</div>
+				{{/each}}
 			</div>
 		</div>
 	</div>
+</div>
 </div>
 <script src="/javascripts/index.js"></script>
