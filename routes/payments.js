@@ -68,7 +68,7 @@ router.post('/addcharge', function (req, res, next) {
 
         // STATISTICS
 
-        if (req.body.venmousage == true && req.body.borroworlent == false) {
+        if (req.body.venmousage && req.body.borroworlent === 'false') {
             console.log("do nothing");
         } else {
 
