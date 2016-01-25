@@ -112,21 +112,21 @@ router.post('/addcharge', function (req, res, next) {
                     Account.findOneAndUpdate({username: req.body.user.toLowerCase()}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed: current_borrowed, current_lent: current_lent}, function(){});           
                 });
             }
-        }
 
         // SENDING EMAIL IF EMAIL_NOTIFICATIONS IS ON FOR THE OTHER USER
 
-        if (users[0] && users[0]['email_notifications']) {
-            
-            var mailOptions = {
-                from: 'noreply.rohis@gmail.com',
-                to: users[0]['email'],
-                subject: "New charge from " + req.user.first_name + " " + req.user.last_name,
-                text: req.user.first_name + " has added a new charge with you: $" + req.body.amount + " for '" + req.body.note + ".' Check it out at rohis.herokuapp.com!"
-            };
+            if (users[0] && users[0]['email_notifications']) {
+                
+                var mailOptions = {
+                    from: 'noreply.rohis@gmail.com',
+                    to: users[0]['email'],
+                    subject: "New charge from " + req.user.first_name + " " + req.user.last_name,
+                    text: req.user.first_name + " has added a new charge with you: $" + req.body.amount + " for '" + req.body.note + ".' Check it out at rohis.herokuapp.com!"
+                };
 
-            transporter.sendMail(mailOptions);
+                transporter.sendMail(mailOptions);
 
+            }
         }
 
         // IF VENMO OPTION IS CHECKED (SO FAR ONLY WORKS IF BOTH USERS HAVE VENMO), THEN EITHER CHARGES OR REQUESTS THE OTHER PERSON.
