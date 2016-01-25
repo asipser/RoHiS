@@ -10,10 +10,15 @@ var transporter = secret['transporter'];
 
 router.get('/', function(req, res, next) {
 
-	Account.findOne({username: req.user.username}, function (err, profile) {
-		var email_on = profile['email_notifications'];
-		res.render('settings', {user:req.user, email_on: email_on});
-	});
+	if (req.user) {
+		Account.findOne({username: req.user.username}, function (err, profile) {
+			var email_on = profile['email_notifications'];
+			res.render('settings', {user:req.user, email_on: email_on});
+		});
+	} else {
+		res.render('settings', {user:req.user});
+	}
+	
 
  	
 });
