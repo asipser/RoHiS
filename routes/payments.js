@@ -117,7 +117,7 @@ router.post('/addcharge', function (req, res, next) {
                 from: 'noreply.rohis@gmail.com',
                 to: users[0]['email'],
                 subject: "New charge from " + req.user.first_name + " " + req.user.last_name,
-                text: req.user.first_name + " has added a new charge with you: $" + req.body.amount + " for '" + req.body.note + ".' Check it out at rohis.herokuapp.com!"
+                text: req.user.first_name + " has added a new charge with you: $" + req.body.amount + " for '" + req.body.note + ".' Check it out at http://moneymatters.eastus.cloudapp.azure.com/!"
             };
 
             transporter.sendMail(mailOptions);
@@ -191,47 +191,23 @@ router.post('/addcharge', function (req, res, next) {
 
 router.post('/addsplitcharge', function (req, res, next) {
 
-    recipient, payer, amount, note
     // search accounts database for the username person entered.
 
-    Account.find({username: req.body.user.toLowerCase()}, function (err, users) {
-        console.log("This is in / addcharge, entered username is " + req.body.user)
-        var recipient;
-        var payer;
-
-        var target_user = users[0]; // user that has been requested
-                                    //if no accounts have been found then the entered username shall be set target_user
-
-        if(users[0] === undefined)
-            target_user = req.body.user.toLowerCase();
-
-        var host_user = (req.user); // user issuing the command
-                                    // configures reciept/payer correctly
-         if (req.body.borroworlent === "true") {
-            recipient = host_user;
-            payer = target_user;
-        }
-        else {
-            payer = host_user;
-            recipient = target_user;
-        }
-
+    Account.find({username: req.body.payer.toLowerCase()}, function (err, users) {
+        console.log("This is in /addsplitcharge, entered username is")
+        var recipient = req.body.recipient;
+        var payer = req.body.payer;
+        var amount = req.body.amount;
+        var description = req.body.note;
         var date_created = moment();
-        var completed = false;
-
-        if (req.body.venmousage) {
-            if (req.body.borroworlent === "false") {
-                completed = true;
-            } 
-        }
-
+     
         var charge = new Charge({ // creates new charge schema
             payer: payer,
             recipient: recipient,
-            amount: req.body.amount,
-            completed: completed,
-            description: req.body.note,
-            used_venmo: req.body.venmousage,
+            amount: amount,
+            completed: false,
+            description: description,
+            used_venmo: false,
             date_created: date_created,
             creator: req.user.username
         });
@@ -241,16 +217,14 @@ router.post('/addsplitcharge', function (req, res, next) {
           console.log("Saved Charge");
         });
 
+        console.log(charge);
+
         // STATISTICS
 
-        Account.findOne({username: req.user.username}, function (err,profile){
-            console.log(profile);
+        Account.findOne({username: req.body.recipient.toLowerCase()}, function (err,profile){
             var current_borrowed = profile['current_borrowed'];
             var current_lent = profile['current_lent'];
-            if (req.body.borroworlent === "true")
-                current_lent += parseFloat(req.body.amount);
-            else
-                current_borrowed += parseFloat(req.body.amount);
+            current_lent += parseFloat(req.body.amount);
 
             var current_total = current_lent - current_borrowed;
             var number_changes = profile['number_changes'] + 1;
@@ -258,21 +232,24 @@ router.post('/addsplitcharge', function (req, res, next) {
             var new_data = {"changes": number_changes, "current_total": current_total};
             graph_current_total.push(new_data);
 
-            Account.findOneAndUpdate({username: req.user.username}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed: current_borrowed, current_lent: current_lent}, {new: true}, function(err, test){
-                console.log(test)
+            // var mailOptions = {
+            //     from: 'noreply.rohis@gmail.com',
+            //     to: profile['email'],
+            //     subject: "You've split a charge!",
+            //     text: "You owe " + profile.first_name " $" + req.body.amount + " for '" + req.body.note + ".' Check it out at http://moneymatters.eastus.cloudapp.azure.com/!"
+            // }
+
+            // transporter.sendMail(mailOptions);
+
+            Account.findOneAndUpdate({username: req.body.recipient.toLowerCase()}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed: current_borrowed, current_lent: current_lent}, {new: true}, function(err, test){
             });           
         });
 
         if (!(users[0] === undefined)) {
-            Account.findOne({username: req.body.user.toLowerCase()}, function (err,profile){
-                console.log(profile);
+            Account.findOne({username: req.body.payer.toLowerCase()}, function (err,profile){
                 var current_borrowed = profile['current_borrowed'];
                 var current_lent = profile['current_lent'];
-
-                if (req.body.borroworlent === "true")
-                    current_borrowed += parseFloat(req.body.amount);
-                else
-                    current_lent += parseFloat(req.body.amount);
+                current_borrowed += parseFloat(req.body.amount);
 
                 var current_total = current_lent - current_borrowed;
                 var number_changes = profile['number_changes'] + 1;
@@ -280,7 +257,7 @@ router.post('/addsplitcharge', function (req, res, next) {
                 var new_data = {"changes": number_changes, "current_total": current_total};
                 graph_current_total.push(new_data);
 
-                Account.findOneAndUpdate({username: req.body.user.toLowerCase()}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed: current_borrowed, current_lent: current_lent}, function(){});           
+                Account.findOneAndUpdate({username: req.body.payer.toLowerCase()}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed: current_borrowed, current_lent: current_lent}, function(){});           
             });
         }
 
@@ -288,76 +265,24 @@ router.post('/addsplitcharge', function (req, res, next) {
 
         if (users[0] && users[0]['email_notifications']) {
             
-            var mailOptions = {
-                from: 'noreply.rohis@gmail.com',
-                to: users[0]['email'],
-                subject: "New charge from " + req.user.first_name + " " + req.user.last_name,
-                text: req.user.first_name + " has added a new charge with you: $" + req.body.amount + " for '" + req.body.note + ".' Check it out at rohis.herokuapp.com!"
-            };
+            Account.findOne({username: req.body.recipient.toLowerCase()}, function (err, profile) {
 
-            transporter.sendMail(mailOptions);
+                var mailOptions = {
+                    from: 'noreply.rohis@gmail.com',
+                    to: users[0]['email'],
+                    subject: "You've split a charge with " + profile.first_name + " " + profile.last_name + "!",
+                    text: "You owe " + profile.first_name + " $" + req.body.amount + " for '" + req.body.note + ".' Check it out at http://moneymatters.eastus.cloudapp.azure.com/!"
+                }
 
-        }
-
-        // IF VENMO OPTION IS CHECKED (SO FAR ONLY WORKS IF BOTH USERS HAVE VENMO), THEN EITHER CHARGES OR REQUESTS THE OTHER PERSON.
-
-
-
-        if (req.body.venmousage) {
-            console.log(req.body);
-
-            var username = req.body.user; // OTHER PERSON'S USERNAME. IF YOU WANT YOUR OWN USERNAME IT'S REQ.USER.USERNAME, AS ALWAYS
-            var amount = req.body.amount; // AMOUNT BEING PAID/REQUESTED
-            var note = req.body.note;     // NOTE ASSOCIATED WITH THING
-            var access_token;      
-            var user_id;
-            var email; 
-            var url = 'https://api.venmo.com/v1/payments';
-
-            if (req.body.borroworlent === "true") {
-               amount = amount * -1;
-            }
-
-
-            Account.findOne({username: req.user.username}, function (err, profile) {
-                access_token = profile['access_token'];
-            
-                Account.findOne({username: username}, function (err, profile) {
-                    if (profile) {
-                        if (profile['venmo_id']) {
-                            user_id = profile['venmo_id'];
-                            var parameters = {access_token: access_token, user_id: user_id, note: note, amount: amount};
-                            request.post({url: url, formData: parameters}, function(err, response, body) {
-                                res.redirect('/');
-                            });
-                        } else {
-                            email = profile['email'];
-                            var parameters = {access_token: access_token, email: email, note: note, amount: amount};
-                            request.post({url: url, formData: parameters}, function(err, response, body) {
-                                res.redirect('/');
-                            });
-                        }
-                    } else {
-                        email = "FILL IN LATER";
-                        var parameters = {access_token: access_token, email: email, note: note, amount: amount};
-                        request.post({url: url, formData: parameters}, function(err, response, body) {
-                            res.redirect('/');
-                        });
-                    }
-
-                });
-
+                transporter.sendMail(mailOptions);
+           
             });
-        } else {
-            console.log("No venmo addition!");
-            res.redirect('/');
-        }
 
-
-
+        };
 
     });
 
+    res.send("Success!");
    
 });
 

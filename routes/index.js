@@ -61,6 +61,8 @@ router.get('/', function (req, res) {
 
 	    Charge.find(find_condition, function (err,charges){
 
+	    	console.log(charges);
+
 	    	//step 1
 		    	for(transaction in charges){
 
@@ -73,7 +75,12 @@ router.get('/', function (req, res) {
 		    			creator = charges[transaction]['creator'];
 		    		}
 
-		    		if(charges[transaction]['payer']['username'] === username){   // user is borrowing money        
+		    		console.log("My username =" + username +" and the boolean is " + charges[transaction]['payer']['username']);
+
+		    		if(charges[transaction]['payer']['username'] === username){   // user is borrowing money
+
+		    			console.log("I'M HERE AND THIS IS THE WRONG PLACE");
+
 		    			if(charges[transaction]['recipient']['username'] === undefined)                                                  // check if person targetted has an account or no, undefined fs they dont 
 		    				you_owe.unshift({username:charges[transaction]['recipient'], name:charges[transaction]['recipient'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});    				
 		    			else{
@@ -81,7 +88,13 @@ router.get('/', function (req, res) {
 		    				you_owe.unshift({username:charges[transaction]['recipient']['username'], name: displayName, amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});
 		    			}
 		    		}
-		    		else if(charges[transaction]['recipient']['username'] === username){                                                 // user is a recipient
+
+		    		console.log("My username =" + username +" and the boolean is " + charges[transaction]['recipient']['username']);
+
+		    		else if(charges[transaction]['recipient']['username'] === username){                
+
+		    			console.log("I'M HERE AND THIS IS CORRECT");
+		    			                                 // user is a recipient
 		    			if(charges[transaction]['payer']['username'] === undefined)                                                      // check if the person targetted has an account
 		    				owe_you.unshift({username:charges[transaction]['payer'], name:charges[transaction]['payer'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});
 		    			else{                                                                                                            // if they have an account it pushes their account username to the array with debts owed to you
@@ -91,7 +104,10 @@ router.get('/', function (req, res) {
 		    		}
 		    	}
 
-
+		    	console.log("YOU OWE PIECE OF SHIT");
+		    	console.log(you_owe);
+		    	console.log("OWE YOU PIECE OF SHIT");
+		    	console.log(owe_you);
 	    	//step 2
 
 		    	for(transaction in you_owe){
@@ -394,7 +410,7 @@ router.post('/chargecomplete', function(req, res) {
 		        				from: 'noreply.rohis@gmail.com',
 		        				to: creator['email'],
 		        				subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
-		        				text: req.user.first_name + " has marked your charge of $" + profile['amount'] + " for '" + profile['description'] + "' as completed. Check it out at rohis.herokuapp.com!"
+		        				text: req.user.first_name + " has marked your charge of $" + profile['amount'] + " for '" + profile['description'] + "' as completed. Check it out at http://moneymatters.eastus.cloudapp.azure.com/!"
 		        			};
 
 		        			if (creator['email_notifications']) {
@@ -414,7 +430,7 @@ router.post('/chargecomplete', function(req, res) {
 		        				from: 'noreply.rohis@gmail.com',
 		        				to: creator['email'],
 		        				subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
-		        				text: req.user.first_name + " has marked your cumulative charge of $" + req.body.totalAmount + " as completed. Check it out at rohis.herokuapp.com!"
+		        				text: req.user.first_name + " has marked your cumulative charge of $" + req.body.totalAmount + " as completed. Check it out at http://moneymatters.eastus.cloudapp.azure.com/!"
 		        			};
 
 		        			if (creator['email_notifications']) {
@@ -602,7 +618,7 @@ router.post('/chargecancel', function(req, res) {
 		        				from: 'noreply.rohis@gmail.com',
 		        				to: creator['email'],
 		        				subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
-		        				text: req.user.first_name + " has cancelled your charge of $" + profile['amount'] + " for '" + profile['description'] + ".' Check it out at rohis.herokuapp.com!"
+		        				text: req.user.first_name + " has cancelled your charge of $" + profile['amount'] + " for '" + profile['description'] + ".' Check it out at http://moneymatters.eastus.cloudapp.azure.com/!"
 		        			};
 
 		        			if (creator['email_notifications']) {
@@ -622,7 +638,7 @@ router.post('/chargecancel', function(req, res) {
 		        				from: 'noreply.rohis@gmail.com',
 		        				to: creator['email'],
 		        				subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
-		        				text: req.user.first_name + " has cancelled your cumulative charge of $" + req.body.totalAmount + ". Check it out at rohis.herokuapp.com!"
+		        				text: req.user.first_name + " has cancelled your cumulative charge of $" + req.body.totalAmount + ". Check it out at http://moneymatters.eastus.cloudapp.azure.com/!"
 		        			};
 
 		        			if (creator['email_notifications']) {
