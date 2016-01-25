@@ -240,7 +240,7 @@ router.post('/addsplitcharge', function (req, res, next) {
                 var new_data = {"changes": number_changes, "current_total": current_total};
                 graph_current_total.push(new_data);
 
-                if (req.body.counter == 1) {
+                if (req.body.counter == 1 && profile['email_notifications']) {
                     var mailOptions = {
                         from: 'noreply.rohis@gmail.com',
                         to: profile['email'],
