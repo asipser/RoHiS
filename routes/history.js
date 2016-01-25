@@ -133,7 +133,7 @@ router.get('/', function(req, res, next) {
             }
         }
 
-    	res.render('history', {user:req.user, history_owe_you, history_you_owe, cancelled_owe_you, cancelled_you_owe});
+    	res.render('history', {user:req.user, history_owe_you:history_owe_you, history_you_owe:history_you_owe, cancelled_owe_you:cancelled_owe_you, cancelled_you_owe:cancelled_you_owe});
 
         });	
     });

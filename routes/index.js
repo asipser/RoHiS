@@ -184,7 +184,7 @@ router.get('/', function (req, res) {
 			console.log("merged owe you");
 			console.log(merged_owe_you);
 
-	    	res.render('index', {venmo: user_has_venmo, user:req.user, merged_owe_you, merged_you_owe });
+	    	res.render('index', {venmo: user_has_venmo, user:req.user, merged_owe_you:merged_owe_you, merged_you_owe:merged_you_owe });
 
 	    });	
 	}
