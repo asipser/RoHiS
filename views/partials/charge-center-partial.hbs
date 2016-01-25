@@ -46,7 +46,6 @@
 			},
 			success: function(data){
 				var starSpan = $(element).parent().parent().siblings('.extra.content').children();
-				console.log(data);
 				if(data){
 					$(starSpan).show();
 				}else{
@@ -55,6 +54,26 @@
 				}
 			}
 		});
+	};
+	var starCheckOnDropdown = function(element){
+		setTimeout(function(){var username = $(element).siblings('.usercardinput').val();
+				$.ajax({
+					type: 'GET',
+					url: '/isUser',
+					data: {
+						username: username
+					},
+					success: function(data){
+						var starSpan = $(element).parent().parent().siblings('.extra.content').children();
+						if(data){
+							$(starSpan).show();
+						}else{
+							$(starSpan).hide();
+							$(starSpan).children().addClass('empty');
+						}
+					}
+				});
+			}, 100);
 	};
 </script>
 <div class="ui container" id="chargecenterpanel">

@@ -103,8 +103,8 @@ $(document).ready(function(){
 		$('#addbuttoncard').before('<div class="standard card"> \
 			<div class="content"> \
 				<div class="ui compact search labeled input field"> \
-					<input oninput="starCheck($(this))" type="text" name="user" id="chargeuser" placeholder="Username" class="prompt usercardinput"> \
-						<div class="results"></div> \
+					<input oninput="starCheck($(this))" type="text" name="user" placeholder="Username" class="prompt usercardinput"></input> \
+					<div onclick="starCheckOnDropdown($(this)) class="results"></div> \
 				</div> \
 				<span class="right floated meta"><div onclick="exitCard($(this))" class="ui mini icon circular button"><i class="remove icon"></i></div></span> \
 			</div> \
@@ -142,6 +142,7 @@ $(document).ready(function(){
 		if(userCardInputs.length){
 			var filledInput = false;
 			var filledPayer = false;
+			var noMatches = true;
 			var stars = $('.star.icon');
 
 			userData[0] = {
@@ -162,6 +163,19 @@ $(document).ready(function(){
 				}
 			}
 
+			for(var i=0;i<userData.length;i++){
+				for(var j=i+1;j<userData.length;j++){
+					if(noMatches && userData[i].username === userData[j].username){
+						noMatches = false;
+					}
+				}
+			}
+
+			if(!noMatches){
+				$('.ui.compact.error.message').append('<p>You cannot input the same user more than once!</p>');
+				$('.ui.compact.error.message').show();
+			}
+
 			if(!filledInput){
 				// console.log('Each person must have a username!');
 				$('.ui.compact.error.message').append('<p>Each person must have a username!</p>');
@@ -172,7 +186,7 @@ $(document).ready(function(){
 				$('.ui.compact.error.message').append('<p>Someone must be chosen as the payer!</p>');
 				$('.ui.compact.error.message').show();
 			}
-			if(filledInput && filledPayer){
+			if(filledInput && filledPayer && noMatches){
 				$('#step2tab').removeClass('disabled');
 				$('#step2tab').click();
 				$('#step1tab').addClass('disabled');
@@ -452,4 +466,12 @@ $(document).ready(function(){
 		if($(stats[i]).attr('data'))
 			$(stats[i]).text(parseFloat($(stats[i]).attr('data')).toFixed(2));
 	}
+
+	$('.historicalcharges').popup();
+
+	var historyChargeAmounts = $('.historychargeamount');
+	for(var i=0;i<historyChargeAmounts.length;i++){
+		$(historyChargeAmounts[i]).text(parseFloat($(historyChargeAmounts[i]).text()).toFixed(2));
+	}
+
 });

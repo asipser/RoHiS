@@ -21,13 +21,13 @@
 				<div class="eight wide column">
 					<h3 class="ui small header">History of charges owed to you</h3>
 					{{#each history_owe_you}}
-					<p data-title="{{description}}" data-content="Completed by {{who_completed}} on {{date_completed}}" id="{{id}}">{{username}} paid you ${{amount}}</p>
+					<p class='historicalcharges' data-title="{{description}}" data-content="Completed by {{who_completed}} on {{date_completed}}" id="{{id}}">{{username}} paid you $<span class='historychargeamount'>{{amount}}</span></p>
 					{{/each}}
 				</div>
 				<div class="eight wide column">
 					<h3 class="ui small header">History of charges you owed</h3>
 					{{#each history_you_owe}}
-					<p data-title="{{description}}" data-content="Completed by {{who_completed}} on {{date_completed}}" id="{{id}}">You paid {{username}} ${{amount}}</p>
+					<p class='historicalcharges' data-title="{{description}}" data-content="Completed by {{who_completed}} on {{date_completed}}" id="{{id}}">You paid {{username}} $<span class='historychargeamount'>{{amount}}</span></p>
 					{{/each}}
 				</div>
 			</div>
@@ -37,13 +37,13 @@
 				<div class="eight wide column">
 					<h3 class="ui small header">Cancelled charges owed to you</h3>
 					{{#each cancelled_owe_you}}
-					<p data-title="{{description}}" data-content="Cancelled by {{who_cancelled_h}} on {{date_cancelled}}" class="{{id}}">{{who_cancelled_d}} cancelled a charge of ${{amount}} with {{with_who}}</p>
+					<p class='historicalcharges' data-title="{{description}}" data-content="Cancelled by {{who_cancelled_h}} on {{date_cancelled}}" class="{{id}}">{{who_cancelled_d}} cancelled a charge of $<span class='historychargeamount'>{{amount}}</span> with {{with_who}}</p>
 					{{/each}}
 				</div>
 				<div class="eight wide column">
 					<h3 class="ui small header">Cancelled charges you owe</h3>
 					{{#each cancelled_you_owe}}
-					<p data-title="{{description}}" data-content="Cancelled by {{who_cancelled_h}} on {{date_cancelled}}" class="{{id}}">{{who_cancelled_d}} cancelled a charge of ${{amount}} with {{with_who}}</p>
+					<p class='historicalcharges' data-title="{{description}}" data-content="Cancelled by {{who_cancelled_h}} on {{date_cancelled}}" class="{{id}}">{{who_cancelled_d}} cancelled a charge of $<span class='historychargeamount'>{{amount}}</span> with {{with_who}}</p>
 					{{/each}}
 				</div>
 			</div>
