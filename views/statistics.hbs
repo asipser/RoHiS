@@ -7,8 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
 	<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
 
-	<link rel="stylesheet" type="text/css" href="
-https://cdnjs.cloudflare.com/ajax/libs/plottable.js/2.0.0/plottable.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/plottable.js/2.0.0/plottable.css">
     <!-- import D3 -->
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 
@@ -23,20 +22,20 @@ https://cdnjs.cloudflare.com/ajax/libs/plottable.js/2.0.0/plottable.css">
 	<div class="ui container" id="statisticspanel">
 		<h2 class="ui dividing large header"><i class="large line chart icon"></i> Statistics</h2>
 		<div class="ui three column grid">
-			<div class="column">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-			<div class="column">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+			<div class="column"><div class='ui segment'>
+			{{user.statistics.average_time}}
+			</div></div>
+			<div class="column"><div class='ui segment'>
+			<p>{{user.statistics.greatest_loan}}</p>
+			<p>{{user.statistics.smallest_loan}}</p>
+			<p>{{user.statistics.highest_debt}}</p>
+			<p>{{user.statistics.smallest_debt}}</p>
+			</div></div>
 			<div class="column">
-				<svg width="400" height="300" id = "stats_graph"></svg>
+				<div class='ui segment'>
+					<div class='ui header'>Lend/Loan Graph</div>
+					<svg width="300" height="300" id = "stats_graph"></svg>
+				</div>
 			</div>
 		</div>
 	</div>
