@@ -356,6 +356,8 @@ $(document).ready(function(){
 								var current_object = chargeObjects.shift();
 								current_object['counter'] = counter;
 								split_charge(current_object);
+							} else {
+								location.reload();
 							}
 						}
 					},
