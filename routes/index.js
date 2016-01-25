@@ -225,7 +225,7 @@ router.post('/chargecomplete', function(req, res) {
 			        var smallest_loan = profile['smallest_loan'];
 			        var highest_debt = profile['highest_debt']; 
 			        var smallest_debt = profile['smallest_debt'];
-			        console.log("current_borrowed before: " + current_borrowed);
+			        // console.log("current_borrowed before: " + current_borrowed);
 		            current_borrowed -= charge_amount; // CHANGING CURRENT BORROWED HERE
 		            if(highest_debt === null){
 		                highest_debt = charge_amount;
@@ -235,7 +235,7 @@ router.post('/chargecomplete', function(req, res) {
 		                highest_debt = charge_amount;
 		            else if(charge_amount < smallest_debt)
 		                smallest_debt = charge_amount;
-		            console.log("current_borrowed after: " + current_borrowed);
+		            // console.log("current_borrowed after: " + current_borrowed);
 
                     var number_changes = profile['number_changes'];
                     var graph_current_total = profile['graph_current_total'];
@@ -695,7 +695,6 @@ router.get('/usersearch',function(req,res){ // this is a function unused for now
 	}
 	else{	
 		name = req.query.name;
-		console.log(name);
 		var response_data = {items:[]};
 		Account.find({}, function (err, docs) {
 			for(user in docs){
@@ -710,11 +709,9 @@ router.get('/usersearch',function(req,res){ // this is a function unused for now
 			}
 			for(user in docs){
 				var inArray = false; // used so no duplicate things happen
-				console.log("User: " + docs[user]['full_name']);
 				if(docs[user]['username'] === req.user.username){
 				}
 				else{
-					console.log(response_data['items'].length);
 					if(stringStartsWith(docs[user]['full_name'], name)){
 						response_data['items'].forEach(function(entry){
 							if(entry['username'] === docs[user]['username']){
@@ -749,7 +746,6 @@ router.get('/usersearch',function(req,res){ // this is a function unused for now
 function stringStartsWith (string, prefix) { // used by usersearch route, boolean function. Inputs are string (complete string you are testing the prefix against, and prefix is the string you are checking if the input string begins with)
 	if(string === undefined)
 		return false;
-	console.log("string: " + string + " prefix: " + prefix +" "+ (string.slice(0, prefix.length).toLowerCase() == prefix.toLowerCase()));
 	return string.slice(0, prefix.length).toLowerCase() == prefix.toLowerCase();
 }
 
