@@ -68,36 +68,18 @@ router.post('/addcharge', function (req, res, next) {
 
         // STATISTICS
 
-        Account.findOne({username: req.user.username}, function (err,profile){
-            console.log(profile);
-            var current_borrowed = profile['current_borrowed'];
-            var current_lent = profile['current_lent'];
-            if (req.body.borroworlent === "true")
-                current_lent += parseFloat(req.body.amount);
-            else
-                current_borrowed += parseFloat(req.body.amount);
+        if (req.body.vemnousage == true && req.body.borroworlent == false) {
+            console.log("do nothing");
+        } else {
 
-            var current_total = current_lent - current_borrowed;
-            var number_changes = profile['number_changes'] + 1;
-            var graph_current_total = profile['graph_current_total'];
-            var new_data = {"changes": number_changes, "current_total": current_total};
-            graph_current_total.push(new_data);
-
-            Account.findOneAndUpdate({username: req.user.username}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed: current_borrowed, current_lent: current_lent}, {new: true}, function(err, test){
-                console.log(test)
-            });           
-        });
-
-        if (!(users[0] === undefined)) {
-            Account.findOne({username: req.body.user.toLowerCase()}, function (err,profile){
+            Account.findOne({username: req.user.username}, function (err,profile){
                 console.log(profile);
                 var current_borrowed = profile['current_borrowed'];
                 var current_lent = profile['current_lent'];
-
                 if (req.body.borroworlent === "true")
-                    current_borrowed += parseFloat(req.body.amount);
-                else
                     current_lent += parseFloat(req.body.amount);
+                else
+                    current_borrowed += parseFloat(req.body.amount);
 
                 var current_total = current_lent - current_borrowed;
                 var number_changes = profile['number_changes'] + 1;
@@ -105,8 +87,31 @@ router.post('/addcharge', function (req, res, next) {
                 var new_data = {"changes": number_changes, "current_total": current_total};
                 graph_current_total.push(new_data);
 
-                Account.findOneAndUpdate({username: req.body.user.toLowerCase()}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed: current_borrowed, current_lent: current_lent}, function(){});           
+                Account.findOneAndUpdate({username: req.user.username}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed: current_borrowed, current_lent: current_lent}, {new: true}, function(err, test){
+                    console.log(test)
+                });           
             });
+
+            if (!(users[0] === undefined)) {
+                Account.findOne({username: req.body.user.toLowerCase()}, function (err,profile){
+                    console.log(profile);
+                    var current_borrowed = profile['current_borrowed'];
+                    var current_lent = profile['current_lent'];
+
+                    if (req.body.borroworlent === "true")
+                        current_borrowed += parseFloat(req.body.amount);
+                    else
+                        current_lent += parseFloat(req.body.amount);
+
+                    var current_total = current_lent - current_borrowed;
+                    var number_changes = profile['number_changes'] + 1;
+                    var graph_current_total = profile['graph_current_total'];
+                    var new_data = {"changes": number_changes, "current_total": current_total};
+                    graph_current_total.push(new_data);
+
+                    Account.findOneAndUpdate({username: req.body.user.toLowerCase()}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed: current_borrowed, current_lent: current_lent}, function(){});           
+                });
+            }
         }
 
         // SENDING EMAIL IF EMAIL_NOTIFICATIONS IS ON FOR THE OTHER USER
