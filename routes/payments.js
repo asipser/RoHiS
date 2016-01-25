@@ -185,4 +185,111 @@ router.post('/addcharge', function (req, res, next) {
    
 });
 
+router.post('/addsplitcharge', function (req, res, next) {
+
+    // search accounts database for the username person entered.
+
+    Account.find({username: req.body.payer.toLowerCase()}, function (err, users) {
+
+        Account.findOne({username: req.body.recipient.toLowerCase()}, function (err, recipientjson) {
+
+            var recipient = recipientjson;
+            var payer;
+            var amount = req.body.amount;
+            var description = req.body.note;
+            var date_created = moment();
+
+            if(users[0] === undefined) {
+                payer = req.body.payer.toLowerCase();
+            } else {
+                payer = users[0];
+            }
+         
+            var charge = new Charge({                   // creates new charge schema
+                payer: payer,
+                recipient: recipient,
+                amount: amount,
+                completed: false,
+                description: description,
+                used_venmo: false,
+                date_created: date_created,
+                creator: req.user.username
+            });
+
+            charge.save(function(err, charge) {         // saves data in collection
+              if (err) return console.error(err);
+            });
+
+            // STATISTICS
+
+            Account.findOne({username: req.body.recipient.toLowerCase()}, function (err,profile){
+                var current_borrowed = profile['current_borrowed'];
+                var current_lent = profile['current_lent'];
+                current_lent += parseFloat(req.body.amount);
+
+                var current_total = current_lent - current_borrowed;
+
+                var number_changes = profile['number_changes'] + 1;
+                var graph_current_total = profile['graph_current_total'];
+                var new_data = {"changes": number_changes, "current_total": current_total};
+                graph_current_total.push(new_data);
+
+                if (req.body.counter == 1 && profile['email_notifications']) {
+                    var mailOptions = {
+                        from: 'noreply.rohis@gmail.com',
+                        to: profile['email'],
+                        subject: "Hey " + profile.first_name + ", you've split a charge!",
+                        text: "Find out what others owe you at http://moneymatters.eastus.cloudapp.azure.com/!"
+                    }
+                    transporter.sendMail(mailOptions);
+                }
+               
+                Account.findOneAndUpdate({username: req.body.recipient.toLowerCase()}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed: current_borrowed, current_lent: current_lent}, {new: true}, function(err, test){
+                });           
+            });
+
+            if (!(users[0] === undefined)) {
+                Account.findOne({username: req.body.payer.toLowerCase()}, function (err,profile){
+                    var current_borrowed = profile['current_borrowed'];
+                    var current_lent = profile['current_lent'];
+                    current_borrowed += parseFloat(req.body.amount);
+
+                    var current_total = current_lent - current_borrowed;
+                    var number_changes = profile['number_changes'] + 1;
+                    var graph_current_total = profile['graph_current_total'];
+                    var new_data = {"changes": number_changes, "current_total": current_total};
+                    graph_current_total.push(new_data);
+
+                    Account.findOneAndUpdate({username: req.body.payer.toLowerCase()}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed: current_borrowed, current_lent: current_lent}, function(){});           
+                });
+            }
+
+            // SENDING EMAIL IF EMAIL_NOTIFICATIONS IS ON FOR THE OTHER USER
+
+            if (users[0] && users[0]['email_notifications']) {
+                
+                Account.findOne({username: req.body.recipient.toLowerCase()}, function (err, profile) {
+
+                    var mailOptions = {
+                        from: 'noreply.rohis@gmail.com',
+                        to: users[0]['email'],
+                        subject: "You've split a charge with " + profile.first_name + " " + profile.last_name + "!",
+                        text: "You owe " + profile.first_name + " $" + req.body.amount + " for '" + req.body.note + ".' Check it out at http://moneymatters.eastus.cloudapp.azure.com/!"
+                    }
+
+                    transporter.sendMail(mailOptions);
+               
+                });
+
+            };
+
+        });
+
+        
+    });
+
+    res.send("Success!");
+   
+});
+
 module.exports = router;
