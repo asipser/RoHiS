@@ -104,7 +104,7 @@ $(document).ready(function(){
 			<div class="content"> \
 				<div class="ui compact search labeled input field"> \
 					<input oninput="starCheck($(this))" type="text" name="user" placeholder="Username" class="prompt usercardinput"></input> \
-					<div onclick="starCheckOnDropdown($(this)) class="results"></div> \
+					<div onclick="starCheckOnDropdown($(this))" class="results"></div> \
 				</div> \
 				<span class="right floated meta"><div onclick="exitCard($(this))" class="ui mini icon circular button"><i class="remove icon"></i></div></span> \
 			</div> \
@@ -474,4 +474,9 @@ $(document).ready(function(){
 		$(historyChargeAmounts[i]).text(parseFloat($(historyChargeAmounts[i]).text()).toFixed(2));
 	}
 
+	$('.cookie.nag')
+	  .nag({
+	    key      : 'accepts-cookies',
+	    value    : true
+	  });
 });
