@@ -5,6 +5,7 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {	
+	console.log("user:");
 	console.log(req.user);
 	res.render('statistics', {user:req.user});
 });
@@ -12,8 +13,6 @@ router.get('/', function(req, res, next) {
 module.exports = router;
 
 router.post('/usergraph', function(req, res, next) {
-
-	console.log(req.body.test);
 
 	Account.findOne({username: req.user.username}, function (err, profile) {
 		var data = profile['graph_current_total'];
