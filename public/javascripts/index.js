@@ -103,7 +103,7 @@ $(document).ready(function(){
 		$('#addbuttoncard').before('<div class="standard card"> \
 			<div class="content"> \
 				<div class="ui compact search labeled input field"> \
-					<input onchange="starCheck($(this))" type="text" name="user" id="chargeuser" placeholder="Username" class="prompt usercardinput"> \
+					<input oninput="starCheck($(this))" type="text" name="user" id="chargeuser" placeholder="Username" class="prompt usercardinput"> \
 						<div class="results"></div> \
 				</div> \
 				<span class="right floated meta"><div onclick="exitCard($(this))" class="ui mini icon circular button"><i class="remove icon"></i></div></span> \
