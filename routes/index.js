@@ -27,10 +27,17 @@ var transporter = secret['transporter'];
 //     res.send("hi");
 // });
 
-router.get('/infoz', function(req, res) {
-	console.log(req.user);
-	res.send(req.user);
+router.get('/isUser', function(req, res) {
+	var name = req.query.username;
+	var accountExists = false;
+	Account.findOne({username:name}, function(err,profile){
+		if(profile)
+			accountExists = true;
+		res.send(accountExists);
+	});
 });
+
+
 
 router.get('/', function (req, res) {
 	if(req.user === undefined){
@@ -665,9 +672,9 @@ router.post('/register', function(req, res) {
 
         Account.register(new Account({ username : req.body.username, first_name: req.body.firstName, last_name: req.body.lastName, full_name:full_name, email: req.body.email, date_created: moment()}), req.body.password, function(err, account) { // registers account with initial data passed through the register form, uses express session, passport js, and passport local mongoose
         if (err) {                              // if there is an error such as a duplicated account or fields left blank. THESE WILL BE DEALT WITH LATER
-        	console.log("err");
-        	console.log(err);
-        	res.redirect ('/#registererror');
+        	if (err['message'].slice(0,19) == "User already exists") {
+        		res.redirect ('/#registererror');
+        	}        	
         } else { console.log("successfully added account");
         console.log(account);
         passport.authenticate('local')(req, res, function () {
