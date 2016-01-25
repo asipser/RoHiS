@@ -27,10 +27,17 @@ var transporter = secret['transporter'];
 //     res.send("hi");
 // });
 
-router.get('/infoz', function(req, res) {
-	console.log(req.user);
-	res.send(req.user);
+router.get('/isUser', function(req, res) {
+	var name = req.query.username;
+	var accountExists = false;
+	Account.findOne({username:name}, function(err,profile){
+		if(profile)
+			accountExists = true;
+		res.send(accountExists);
+	});
 });
+
+
 
 router.get('/', function (req, res) {
 	if(req.user === undefined){
