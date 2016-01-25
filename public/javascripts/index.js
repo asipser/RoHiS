@@ -297,7 +297,7 @@ $(document).ready(function(){
 				$.ajax({
 					type: "POST",
 					url: '/payments/addsplitcharge',
-					data: chargeObject
+					data: chargeObject,
 					success: function(data){
 						if (data === "Success!") {
 							console.log("Success!");
@@ -324,8 +324,8 @@ $(document).ready(function(){
 		},
 		fields: {
 			results : 'items',
-			title   : 'full_name',
-			description     : 'username'
+			title   : 'username',
+			description     : 'full_name'
 		},
 		minCharacters : 2
 	});

@@ -6,6 +6,16 @@
 	<link rel="stylesheet" type="text/css" href="/dist/semantic.min.css">
 	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
 	<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+
+	<link rel="stylesheet" type="text/css" href="
+https://cdnjs.cloudflare.com/ajax/libs/plottable.js/2.0.0/plottable.css">
+    <!-- import D3 -->
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+    <!-- import Plottable-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/plottable.js/2.0.0/plottable.js"></script>
+
+
 </head>
 <body>
 	{{#if user}}
@@ -25,14 +35,66 @@
 			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
 			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-			<div class="column">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+			<div class="column">
+				<svg width="400" height="300" id = "stats_graph"></svg>
+			</div>
 		</div>
 	</div>
+
+	<script>
+	var colorScale = new Plottable.Scales.Color();
+	var xScale = new Plottable.Scales.Linear();
+	var yScale = new Plottable.Scales.Linear();
+
+	var xAxis = new Plottable.Axes.Numeric(xScale, "bottom");
+	var yAxis = new Plottable.Axes.Numeric(yScale, "left");
+
+	var plot = new Plottable.Plots.Area()
+		.x(function(d) { return d.changes; }, xScale)
+		.y(function(d) { return d.current_total; }, yScale);
+
+	var pzi = new Plottable.Interactions.PanZoom();
+	pzi.addXScale(xScale);
+	pzi.addYScale(yScale);
+	pzi.attachTo(plot);
+
+	var pziXAxis = new Plottable.Interactions.PanZoom();
+	pziXAxis.addXScale(xScale);
+	pziXAxis.attachTo(xAxis);
+
+	var pziYAxis = new Plottable.Interactions.PanZoom();
+	pziYAxis.addYScale(yScale);
+	pziYAxis.attachTo(yAxis);
+
+	var label_y = new Plottable.Components.AxisLabel("Current Total", -90);
+	var label_x = new Plottable.Components.AxisLabel("Actions", 0);
+
+	$.ajax({
+		url: '/statistics/usergraph',
+		data: {
+			test: "test"
+		},
+		type: 'POST',
+		success: function(data) {
+			if (!(data === "Error")) {
+				var dataset = new Plottable.Dataset(data);
+				plot.addDataset(dataset);
+
+				var chart = new Plottable.Components.Table([
+					[label_y, yAxis, plot],
+					[null, null, xAxis],
+					[null, null, label_x]
+					]);
+
+				chart.renderTo("svg#stats_graph");
+			}
+		},
+		error: function(xhr, status, error) {
+			console.log("A problem occurred" + error);
+		}
+	});
+	</script>
+
 	{{else}}
 	{{> home-page-partial}}
 	{{/if}}
