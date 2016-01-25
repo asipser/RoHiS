@@ -379,4 +379,9 @@ $(document).ready(function(){
 	}else{
 		$('#venmobool').popup();
 	};
+	if($('#emailcheck').attr('data') == 'true'){
+		$('div.ui.toggle.checkbox').checkbox('check');
+	}else{
+		$('div.ui.toggle.checkbox').checkbox('uncheck');
+	}
 });
