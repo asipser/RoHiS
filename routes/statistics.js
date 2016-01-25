@@ -3,10 +3,9 @@ var passport = require('passport');
 var Account = require('../models/account');
 var router = express.Router();
 
-/* GET users listing. */
+// Loads user statistics
+
 router.get('/', function(req, res, next) {	
-	console.log("user:");
-	console.log(JSON.stringify(req.user));
 	res.render('statistics', {user:req.user});
 });
 

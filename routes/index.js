@@ -9,23 +9,8 @@ var nodemailer = require('nodemailer');
 var secret = require('../secret/secret');
 var transporter = secret['transporter'];
 
-// router.get('/emailtest', function (req, res) {
-//     var mailOptions = {
-//         from: 'noreply.rohis@gmail.com', // sender address
-//         to: 'rneogy@mit.edu', // list of receivers
-//         subject: "You're a little shit", // Subject line
-//         text: 'Truth.' // plaintext body
-//     };
 
-//     transporter.sendMail(mailOptions, function(error, info){
-//         if(error){
-//             return console.log(error);
-//         }
-//         console.log('Message sent: ' + info.response);
-//     });
-
-//     res.send("hi");
-// });
+// CHECKS FOR SPLIT BILL IF RECIPIENT IS A USER
 
 router.get('/isUser', function(req, res) {
 	var name = req.query.username;
@@ -37,7 +22,7 @@ router.get('/isUser', function(req, res) {
 	});
 });
 
-
+// LOADS ALL CURRENT CHARGES
 
 router.get('/', function (req, res) {
 	if(req.user === undefined){
@@ -45,14 +30,14 @@ router.get('/', function (req, res) {
 	}
 	else{
 		var username = req.user.username;
-		var user_has_venmo; // boolean to see if the req.user has venmo.
+		var user_has_venmo; 					// boolean to see if the req.user has venmo.
 
-	    var userCharges = []; // Array used to store all charges for one person 
-	    var mergedCharges = []; // Array with a merged userCharges where it compiles the same payer recipients under the same piles.
-	    var you_owe = []; // people u owe
-	    var owe_you = []; // charges with people that owe u
-	    var merged_you_owe = []; // merged charges one way within you_owe
-	    var merged_owe_you = []; // merged charges one way within array owe_you
+	    var userCharges = []; 					// Array used to store all charges for one person 
+	    var mergedCharges = []; 				// Array with a merged userCharges where it compiles the same payer recipients under the same piles.
+	    var you_owe = []; 						// people u owe
+	    var owe_you = []; 						// charges with people that owe u
+	    var merged_you_owe = []; 				// merged charges one way within you_owe
+	    var merged_owe_you = []; 				// merged charges one way within array owe_you
 
 	    if (req.user['venmo_id'])
 	    	user_has_venmo = true;
@@ -68,9 +53,7 @@ router.get('/', function (req, res) {
 
 	    Charge.find(find_condition, function (err,charges){
 
-	    	console.log(charges);
-
-	    	//step 1
+	    	//step 1 find charges
 		    	for(transaction in charges){
 
 		    		var date_created = moment(charges[transaction]['date_created']).format("M/D/YY, h:mm a");
@@ -82,21 +65,17 @@ router.get('/', function (req, res) {
 		    			creator = charges[transaction]['creator'];
 		    		}
 
-		    		if(charges[transaction]['payer']['username'] === username){   // user is borrowing money
-
-		    			console.log("I'M HERE AND THIS IS THE WRONG PLACE");
+		    		if(charges[transaction]['payer']['username'] === username){   														 // user is borrowing money
 
 		    			if(charges[transaction]['recipient']['username'] === undefined)                                                  // check if person targetted has an account or no, undefined fs they dont 
 		    				you_owe.unshift({username:charges[transaction]['recipient'], name:charges[transaction]['recipient'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});    				
 		    			else{
-		    				var displayName = getDisplayName(charges[transaction]['recipient']);                                                                                                             // they have an account and it pushes to charges that you owe their name
+		    				var displayName = getDisplayName(charges[transaction]['recipient']);                                         // they have an account and it pushes to charges that you owe their name
 		    				you_owe.unshift({username:charges[transaction]['recipient']['username'], name: displayName, amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});
 		    			}
 		    		}
 		    		else if(charges[transaction]['recipient']['username'] === username){                
-
-		    			console.log("I'M HERE AND THIS IS CORRECT");
-		    			                                 // user is a recipient
+		    			                                 																					// user is a recipient
 		    			if(charges[transaction]['payer']['username'] === undefined)                                                      // check if the person targetted has an account
 		    				owe_you.unshift({username:charges[transaction]['payer'], name:charges[transaction]['payer'], amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});
 		    			else{                                                                                                            // if they have an account it pushes their account username to the array with debts owed to you
@@ -106,11 +85,7 @@ router.get('/', function (req, res) {
 		    		}
 		    	}
 
-		    	console.log("YOU OWE PIECE OF SHIT");
-		    	console.log(you_owe);
-		    	console.log("OWE YOU PIECE OF SHIT");
-		    	console.log(owe_you);
-	    	//step 2
+	    	//step 2 collects all charges a user has
 
 		    	for(transaction in you_owe){
 		    		var user = you_owe[transaction]['username'];
@@ -156,7 +131,7 @@ router.get('/', function (req, res) {
 		    			merged_owe_you.push({username:user, name:displayName, amount:amount, transactions_info:[{amount: amount, id: id, note: note, date_created: date, creator: creator}]});
 	    		}
 
-	    	//step 3
+	    	//step 3 combines loans and debts
 
 	    	merged_owe_you.forEach(function(transaction_owe_you){
 	    		var merge_username = transaction_owe_you['username'];
@@ -164,29 +139,27 @@ router.get('/', function (req, res) {
 	    		var owe_you_transactions_info = transaction_owe_you['transactions_info'];
 
 	    		merged_you_owe.forEach(function(transaction_you_owe){
-	    			var cross_check_username = transaction_you_owe['username']; // cross check  this username with merge username
+	    			var cross_check_username = transaction_you_owe['username'];										 // cross check  this username with merge username
 	    			var you_owe_amount = transaction_you_owe['amount'];
 	    			var you_owe_transactions_info = transaction_you_owe['transactions_info'];
 	    			if(merge_username === cross_check_username){
 	    				if(owe_you_amount > you_owe_amount){
-	    					you_owe_transactions_info = negateElements(transaction_you_owe['transactions_info']); // negates values to show clarity
+	    					you_owe_transactions_info = negateElements(transaction_you_owe['transactions_info']); 	 // negates values to show clarity
 	    					you_owe_transactions_info.forEach(function(individual_transaction){transaction_owe_you['transactions_info'].push(individual_transaction);});
-	    					//console.log(transaction_owe_you['transactions_info']);
 	    					transaction_owe_you['amount'] = owe_you_amount - you_owe_amount;
 	    					var arr = merged_you_owe;
-							var idx = arr.indexOf(transaction_you_owe); // INDEX OF THE CURRENT TRANSACTION IN MERGED YOU OWE, used to SPLICE out DATA
+							var idx = arr.indexOf(transaction_you_owe);												 // INDEX OF THE CURRENT TRANSACTION IN MERGED YOU OWE, used to SPLICE out DATA
 							if (idx !== -1) 
 								arr.splice(idx, 1);						
 							else
 								console.log("Error, current you_owe_transaction not found in array, bug happened here");
 						}
 						else{
-	    					owe_you_transactions_info = negateElements(transaction_owe_you['transactions_info']); // negates values to show clarity
+	    					owe_you_transactions_info = negateElements(transaction_owe_you['transactions_info']); 	 // negates values to show clarity
 	    					owe_you_transactions_info.forEach(function(individual_transaction){transaction_you_owe['transactions_info'].push(individual_transaction);});
-	    					//console.log(transaction_you_owe['transactions_info']);
 	    					transaction_you_owe['amount'] = you_owe_amount - owe_you_amount;
 	    					var arr = merged_owe_you;
-							var idx = arr.indexOf(transaction_owe_you); // INDEX OF THE CURRENT TRANSACTION IN MERGED YOU OWE, used to SPLICE out DATA
+							var idx = arr.indexOf(transaction_owe_you); 											 // INDEX OF THE CURRENT TRANSACTION IN MERGED YOU OWE, used to SPLICE out DATA
 							if (idx !== -1) 
 								arr.splice(idx, 1);						
 							else
@@ -196,11 +169,6 @@ router.get('/', function (req, res) {
 
 				});
 			});
-
-			console.log("merged you owe:");
-			console.log(merged_you_owe);
-			console.log("merged owe you");
-			console.log(merged_owe_you);
 
 	    	res.render('index', {venmo: user_has_venmo, user:req.user, merged_owe_you:merged_owe_you, merged_you_owe:merged_you_owe });
 
@@ -229,13 +197,11 @@ function getDisplayName(target_user){
 router.post('/chargecomplete', function(req, res) {
 	Charge.findOne({_id: req.body.charge_id},function(err,charge){
 		if(charge['completed'] || charge['cancelled']){
-			console.log("already done");
 			res.send("Already Done");
 		}
 		else{
 			var charge_amount = charge['amount'];
-			console.log("Main user has returned the charge amount: of" + charge_amount);
-		    if(charge['payer']['username'] === req.user.username){    // user is borrowing money 
+		    if(charge['payer']['username'] === req.user.username){    								// user is borrowing money 
 	        	Account.findOne({username: req.user.username}, function (err,profile){
 					var current_borrowed = profile['current_borrowed'];
 			        var current_lent = profile['current_lent'];
@@ -243,8 +209,7 @@ router.post('/chargecomplete', function(req, res) {
 			        var smallest_loan = profile['smallest_loan'];
 			        var highest_debt = profile['highest_debt']; 
 			        var smallest_debt = profile['smallest_debt'];
-			        // console.log("current_borrowed before: " + current_borrowed);
-		            current_borrowed -= charge_amount; // CHANGING CURRENT BORROWED HERE
+		            current_borrowed -= charge_amount; 												// CHANGING CURRENT BORROWED HERE
 		            if(highest_debt === null){
 		                highest_debt = charge_amount;
 		                smallest_debt = charge_amount;
@@ -253,38 +218,28 @@ router.post('/chargecomplete', function(req, res) {
 		                highest_debt = charge_amount;
 		            else if(charge_amount < smallest_debt)
 		                smallest_debt = charge_amount;
-		            // console.log("current_borrowed after: " + current_borrowed);
-
+		            
                     var number_changes = profile['number_changes'];
                     var graph_current_total = profile['graph_current_total'];
                     var current_total;
-
-                    // if (req.body.totalAmount) {
-                    //     if (req.body.counter == 1) {
-                    //         number_changes += 1;
-                    //         current_total = current_lent - current_borrowed - req.body.totalAmount + charge_amount;
-                    //         var new_data = {"changes": number_changes, "current_total": current_total};
-                    //         graph_current_total.push(new_data);
-                    //     }
-                    // } else {
-                        number_changes += 1;
-                        current_total = current_lent - current_borrowed;
-                        var new_data = {"changes": number_changes, "current_total": current_total};
-                        graph_current_total.push(new_data);
-                    // }
+                   
+                    number_changes += 1;
+                    current_total = current_lent - current_borrowed;
+                    var new_data = {"changes": number_changes, "current_total": current_total};
+                    graph_current_total.push(new_data);
+                 
 
 		            Account.findOneAndUpdate({username: req.user.username}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:current_borrowed, current_lent:current_lent, greatest_loan:greatest_loan,smallest_loan:smallest_loan,highest_debt:highest_debt,smallest_debt:smallest_debt}, function(){});           
 				});      
-				if(charge['recipient']['username'] !== undefined){	  // other user is lending money
+				if(charge['recipient']['username'] !== undefined){	  								// other user is lending money
 					Account.findOne({username: charge['recipient']['username']}, function (err,recipient){
-						console.log("The user with name: " + charge['recipient']['username'] + " has gotten his money back (finished lending");
-						var r_current_borrowed = recipient['current_borrowed']; // R stands for Recipient 
+						var r_current_borrowed = recipient['current_borrowed']; 					// R stands for Recipient 
 				        var r_current_lent = recipient['current_lent'];
 				        var r_greatest_loan = recipient['greatest_loan']; 
 				        var r_smallest_loan = recipient['smallest_loan'];
 				        var r_highest_debt = recipient['highest_debt']; 
 				        var r_smallest_debt = recipient['smallest_debt'];
-			            r_current_lent -= charge_amount; // CHANGING CURRENT LENT OF OTHER PERSON HERE
+			            r_current_lent -= charge_amount; 											// CHANGING CURRENT LENT OF OTHER PERSON HERE
 			            if(r_greatest_loan === null){
 			                r_greatest_loan = charge_amount;
 			                r_smallest_loan = charge_amount;
@@ -298,35 +253,26 @@ router.post('/chargecomplete', function(req, res) {
                         var number_changes = recipient['number_changes'];
                         var graph_current_total = recipient['graph_current_total'];
                         var current_total;
-
-                        // if (req.body.totalAmount) {
-                        //     if (req.body.counter == 1) {
-                        //         number_changes += 1;
-                        //         current_total = r_current_lent - r_current_borrowed - req.body.totalAmount + charge_amount;
-                        //         var new_data = {"changes": number_changes, "current_total": current_total};
-                        //         graph_current_total.push(new_data);
-                        //     }
-                        // } else {
-                            number_changes += 1;
-                            current_total = r_current_lent - r_current_borrowed;
-                            var new_data = {"changes": number_changes, "current_total": current_total};
-                            graph_current_total.push(new_data);
-                        // }
+                     
+                        number_changes += 1;
+                        current_total = r_current_lent - r_current_borrowed;
+                        var new_data = {"changes": number_changes, "current_total": current_total};
+                        graph_current_total.push(new_data);
+                        
 
 			            Account.findOneAndUpdate({username: charge['recipient']['username']}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:r_current_borrowed, current_lent:r_current_lent, greatest_loan:r_greatest_loan, smallest_loan:r_smallest_loan,highest_debt:r_highest_debt,smallest_debt:r_smallest_debt}, function(){});           
 					}); 
-				}                                                  // check if person targetted has an account or no, undefined fs they dont 					                                                                                                          // they have an account and it pushes to charges that you owe their name	    				
+				}                                                 								   // check if person targetted has an account or no, undefined fs they dont 					                                                                                                          // they have an account and it pushes to charges that you owe their name	    				
 			}
-			else if(charge['recipient']['username'] === req.user.username){                                                 // user is a recipient
+			else if(charge['recipient']['username'] === req.user.username){                        // user is a recipient
 				Account.findOne({username: req.user.username}, function (err,profile){
-					console.log("Main user has gotten the money back with amount: of" + charge_amount);
 					var current_borrowed = profile['current_borrowed'];
 			        var current_lent = profile['current_lent'];
 			        var greatest_loan = profile['greatest_loan']; 
 			        var smallest_loan = profile['smallest_loan'];
 			        var highest_debt = profile['highest_debt']; 
 			        var smallest_debt = profile['smallest_debt'];
-		            current_lent -= charge_amount; // CHANGING CURRENT LENT HERE
+		            current_lent -= charge_amount; 												  // CHANGING CURRENT LENT HERE
 		            if(greatest_loan === null){
 		                greatest_loan = charge_amount;
 		                smallest_loan = charge_amount;
@@ -339,25 +285,15 @@ router.post('/chargecomplete', function(req, res) {
                     var number_changes = profile['number_changes'];
                     var graph_current_total = profile['graph_current_total'];
                     var current_total;
-
-                    // if (req.body.totalAmount) {
-                    //     if (req.body.counter == 1) {
-                    //         number_changes += 1;
-                    //         current_total = current_lent - current_borrowed - req.body.totalAmount + charge_amount;
-                    //         var new_data = {"changes": number_changes, "current_total": current_total};
-                    //         graph_current_total.push(new_data);
-                    //     }
-                    // } else {
-                        number_changes += 1;
-                        current_total = current_lent - current_borrowed;
-                        var new_data = {"changes": number_changes, "current_total": current_total};
-                        graph_current_total.push(new_data);
-                    // }
+                
+                    number_changes += 1;
+                    current_total = current_lent - current_borrowed;
+                    var new_data = {"changes": number_changes, "current_total": current_total};
+                    graph_current_total.push(new_data);
 
 		            Account.findOneAndUpdate({username: req.user.username}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:current_borrowed, current_lent:current_lent, greatest_loan:greatest_loan,smallest_loan:smallest_loan,highest_debt:highest_debt,smallest_debt:smallest_debt}, function(){});           
 				}); 
 				if(charge['payer']['username'] !== undefined){
-					console.log("Editing " + charge['payer']['username'] + "charge shit");
 					Account.findOne({username: charge['payer']['username']}, function (err,payer){
 						var p_current_borrowed = payer['current_borrowed'];
 				        var p_current_lent = payer['current_lent'];
@@ -365,7 +301,7 @@ router.post('/chargecomplete', function(req, res) {
 				        var p_smallest_loan = payer['smallest_loan'];
 				        var p_highest_debt = payer['highest_debt']; 
 				        var p_smallest_debt = payer['smallest_debt'];
-			            p_current_borrowed -= charge_amount; // CHANGING OTHER PERSON'S CURRENT BORROWED HERE
+			            p_current_borrowed -= charge_amount; 									// CHANGING OTHER PERSON'S CURRENT BORROWED HERE
 			            if(p_highest_debt === null){
 			                p_highest_debt = charge_amount;
 			                p_smallest_debt = charge_amount;
@@ -379,27 +315,19 @@ router.post('/chargecomplete', function(req, res) {
                         var number_changes = payer['number_changes'];
                         var graph_current_total = payer['graph_current_total'];
                         var current_total;
-
-                        // if (req.body.totalAmount) {
-                        //     if (req.body.counter == 1) {
-                        //         number_changes += 1;
-                        //         current_total = p_current_lent - p_current_borrowed - req.body.totalAmount + charge_amount;
-                        //         var new_data = {"changes": number_changes, "current_total": current_total};
-                        //         graph_current_total.push(new_data);
-                        //     }
-                        // } else {
-                            number_changes += 1;
-                            current_total = p_current_lent - p_current_borrowed;
-                            var new_data = {"changes": number_changes, "current_total": current_total};
-                            graph_current_total.push(new_data);
-                        // }
+                 
+                        number_changes += 1;
+                        current_total = p_current_lent - p_current_borrowed;
+                        var new_data = {"changes": number_changes, "current_total": current_total};
+                        graph_current_total.push(new_data);
+                        
 
 			            Account.findOneAndUpdate({username: charge['payer']['username']}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:p_current_borrowed, current_lent:p_current_lent, greatest_loan:p_greatest_loan,smallest_loan:p_smallest_loan,highest_debt:p_highest_debt,smallest_debt:p_smallest_debt}, function(){});           
 					});  
 				}
 			}
 			Charge.findOneAndUpdate({_id: req.body.charge_id}, {completed: true, date_completed: moment(), who_completed: req.user.username}, {new: true}, function(err, profile) {
-				//console.log(profile);
+				
 		        // SEND EMAIL IF PERSON WHO COMPLETED IS NOT THE CREATOR
 
 		        if (req.body.total === "false") {
@@ -446,28 +374,19 @@ router.post('/chargecomplete', function(req, res) {
 
 		        Account.findOne({username: profile['payer']['username']}, function(err, payer_info) {
 
-		            // UPDATES 
+		            // UPDATES AVERAGE PAYMENT TIME FOR THE PAYER IF THE USER EXISTS
 
-		            if (payer_info) {             // UPDATES AVERAGE PAYMENT TIME FOR THE PAYER IF THE USER EXISTS
-
-		            	//console.log(payer_info);
-
+		            if (payer_info) {
+		            	
 		            	var start_time = moment(profile['date_created']);
-		            	var complete_time = moment(profile['date_completed']);
-
-		            	//console.log("AHHHHHHHHHHHH");
-
+		            	var complete_time = moment(profile['date_completed']);	    
 		            	var time_diff = complete_time.diff(start_time);
-
-		            	//console.log(time_diff);
 
 		            	var previous_num = payer_info['statistics']['num_charges'];
 		            	var previous_avg = payer_info['statistics']['average_time'];
 		            	var previous_total = previous_num * previous_avg;
 		            	var new_avg = (previous_total + time_diff) / (previous_num + 1);
-
-		            	//console.log(new_avg);
-
+		            
 		            	Account.findOneAndUpdate({username: profile['payer']['username']}, {statistics: {num_charges: previous_num + 1, average_time: new_avg}}, function() {
 		            		res.send('Success!');
 		            	});
@@ -485,121 +404,86 @@ router.post('/chargecomplete', function(req, res) {
 // WHEN YOU CLICK THE X NEXT TO A CHARGE
 
 router.post('/chargecancel', function(req, res) {
+
 	//STATISTICS FOR CURRENT LENT / BORROWED
+
 	Charge.findOne({_id: req.body.charge_id},function(err,charge){
 		if(charge['completed'] || charge['cancelled']){
 			res.send("Already Done");
 		}
 		else{
 			var charge_amount = charge['amount'];
-			console.log("charge cancel amount: " + charge_amount);
-		    if(charge['payer']['username'] === req.user.username){    // user is borrowing money 
+		    if(charge['payer']['username'] === req.user.username){    							// user is borrowing money 
 	        	Account.findOne({username: req.user.username}, function (err,profile){
 					var current_borrowed = profile['current_borrowed'];
 			        var current_lent = profile['current_lent'];
-			        console.log("current_borrowed before: " + current_borrowed);
-		            current_borrowed -= charge_amount; // CHANGING CURRENT BORROWED HERE
-		            console.log("current_borrowed after: " + current_borrowed);
+		            current_borrowed -= charge_amount; 										    // CHANGING CURRENT BORROWED HERE
 
                     var number_changes = profile['number_changes'];
                     var graph_current_total = profile['graph_current_total'];
                     var current_total;
 
-                    // if (req.body.totalAmount) {
-                    //     if (req.body.counter == 1) {
-                    //         number_changes += 1;
-                    //         current_total = current_lent - current_borrowed - req.body.totalAmount + charge_amount;
-                    //         var new_data = {"changes": number_changes, "current_total": current_total};
-                    //         graph_current_total.push(new_data);
-                    //     }
-                    // } else {
-                        number_changes += 1;
-                        current_total = current_lent - current_borrowed;
-                        var new_data = {"changes": number_changes, "current_total": current_total};
-                        graph_current_total.push(new_data);
-                    // }
+                    number_changes += 1;
+                    current_total = current_lent - current_borrowed;
+                    var new_data = {"changes": number_changes, "current_total": current_total};
+                    graph_current_total.push(new_data);
+                  
 
 		            Account.findOneAndUpdate({username: req.user.username}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:current_borrowed, current_lent:current_lent}, function(){});           
 				});      
-				if(charge['recipient']['username'] !== undefined){	  // other user is lending money
+				if(charge['recipient']['username'] !== undefined){	 						   // other user is lending money
 					Account.findOne({username: charge['recipient']['username']}, function (err,recipient){
-						console.log("error here");
-						var r_current_borrowed = recipient['current_borrowed']; // R stands for Recipient 
+						var r_current_borrowed = recipient['current_borrowed']; 			   // r stands for Recipient 
 				        var r_current_lent = recipient['current_lent'];
-			            r_current_lent -= charge_amount; // CHANGING CURRENT LENT OF OTHER PERSON HERE
+			            r_current_lent -= charge_amount; 									   // CHANGING CURRENT LENT OF OTHER PERSON HERE
 
                         var number_changes = recipient['number_changes'];
                         var graph_current_total = recipient['graph_current_total'];
                         var current_total;
-
-                        // if (req.body.totalAmount) {
-                        //     if (req.body.counter == 1) {
-                        //         number_changes += 1;
-                        //        current_total = r_current_lent - r_current_borrowed - req.body.totalAmount + charge_amount;
-                        //         var new_data = {"changes": number_changes, "current_total": current_total};
-                        //         graph_current_total.push(new_data);
-                        //     }
-                        // } else {
-                            number_changes += 1;
-                            current_total = r_current_lent - r_current_borrowed;
-                            var new_data = {"changes": number_changes, "current_total": current_total};
-                            graph_current_total.push(new_data);
-                        // }
+                       
+                        number_changes += 1;
+                        current_total = r_current_lent - r_current_borrowed;
+                        var new_data = {"changes": number_changes, "current_total": current_total};
+                        graph_current_total.push(new_data);
+                        
 
 			            Account.findOneAndUpdate({username: charge['recipient']['username']}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:r_current_borrowed, current_lent:r_current_lent}, function(){});           
 					}); 
-				}                                                  // check if person targetted has an account or no, undefined fs they dont 					                                                                                                          // they have an account and it pushes to charges that you owe their name	    				
+				}                                                  								// check if person targetted has an account or no, undefined fs they dont 					                                                                                                          // they have an account and it pushes to charges that you owe their name	    				
 			}
-			else if(charge['recipient']['username'] === req.user.username){                                                 // user is a recipient
+			else if(charge['recipient']['username'] === req.user.username){                     // user is a recipient
 				Account.findOne({username: req.user.username}, function (err,profile){
 					var current_borrowed = profile['current_borrowed'];
 			        var current_lent = profile['current_lent'];
-		            current_lent -= charge_amount; // CHANGING CURRENT LENT HERE
+		            current_lent -= charge_amount; 												// CHANGING CURRENT LENT HERE
 
                     var number_changes = profile['number_changes'];
                     var graph_current_total = profile['graph_current_total'];
                     var current_total;
-
-                    // if (req.body.totalAmount) {
-                    //     if (req.body.counter == 1) {
-                    //         number_changes += 1;
-                    //         current_total = current_lent - current_borrowed - req.body.totalAmount + charge_amount;
-                    //         var new_data = {"changes": number_changes, "current_total": current_total};
-                    //         graph_current_total.push(new_data);
-                    //     }
-                    // } else {
-                        number_changes += 1;
-                        current_total = current_lent - current_borrowed;
-                        var new_data = {"changes": number_changes, "current_total": current_total};
-                        graph_current_total.push(new_data);
-                    // }
+                 
+                    number_changes += 1;
+                    current_total = current_lent - current_borrowed;
+                    var new_data = {"changes": number_changes, "current_total": current_total};
+                    graph_current_total.push(new_data);
+                   
 
 		            Account.findOneAndUpdate({username: req.user.username}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:current_borrowed, current_lent:current_lent}, function(){});           
 				}); 
 				if(charge['payer']['username'] !== undefined){
-					console.log("This is an error....");
 					Account.findOne({username: charge['payer']['username']}, function (err,payer){
 						var p_current_borrowed = payer['current_borrowed'];
 				        var p_current_lent = payer['current_lent'];
-			            p_current_borrowed -= charge_amount; // CHANGING OTHER PERSON'S CURRENT BORROWED HERE
+			            p_current_borrowed -= charge_amount; 									// CHANGING OTHER PERSON'S CURRENT BORROWED HERE
 
                         var number_changes = payer['number_changes'];
                         var graph_current_total = payer['graph_current_total'];
                         var current_total;
 
-                        // if (req.body.totalAmount) {
-                        //     if (req.body.counter == 1) {
-                        //         number_changes += 1;
-                        //         current_total = p_current_lent - p_current_borrowed - req.body.totalAmount + charge_amount;
-                        //         var new_data = {"changes": number_changes, "current_total": current_total};
-                        //         graph_current_total.push(new_data);
-                        //     }
-                        // } else {
-                            number_changes += 1;
-                            current_total = p_current_lent - p_current_borrowed;
-                            var new_data = {"changes": number_changes, "current_total": current_total};
-                            graph_current_total.push(new_data);
-                        // }
+                        number_changes += 1;
+                        current_total = p_current_lent - p_current_borrowed;
+                        var new_data = {"changes": number_changes, "current_total": current_total};
+                        graph_current_total.push(new_data);
+                        
 
 			            Account.findOneAndUpdate({username: charge['payer']['username']}, {graph_current_total: graph_current_total, number_changes: number_changes, current_borrowed:p_current_borrowed, current_lent:p_current_lent}, function(){});           
 					});  
@@ -666,17 +550,15 @@ router.post('/chargecancel', function(req, res) {
 
 router.post('/register', function(req, res) {
 	Account.count({username:req.body.username},function(error, count){
-        //console.log(req.body);
 
         var full_name = req.body.firstName + " " + req.body.lastName;
 
         Account.register(new Account({ username : req.body.username, first_name: req.body.firstName, last_name: req.body.lastName, full_name:full_name, email: req.body.email, date_created: moment()}), req.body.password, function(err, account) { // registers account with initial data passed through the register form, uses express session, passport js, and passport local mongoose
-        if (err) {                              // if there is an error such as a duplicated account or fields left blank. THESE WILL BE DEALT WITH LATER
+        if (err) {                              
         	if (err['message'].slice(0,19) == "User already exists") {
         		res.redirect ('/#registererror');
         	}        	
         } else { console.log("successfully added account");
-        console.log(account);
         passport.authenticate('local')(req, res, function () {
         	res.redirect('/');
         });
@@ -701,13 +583,13 @@ router.get('/logout', function(req, res) {
 	res.redirect('/');
 });
 
-router.get('/ping', function(req, res){ // test function to see if tutorial worked. Link to tutorial here: http://mherman.org/blog/2015/01/31/local-authentication-with-passport-and-express-4/#.VpqQOhUrKhe
+router.get('/ping', function(req, res){ 				 // test function to see if tutorial worked. Link to tutorial here: http://mherman.org/blog/2015/01/31/local-authentication-with-passport-and-express-4/#.VpqQOhUrKhe
 	res.status(200).send("pong!");
 });
 
 //search 
 
-router.get('/usersearch',function(req,res){ // this is a function unused for now, but will be used for the dropdown menu when you enter a username into the charge form. Supplies a list of users that begin with the letters entered in by user
+router.get('/usersearch',function(req,res){ 			 
 	if(req.user === undefined){
 		res.redirect('/');
 	}
@@ -726,7 +608,7 @@ router.get('/usersearch',function(req,res){ // this is a function unused for now
 				}
 			}
 			for(user in docs){
-				var inArray = false; // used so no duplicate things happen
+				var inArray = false; 											// used so no duplicate things happen
 				if(docs[user]['username'] === req.user.username){
 				}
 				else{
@@ -761,7 +643,7 @@ router.get('/usersearch',function(req,res){ // this is a function unused for now
 	}
 });
 
-function stringStartsWith (string, prefix) { // used by usersearch route, boolean function. Inputs are string (complete string you are testing the prefix against, and prefix is the string you are checking if the input string begins with)
+function stringStartsWith (string, prefix) {									 // used by usersearch route, boolean function. Inputs are string (complete string you are testing the prefix against, and prefix is the string you are checking if the input string begins with)
 	if(string === undefined)
 		return false;
 	return string.slice(0, prefix.length).toLowerCase() == prefix.toLowerCase();
