@@ -211,6 +211,7 @@ function getDisplayName(target_user){
 router.post('/chargecomplete', function(req, res) {
 	Charge.findOne({_id: req.body.charge_id},function(err,charge){
 		if(charge['completed'] || charge['cancelled']){
+			console.log("already done");
 			res.send("Already Done");
 		}
 		else{
@@ -379,89 +380,88 @@ router.post('/chargecomplete', function(req, res) {
 					});  
 				}
 			}
+			Charge.findOneAndUpdate({_id: req.body.charge_id}, {completed: true, date_completed: moment(), who_completed: req.user.username}, {new: true}, function(err, profile) {
+				//console.log(profile);
+		        // SEND EMAIL IF PERSON WHO COMPLETED IS NOT THE CREATOR
+
+		        if (req.body.total === "false") {
+
+		        	if (!(profile['creator'] === profile['who_completed'])) {
+
+		        		Account.findOne({username: profile['creator']}, function(err, creator) {
+
+		        			var mailOptions = {
+		        				from: 'noreply.rohis@gmail.com',
+		        				to: creator['email'],
+		        				subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
+		        				text: req.user.first_name + " has marked your charge of $" + profile['amount'] + " for '" + profile['description'] + "' as completed. Check it out at rohis.herokuapp.com!"
+		        			};
+
+		        			if (creator['email_notifications']) {
+		        				transporter.sendMail(mailOptions);
+		        			}
+
+		        		});      
+		        	}
+
+		        } else if (req.body.total === "true") {
+
+		        	if (!(profile['creator'] === profile['who_completed'])) {
+
+		        		Account.findOne({username: profile['creator']}, function(err, creator) {
+
+		        			var mailOptions = {
+		        				from: 'noreply.rohis@gmail.com',
+		        				to: creator['email'],
+		        				subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
+		        				text: req.user.first_name + " has marked your cumulative charge of $" + req.body.totalAmount + " as completed. Check it out at rohis.herokuapp.com!"
+		        			};
+
+		        			if (creator['email_notifications']) {
+		        				transporter.sendMail(mailOptions);
+		        			}
+
+		        		});      
+		        	}
+
+		        }
+
+		        Account.findOne({username: profile['payer']['username']}, function(err, payer_info) {
+
+		            // UPDATES 
+
+		            if (payer_info) {             // UPDATES AVERAGE PAYMENT TIME FOR THE PAYER IF THE USER EXISTS
+
+		            	//console.log(payer_info);
+
+		            	var start_time = moment(profile['date_created']);
+		            	var complete_time = moment(profile['date_completed']);
+
+		            	//console.log("AHHHHHHHHHHHH");
+
+		            	var time_diff = complete_time.diff(start_time);
+
+		            	//console.log(time_diff);
+
+		            	var previous_num = payer_info['statistics']['num_charges'];
+		            	var previous_avg = payer_info['statistics']['average_time'];
+		            	var previous_total = previous_num * previous_avg;
+		            	var new_avg = (previous_total + time_diff) / (previous_num + 1);
+
+		            	//console.log(new_avg);
+
+		            	Account.findOneAndUpdate({username: profile['payer']['username']}, {statistics: {num_charges: previous_num + 1, average_time: new_avg}}, function() {
+		            		res.send('Success!');
+		            	});
+
+		            } else {                    // OTHERWISE SKIP UPDATING
+		            	res.send('Success!');
+		            }
+
+		        });
+			});
     	}
     });
-	Charge.findOneAndUpdate({_id: req.body.charge_id}, {completed: true, date_completed: moment(), who_completed: req.user.username}, {new: true}, function(err, profile) {
-		//console.log(profile);
-        // SEND EMAIL IF PERSON WHO COMPLETED IS NOT THE CREATOR
-
-        if (req.body.total === "false") {
-
-        	if (!(profile['creator'] === profile['who_completed'])) {
-
-        		Account.findOne({username: profile['creator']}, function(err, creator) {
-
-        			var mailOptions = {
-        				from: 'noreply.rohis@gmail.com',
-        				to: creator['email'],
-        				subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
-        				text: req.user.first_name + " has marked your charge of $" + profile['amount'] + " for '" + profile['description'] + "' as completed. Check it out at rohis.herokuapp.com!"
-        			};
-
-        			if (creator['email_notifications']) {
-        				transporter.sendMail(mailOptions);
-        			}
-
-        		});      
-        	}
-
-        } else if (req.body.total === "true") {
-
-        	if (!(profile['creator'] === profile['who_completed'])) {
-
-        		Account.findOne({username: profile['creator']}, function(err, creator) {
-
-        			var mailOptions = {
-        				from: 'noreply.rohis@gmail.com',
-        				to: creator['email'],
-        				subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
-        				text: req.user.first_name + " has marked your cumulative charge of $" + req.body.totalAmount + " as completed. Check it out at rohis.herokuapp.com!"
-        			};
-
-        			if (creator['email_notifications']) {
-        				transporter.sendMail(mailOptions);
-        			}
-
-        		});      
-        	}
-
-        }
-
-        Account.findOne({username: profile['payer']['username']}, function(err, payer_info) {
-
-            // UPDATES 
-
-            if (payer_info) {             // UPDATES AVERAGE PAYMENT TIME FOR THE PAYER IF THE USER EXISTS
-
-            	//console.log(payer_info);
-
-            	var start_time = moment(profile['date_created']);
-            	var complete_time = moment(profile['date_completed']);
-
-            	//console.log("AHHHHHHHHHHHH");
-
-            	var time_diff = complete_time.diff(start_time);
-
-            	//console.log(time_diff);
-
-            	var previous_num = payer_info['statistics']['num_charges'];
-            	var previous_avg = payer_info['statistics']['average_time'];
-            	var previous_total = previous_num * previous_avg;
-            	var new_avg = (previous_total + time_diff) / (previous_num + 1);
-
-            	//console.log(new_avg);
-
-            	Account.findOneAndUpdate({username: profile['payer']['username']}, {statistics: {num_charges: previous_num + 1, average_time: new_avg}}, function() {
-            		res.send('Success!');
-            	});
-
-            } else {                    // OTHERWISE SKIP UPDATING
-            	res.send('Success!');
-            }
-
-        });
-	});
-
 });
 
 // WHEN YOU CLICK THE X NEXT TO A CHARGE
@@ -694,6 +694,17 @@ router.get('/usersearch',function(req,res){ // this is a function unused for now
 	var response_data = {items:[]};
 	Account.find({}, function (err, docs) {
 		for(user in docs){
+			if(docs[user]['username'] === req.user.username){
+			}
+			else{
+				if(stringStartsWith(docs[user]['username'], name)){
+					response_data['items'].push({full_name: docs[user]['full_name'],
+						username: docs[user]['username']});
+				}
+			}
+		}
+
+		for(user in docs){
 			console.log("User: " + docs[user]['full_name']);
 			if(docs[user]['username'] === req.user.username){
 			}
@@ -711,8 +722,6 @@ router.get('/usersearch',function(req,res){ // this is a function unused for now
 		response_data['items'].unshift({full_name:'Charge Custom User', username:req.query.name});
 		res.send(response_data);
 	});
-
-
 });
 
 function stringStartsWith (string, prefix) { // used by usersearch route, boolean function. Inputs are string (complete string you are testing the prefix against, and prefix is the string you are checking if the input string begins with)
