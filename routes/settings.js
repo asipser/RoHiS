@@ -65,7 +65,7 @@ router.post('/forgotPassword', function(req, res) {
 				from: 'noreply.rohis@gmail.com',
 				to: profile['email'],
 				subject: "MoneyMatters Temporary Password",
-				text: "If you are receiving this email, then you have forgotten your MoneyMatters password. Please use the following temporary password of length SIX to log in: '" + text + "'. You may reset your password via your account settings at rohis.herokuapp.com/settings."
+				text: "If you are receiving this email, then you have forgotten your MoneyMatters password. Please use the following temporary password of length SIX to log in: '" + text + "'. You may reset your password via your account settings at http://moneymatters.eastus.cloudapp.azure.com/settings."
 			}
 
 			transporter.sendMail(mailOptions);
