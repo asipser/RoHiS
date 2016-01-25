@@ -587,60 +587,61 @@ router.post('/chargecancel', function(req, res) {
 					});  
 				}
 			}
+			Charge.findOneAndUpdate({_id: req.body.charge_id}, {cancelled: true, date_cancelled: moment(), who_cancelled: req.user.username}, {new: true}, function(err, profile) {
+
+
+		        // SEND EMAIL IF PERSON WHO CANCELLED IS NOT THE CREATOR
+
+		        if (req.body.total === "false") {
+
+		        	if (!(profile['creator'] === profile['who_cancelled'])) {
+
+		        		Account.findOne({username: profile['creator']}, function(err, creator) {
+
+		        			var mailOptions = {
+		        				from: 'noreply.rohis@gmail.com',
+		        				to: creator['email'],
+		        				subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
+		        				text: req.user.first_name + " has cancelled your charge of $" + profile['amount'] + " for '" + profile['description'] + ".' Check it out at rohis.herokuapp.com!"
+		        			};
+
+		        			if (creator['email_notifications']) {
+		        				transporter.sendMail(mailOptions);
+		        			}
+
+		        		});      
+		        	}
+
+		        } else if (req.body.total === "true") {
+
+		        	if (!(profile['creator'] === profile['who_cancelled'])) {
+
+		        		Account.findOne({username: profile['creator']}, function(err, creator) {
+
+		        			var mailOptions = {
+		        				from: 'noreply.rohis@gmail.com',
+		        				to: creator['email'],
+		        				subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
+		        				text: req.user.first_name + " has cancelled your cumulative charge of $" + req.body.totalAmount + ". Check it out at rohis.herokuapp.com!"
+		        			};
+
+		        			if (creator['email_notifications']) {
+		        				transporter.sendMail(mailOptions);
+		        			}
+
+		        		});      
+		        	}
+
+		        }
+
+
+		        res.send('Success!');
+
+		    });
     	}
     });
 
-	Charge.findOneAndUpdate({_id: req.body.charge_id}, {cancelled: true, date_cancelled: moment(), who_cancelled: req.user.username}, {new: true}, function(err, profile) {
 
-
-        // SEND EMAIL IF PERSON WHO CANCELLED IS NOT THE CREATOR
-
-        if (req.body.total === "false") {
-
-        	if (!(profile['creator'] === profile['who_cancelled'])) {
-
-        		Account.findOne({username: profile['creator']}, function(err, creator) {
-
-        			var mailOptions = {
-        				from: 'noreply.rohis@gmail.com',
-        				to: creator['email'],
-        				subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
-        				text: req.user.first_name + " has cancelled your charge of $" + profile['amount'] + " for '" + profile['description'] + ".' Check it out at rohis.herokuapp.com!"
-        			};
-
-        			if (creator['email_notifications']) {
-        				transporter.sendMail(mailOptions);
-        			}
-
-        		});      
-        	}
-
-        } else if (req.body.total === "true") {
-
-        	if (!(profile['creator'] === profile['who_cancelled'])) {
-
-        		Account.findOne({username: profile['creator']}, function(err, creator) {
-
-        			var mailOptions = {
-        				from: 'noreply.rohis@gmail.com',
-        				to: creator['email'],
-        				subject: "Charge updated by " + req.user.first_name + " " + req.user.last_name,
-        				text: req.user.first_name + " has cancelled your cumulative charge of $" + req.body.totalAmount + ". Check it out at rohis.herokuapp.com!"
-        			};
-
-        			if (creator['email_notifications']) {
-        				transporter.sendMail(mailOptions);
-        			}
-
-        		});      
-        	}
-
-        }
-
-
-        res.send('Success!');
-
-    });
 
 });
 
