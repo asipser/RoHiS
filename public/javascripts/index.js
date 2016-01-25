@@ -392,9 +392,10 @@ $(document).ready(function(){
 	var $chargeamounts = $('.listedchargeamount');
 	for(i=0; i<$chargeamounts.length; i++){
 		var amount = $chargeamounts[i];
-		if($(amount).text().charAt(0) == '-'){
+		if(	$(amount).text().charAt(0) == '-'){
 			$(amount).css('color', 'red');
 		}
+		$(amount).text(parseFloat($(amount).text()).toFixed(2));
 	};
 
 	$('.ui.form.changepassword').form({
@@ -449,6 +450,6 @@ $(document).ready(function(){
 	var stats = $('div.statisticspage.value');
 	for(var i=0;i<stats.length;i++){
 		if($(stats[i]).attr('data'))
-			$(stats[i]).text($(stats[i]).attr('data'));
+			$(stats[i]).text(parseFloat($(stats[i]).attr('data')).toFixed(2));
 	}
 });
