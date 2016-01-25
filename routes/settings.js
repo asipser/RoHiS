@@ -6,7 +6,8 @@ var nodemailer = require('nodemailer');
 var secret = require('../secret/secret');
 var transporter = secret['transporter'];
 
-/* GET users listing. */
+// Loads user settings
+
 router.get('/', function(req, res, next) {
 
 	Account.findOne({username: req.user.username}, function (err, profile) {
@@ -22,14 +23,12 @@ router.post('/email', function(req, res, next) {
 	if (req.body.emailcheck === "true") {
 
 		Account.findOneAndUpdate({username: req.user.username}, {email_notifications: true}, {new: true}, function(err, profile) {
-			console.log(profile);
 			res.redirect('/settings/');
 		});
 
 	} else {
 
 		Account.findOneAndUpdate({username: req.user.username}, {email_notifications: false}, {new: true}, function(err, profile) {
-			console.log(profile);
 			res.redirect('/settings/');
 		});
 

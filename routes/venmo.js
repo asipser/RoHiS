@@ -47,9 +47,4 @@ router.get('/checkdata', function (req, res, next) {
         });
 });
 
-
-
-
-
-
 module.exports = router;
