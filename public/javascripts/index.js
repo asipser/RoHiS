@@ -123,8 +123,8 @@ $(document).ready(function(){
 			},
 			fields: {
 				results : 'items',
-				title   : 'full_name',
-				description     : 'username'
+				title   : 'username',
+				description     : 'full_name'
 			},
 			minCharacters : 2
 		});
