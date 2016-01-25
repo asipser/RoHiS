@@ -6,7 +6,7 @@ var router = express.Router();
 /* GET users listing. */
 router.get('/', function(req, res, next) {	
 	console.log("user:");
-	console.log(req.user);
+	console.log(JSON.stringify(req.user));
 	res.render('statistics', {user:req.user});
 });
 
