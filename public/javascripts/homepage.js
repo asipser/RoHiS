@@ -44,17 +44,83 @@ $(document).ready(function(){
 	});
 	$('.ui.form.signup').form({
 	    fields: {
-	      firstName	: 'empty',
-	      lastName	: 'empty',
-	      username	: 'empty',
-	      email		: 'email',
-	      password	: ['minLength[6]', 'empty']
+	      firstName	: {
+	      	identifier: 'firstName',
+	      	rules: [{
+	      		type: 'empty',
+					prompt: 'Please enter a first name'
+				},
+				{
+					type: 'regExp[/^[a-z ,.\'-]+$/i]',
+					prompt: 'First name can only contain letters, numbers, and certain special characters'
+	      	}]
+	      },	
+	      lastName	: {
+	      	identifier: 'lastName',
+	      	rules: [{
+	      		type: 'empty',
+					prompt: 'Please enter a last name'
+				},
+				{
+					type: 'regExp[/^[a-z ,.\'-]+$/i]',
+					prompt: 'Last name can only contain letters, numbers, and certain special characters'
+	      	}]
+	      },
+	      username	: {
+	      	identifier: 'username',
+	      	rules: [{
+	      		type: 'empty',
+					prompt: 'Please enter a username'
+				},
+				{
+					type: 'regExp[^[a-zA-Z0-9_]*$]',
+					prompt: 'Username can only contain letters, numbers, and certain special characters'
+	      	}]
+	      },
+	      email		: {
+	      	identifier: 'email',
+	      	rules: [{
+	      		type: 'empty',
+					prompt: 'Please enter an email'
+				},
+				{
+					type: 'email',
+					prompt: 'Email must be correctly formed'
+	      	}]
+	      },
+	      password	: {
+	      	identifier: 'password',
+	      	rules: [{
+	      		type: 'empty',
+					prompt: 'Please enter a password'
+				},
+				{
+					type: 'minLength[6]',
+					prompt: 'Password must be at least {ruleValue} characters long'
+	      	}]
+	      }
 	    }
 	});
 	$('.ui.form.login').form({
 	    fields: {
-	      username	: 'empty',
-	      password	: 'empty'
+	      username	: {
+	      	identifier: 'username',
+	      	rules: [{
+	      		type: 'empty',
+					prompt: 'Please enter a username'
+				},
+				{
+					type: 'regExp[^[a-zA-Z0-9_]*$]',
+					prompt: 'Username can only contain letters, numbers, and certain special characters'
+	      	}]
+	      },
+	      password	: {
+	      	identifier: 'password',
+	      	rules: [{
+	      		type: 'empty',
+					prompt: 'Please enter a password'
+			}]
+	      }
 	    }
 	});
 	$('.ui.dropdown').dropdown();

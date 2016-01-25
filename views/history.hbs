@@ -12,7 +12,11 @@
 	{{> top-bar-partial}}
 	<div class="ui container" id="historypanel">
 		<div class="ui divider"></div>
-		<div class="ui container">
+		<div class="ui top attached tabular menu">
+		  <a class="active item" data-tab="completed">Completed Charges</a>
+		  <a class="item" data-tab="cancelled">Cancelled Charges</a>
+		</div>
+		<div class="ui bottom attached active tab segment" data-tab='completed'>
 			<h2 class="ui header">Historical Charges</h2>
 			<div class="ui grid">
 				<div class="eight wide column">
@@ -29,8 +33,7 @@
 				</div>
 			</div>
 		</div>
-		<br>
-		<div class="ui container">
+		<div class="ui bottom attached tab segment" data-tab='cancelled'>
 			<h2 class="ui header">Cancelled Charges</h2>
 			<div class="ui grid">
 				<div class="eight wide column">

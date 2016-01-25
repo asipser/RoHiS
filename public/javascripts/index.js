@@ -12,7 +12,6 @@ $(document).ready(function(){
 	$('.ui.checkbox').checkbox();
 
 	var notFormUserName = 'not[' + $('#getusername').text() + ']';
-	console.log(notFormUserName);
 	$('.ui.form.charge').form({
 		fields: {
 			borroworlent: {
@@ -356,7 +355,7 @@ $(document).ready(function(){
 								var current_object = chargeObjects.shift();
 								current_object['counter'] = counter;
 								split_charge(current_object);
-							} else {
+							}else{
 								location.reload();
 							}
 						}
@@ -370,7 +369,6 @@ $(document).ready(function(){
 			var current_object = chargeObjects.shift();
 			current_object['counter'] = counter;
 			split_charge(current_object);
-
 		});
 	}
 
@@ -394,9 +392,10 @@ $(document).ready(function(){
 	var $chargeamounts = $('.listedchargeamount');
 	for(i=0; i<$chargeamounts.length; i++){
 		var amount = $chargeamounts[i];
-		if($(amount).text().charAt(0) == '-'){
+		if(	$(amount).text().charAt(0) == '-'){
 			$(amount).css('color', 'red');
 		}
+		$(amount).text(parseFloat($(amount).text()).toFixed(2));
 	};
 
 	$('.ui.form.changepassword').form({
@@ -444,5 +443,13 @@ $(document).ready(function(){
 		$('div.ui.toggle.checkbox').checkbox('check');
 	}else{
 		$('div.ui.toggle.checkbox').checkbox('uncheck');
+	}
+
+	$('div.statisticsreturntime').text((parseFloat($('div.statisticsreturntime').attr('data'))/(60000)).toFixed(2));
+
+	var stats = $('div.statisticspage.value');
+	for(var i=0;i<stats.length;i++){
+		if($(stats[i]).attr('data'))
+			$(stats[i]).text(parseFloat($(stats[i]).attr('data')).toFixed(2));
 	}
 });
