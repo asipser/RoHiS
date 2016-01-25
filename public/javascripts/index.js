@@ -10,12 +10,49 @@ $(document).ready(function(){
 	$('.ui.accordion').accordion();
 	$('.ui.dropdown').dropdown();
 	$('.ui.checkbox').checkbox();
+
+	var notFormUserName = 'not[' + $('#getusername').text() + ']';
+	console.log(notFormUserName);
 	$('.ui.form.charge').form({
 		fields: {
-			borroworlent: 'empty',
-			amount		: 'empty',
-			user		: 'empty',
-			note		: 'empty'
+			borroworlent: {
+				identifier: 'borroworlent',
+				rules: [{
+					type: 'empty',
+					prompt: 'Please choose where you borrowed or lent the charge amount' 
+				}]
+			},
+			amount		: {
+				identifier: 'amount',
+				rules: [{
+					type: 'empty',
+					prompt: 'Please enter a charge amount'
+				}]
+			},
+			user		: {	
+				identifier: 'user',
+				rules: [{
+					type: 'empty',
+					prompt: 'Please enter a username'
+				},
+				{
+					type: notFormUserName,
+					prompt: 'You cannot charge yourself'
+				},{
+					type: 'regExp[^[a-zA-Z0-9_]*$]',
+					prompt: 'Username can only contain letters, numbers, and certain special characters'
+				}]
+			},
+			note		: {
+				identifier: 'note',
+				rules: [{
+					type: 'empty',
+					prompt: 'Please enter a note'
+				},{
+					type: 'regExp[^[a-zA-Z0-9\\-\\s]+$]',
+					prompt: 'The note can only contain letters, numbers, and certain special characters'
+				}]
+			}
 		}
 	});
 	$('#borroworlent').change(function(){
@@ -30,7 +67,8 @@ $(document).ready(function(){
 		$('#chargeformwrapper').addClass('expansion');
 		$(this).removeClass('massive');
 		$('#precharge').css('margin-top','-37px');
-		$('#precharge').css('padding-bottom','0');
+		$('#precharge').css('margin-bottom','-10vh');
+		$('#precharge').css('max-height','0');
 		$(this).text('Charge!');
 		$(this).css('margin-left', '6.9vw');
 		setTimeout(function(){
@@ -45,8 +83,6 @@ $(document).ready(function(){
 	});
 
 	$('#splitchargebutton').click(function(){
-		$('#precharge').css('padding-bottom', '0');
-		$('#precharge').css('margin-bottom', '0');
 		$('#precharge').css('max-height', 0);
 		$('#makechargebutton').addClass('animated fadeOutLeft');
 		$(this).addClass('animated fadeOutRight');

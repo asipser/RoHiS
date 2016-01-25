@@ -79,13 +79,14 @@ h2.ui.message{
 
 div.ui.message.opaque {
 	background-color: rgba(255,255,255,0.3);
-	min-height:30vh;
+	min-height:25vh;
 }
 
 #precharge{
-	margin-top:10vh;
-	padding-bottom:5vh;
-	transition:.7s;
+	margin-top:8vh;
+	padding-bottom:-40vh;
+	margin-bottom:-40vh;
+	transition: 1s;
 	max-height:50vh;
 }
 #makechargebutton{
@@ -157,6 +158,7 @@ h2.ui.dividing.header{
 
 .ui.card>.content>.header:not(.ui), .ui.cards>.card>.content>.header:not(.ui){
 	text-transform: capitalize;
+	word-wrap:break-word;
 }
 .ui.card>.content, .ui.cards>.card>.content {
 	padding:0.5em;
@@ -172,8 +174,8 @@ h2.ui.dividing.header{
 }
 
 #chargedescription{
-	border-bottom-right-radius:1px;
-	border-top-right-radius:1px;
+	border-bottom-right-radius:.28571429rem;
+	border-top-right-radius:.28571429rem;
 }
 
 input[type=number]::-webkit-inner-spin-button, 
@@ -184,4 +186,18 @@ input[type=number]::-webkit-outer-spin-button {
 
 #sharedchargeform{
 	display:none;
+}
+
+.listednote{
+	width:90px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.chargelist{
+	overflow: scroll;
+}
+
+.chargelist::-webkit-scrollbar { 
+    display: none; 
 }

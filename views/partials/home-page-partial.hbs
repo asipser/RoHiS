@@ -4,7 +4,7 @@
 	<div class="ui container">
 		<div class="ui inverted large secondary pointing menu">
 			<a class="active item" id='homemenuitem'>Home</a>
-			<a class="item" id="aboutmenuitem">About Us</a>
+			<a class="item" id="aboutmenuitem">How It Works</a>
 			<div class="right item">
 				<div class="ui inverted button" id="loginbutton">Login</div>
 			</div>
@@ -47,16 +47,16 @@
 				<label>Name</label>
 				<div class="two fields">
 					<div class="field">
-						<input type="text" name="firstName" placeholder="First Name" style='border-bottom-right-radius: 0px; border-top-right-radius: 0px;'>
+						<input type="text" name="firstName" placeholder="First Name" max-length='20' style='border-bottom-right-radius: 0px; border-top-right-radius: 0px;'>
 					</div>
 					<div class="field">
-						<input type="text" name="lastName" placeholder="Last Name" style='border-bottom-left-radius: 0px; border-top-left-radius: 0px;'>
+						<input type="text" name="lastName" placeholder="Last Name" max-length='20' style='border-bottom-left-radius: 0px; border-top-left-radius: 0px;'>
 					</div>
 				</div>
 			</div>
 			<div class="field">
 				<label>Username</label>
-				<input type="text" name="username" placeholder="Username">
+				<input type="text" name="username" max-length='30' placeholder="Username">
 			</div>
 			<div class="field">
 				<label>Email</label>
@@ -81,7 +81,7 @@
 		<form class="ui large form login" action="/login" method="post" >
 			<div class="field">
 				<label>Username</label>
-				<input type="text" name="username" placeholder="Username">
+				<input type="text" name="username" max-length='30' placeholder="Username">
 			</div>
 			<div class="field">
 				<label>Password</label>
