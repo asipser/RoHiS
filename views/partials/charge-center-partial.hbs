@@ -36,6 +36,25 @@
 			$('#totalshared').text((totalBill - totalCharges).toFixed(2));
 		}
 	};
+	var starCheck = function(element){
+		var username = $(element).val();
+		$.ajax({
+			type: 'GET',
+			url: '/isUser',
+			data: {
+				username: username
+			},
+			success: function(data){
+				var starSpan = $(element).parent().parent().siblings('.extra.content').children();
+				if(data){
+					$(starSpan).show();
+				}else{
+					$(starSpan).hide();
+					$(starSpan).children().addClass('empty');
+				}
+			}
+		});
+	};
 </script>
 <div class="ui container" id="chargecenterpanel">
 	<div class='ui message opaque'>
@@ -131,6 +150,10 @@
 									</div>
 								</div>
 							</div>
+						</div>
+						<div class='ui message'>
+							<i class='info icon'></i>
+							Only registered users can be the payer.
 						</div>
 					</div>
 					<div class="ui tab" data-tab='step-2'>
