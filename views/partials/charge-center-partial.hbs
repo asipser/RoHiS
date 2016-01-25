@@ -46,6 +46,7 @@
 			},
 			success: function(data){
 				var starSpan = $(element).parent().parent().siblings('.extra.content').children();
+				console.log(data);
 				if(data){
 					$(starSpan).show();
 				}else{
