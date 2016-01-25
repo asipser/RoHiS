@@ -26,19 +26,296 @@ $(document).ready(function(){
 			$('#tofrom').text('from');
 	});
 	$('#makechargebutton').click(function(){
+		$('#splitchargebutton').addClass('animated fadeOutRight').removeClass('massive');
 		$('#chargeformwrapper').addClass('expansion');
 		$(this).removeClass('massive');
 		$('#precharge').css('margin-top','-37px');
 		$('#precharge').css('padding-bottom','0');
 		$(this).text('Charge!');
+		$(this).css('margin-left', '6.9vw');
 		setTimeout(function(){
 			$('#submitchargebutton').css('opacity', '1');
 		}, 1000);
 		setTimeout(function(){
+			$('#chargeformwrapper').css('overflow', 'visible');
+		}, 1000);
+		setTimeout(function(){
 			$('#precharge').hide();
-		}, 1020);
-	})
-	$('p').popup();
+		}, 1050);
+	});
+
+	$('#splitchargebutton').click(function(){
+		$('#precharge').css('padding-bottom', '0');
+		$('#precharge').css('margin-bottom', '0');
+		$('#precharge').css('max-height', 0);
+		$('#makechargebutton').addClass('animated fadeOutLeft');
+		$(this).addClass('animated fadeOutRight');
+		$('#splitformwrapper').css('max-height','100vh');
+		setTimeout(function(){
+			$('#precharge').hide();
+		}, 700);
+		setTimeout(function(){
+			$('#splitformwrapper').css('overflow', 'visible');
+		}, 1000);
+	});
+
+	$('#addnewcardbutton').click(function(){
+
+		var numCards = $(this).parent().parent().siblings().length;
+		if(numCards===8){
+			$(this).parent().parent().hide();
+		}
+		$('#addbuttoncard').before('<div class="standard card"> \
+			<div class="content"> \
+				<div class="ui compact search labeled input field"> \
+					<input type="text" name="user" id="chargeuser" placeholder="Username" class="prompt usercardinput"> \
+						<div class="results"></div> \
+				</div> \
+				<span class="right floated meta"><div onclick="exitCard($(this))" class="ui mini icon circular button"><i class="remove icon"></i></div></span> \
+			</div> \
+			<div class="content"> \
+				<i class="massive smile icon"></i> \
+			</div> \
+			<div class="extra content"> \
+				<span class="right floated">Paid the bill <i onclick="starClick($(this))" class="empty star icon"></i></span> \
+			</div> \
+		</div>');
+		
+		$('.ui.search')
+		.search({
+			apiSettings: {
+				url: '/usersearch?name={query}'
+			},
+			fields: {
+				results : 'items',
+				title   : 'full_name',
+				description     : 'username'
+			},
+			minCharacters : 2
+		});
+	});
+
+	$('.cancelbutton').click(function(){
+		location.reload();
+	});
+
+	$('#steponedonebutton').click(function(){
+		$('.ui.compact.error.message').empty();
+		$('.ui.compact.error.message').hide();
+		var userData = [];
+		var userCardInputs = $('.usercardinput');
+		if(userCardInputs.length){
+			var filledInput = false;
+			var filledPayer = false;
+			var stars = $('.star.icon');
+
+			userData[0] = {
+				username: $('#getusername').text(),
+				payer: !($(stars[0]).hasClass('empty'))
+			}
+			filledPayer = userData[0].payer;
+
+			for(var i=1;i<stars.length;i++){
+				userData[i] = {
+					username: $(userCardInputs[i-1]).val(),
+					payer: !($(stars[i]).hasClass('empty'))
+				}
+
+				filledInput = Boolean(userData[i].username);
+				if(!filledPayer){
+					filledPayer = userData[i].payer;
+				}
+			}
+
+			if(!filledInput){
+				// console.log('Each person must have a username!');
+				$('.ui.compact.error.message').append('<p>Each person must have a username!</p>');
+				$('.ui.compact.error.message').show();
+			}
+			if(!filledPayer){
+				// console.log('Someone must be chosen as the payer!');
+				$('.ui.compact.error.message').append('<p>Someone must be chosen as the payer!</p>');
+				$('.ui.compact.error.message').show();
+			}
+			if(filledInput && filledPayer){
+				$('#step2tab').removeClass('disabled');
+				$('#step2tab').click();
+				$('#step1tab').addClass('disabled');
+				setUpStep2Tab(userData);
+			}
+		}else{
+			// console.log('Not enough users!');
+			$('.ui.compact.error.message').append('<p>Not enough users!</p>');
+			$('.ui.compact.error.message').show();
+		}
+		// console.log(userData);
+	});
+
+	var setUpStep2Tab = function(userData){
+		console.log(userData);
+		$('#numpeoplesplit').text(userData.length);
+
+		for(var i=0;i<userData.length;i++){
+			var username = userData[i].username;
+			var payer = userData[i].payer;
+			step2AddCard(username, payer);
+
+			$('#participantdropdown').append("<option value='" + username + "'>" + username + "</option>");
+		}
+	};
+	
+	var step2AddCard = function(username, payer){
+		if(payer){
+			$('#step2cards').prepend("<div class='ui yellow card' id='" + username + "'> \
+								<div class='content'> \
+									<div class='header'>" + username + "<span class='right floated meta'>Paid the bill <i class='star icon'></i></span></div> \
+								</div> \
+								<div class='content sharedcharges " + username + "'>No shared charges yet!</div> \
+								<div class='content'> \
+									<div class='ui transparent fluid left icon input'> \
+										<i class='dollar icon'></i> \
+										<input type='number' class='indcharge " + username + "' min='0.01' max='999.99' step='0.01' onchange='chargeOnChange()' name='amount' placeholder='Individual charges'> \
+									</div> \
+								</div> \
+							</div>");
+		}else{
+			$('#step2cards').append("<div class='card' id='" + username + "'> \
+								<div class='content'> \
+									<div class='header'>" + username + "</div> \
+								</div> \
+								<div class='content sharedcharges " + username + "'>No shared charges yet!</div> \
+								<div class='extra content'> \
+									<div class='ui transparent fluid left icon input'> \
+										<i class='dollar icon'></i> \
+										<input type='number' class='indcharge " + username + "' min='0.01' max='999.99' step='0.01' onchange='chargeOnChange()' name='amount' placeholder='Individual charges'> \
+									</div> \
+								</div> \
+							</div>")
+		}
+	}
+
+	$('#sharedchargebutton').click(function(){
+		$('#sharedchargeform').show();
+	});
+
+	$('#submitsharedchargebutton').click(function(){
+		$(this).siblings('.ui.error.message').hide();
+		var charge = parseFloat($('#sharedchargeamount').val());
+		var participants = $('#participantdropdown').val();
+
+		if(!(participants && charge)){
+			$(this).siblings('.ui.error.message').show();
+		}else{
+			var numParticipants = participants.length;
+			var chargePerPerson = charge/numParticipants;
+			console.log(chargePerPerson);
+			for(var i=0; i<numParticipants;i++){
+				var user = participants[i];
+				var currentAmount = $('div.content.sharedcharges.' + user).text();
+				console.log(currentAmount);
+				if(currentAmount == "No shared charges yet!"){
+					$('div.content.sharedcharges.' + user).text(chargePerPerson.toFixed(2));
+				}else{
+					currentAmount = parseFloat(currentAmount);
+					$('div.content.sharedcharges.' + user).text((chargePerPerson + currentAmount).toFixed(2));
+				}
+			}
+			$('#sharedchargeamount').val('');
+			$('#participantdropdown').dropdown('clear');
+			$('#sharedchargeform').hide();
+		}
+
+		chargeOnChange();
+	});
+
+	$('#step2nextbutton').click(function(){
+		var leftover = parseFloat($('#totalshared').text());
+		if(leftover > 0){
+			var payerCard = $('div.ui.yellow.card');
+			var userCards = $(payerCard).siblings();
+			var payer = $(payerCard).attr('id');
+			console.log(payer);
+			var leftoversplit = leftover/(userCards.length + 1);
+
+			var userData = [];
+
+			for(var i=0;i<userCards.length;i++){
+				var currentCard = userCards[i];
+				var currentUser = $(currentCard).attr('id');
+				var sharedCharge = parseFloat($('div.content.sharedcharges.' + currentUser).text());
+				var indCharge = parseFloat($('input.indcharge.' + currentUser).val());
+				var debt = 0;
+				if(sharedCharge)
+					debt += sharedCharge;
+				if(indCharge)
+					debt += indCharge;
+				debt += leftoversplit;
+
+				userData[i] = {
+					username: currentUser,
+					charge: debt
+				}
+			}
+
+			console.log(userData);
+
+			$('#step3tab').removeClass('disabled');
+			$('#step3tab').click();
+			$('#step2tab').addClass('disabled');
+			setUpStep3Tab(userData, payer);
+		}else{
+			// ERROR MESSAGE
+		}
+	});
+
+	var setUpStep3Tab = function(userData, payer){
+		for(var i=0;i<userData.length;i++){
+			var username = userData[i].username;
+			var debt = (userData[i].charge).toFixed(2);
+			$('#step3cards').append("<div class='ui card' id='" + username + "'> \
+								<div class='content'> \
+									<div class='header'>" + username + "</div> \
+								</div> \
+								<div class='content'> \
+									<div class='ui statistic'><div class='label'>owes</div><div class='value'>$" + debt + "</div></div> \
+								</div> \
+								<div class='content'> \
+									to " + payer + " \
+								</div> \
+							</div>");
+		}
+
+		$('#step3confirmbutton').click(function(){
+			var fakeNote = "fake note"
+			for(var i=0;i<userData.length;i++){
+				var chargeObject = {
+					recipient: payer,
+					payer: userData[i].username,
+					amount: userData[i].charge,
+					note: fakeNote
+				}
+				$.ajax({
+					type: "POST",
+					url: '/payments/addsplitcharge',
+					data: chargeObject,
+					success: function(data){
+						if (data === "Success!") {
+							console.log("Success!");
+						}else{
+							console.log('Some weird data error');
+						}
+					},
+					error: function(xhr, status, error) {
+						console.log("A problem occurred" + error);
+					}
+				});
+			}
+		});
+	}
+
+	$('.tabular.menu .item').tab();
+
+	$('.listeditem').popup();
 	
 	$('.ui.search')
 	.search({
@@ -101,5 +378,5 @@ $(document).ready(function(){
 		$('#venmobool').removeClass('disabled');
 	}else{
 		$('#venmobool').popup();
-	}
+	};
 });

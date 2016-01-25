@@ -17,7 +17,7 @@ body, body.pushable>.pusher{
 	height:100vh;
 }
 
-#headerpanel, .pusher{
+#headerpanel{
 	height: 100vh;
 }
 
@@ -67,16 +67,26 @@ h2.ui.message{
 
 #chargeformwrapper{
 	width: 0px;
+	max-height:0px;
 	overflow: hidden;
 }
+
+#splitformwrapper{
+	overflow: hidden;
+	max-height: 0;
+	transition: 3.5s;
+}
+
 div.ui.message.opaque {
 	background-color: rgba(255,255,255,0.3);
+	min-height:30vh;
 }
 
 #precharge{
-	margin-top:-15vh;
+	margin-top:10vh;
 	padding-bottom:5vh;
 	transition:.7s;
+	max-height:50vh;
 }
 #makechargebutton{
 	transition:1s;
@@ -90,9 +100,11 @@ div.ui.message.opaque {
 @keyframes expansion{
 	from{
 		width: 0;
+		max-height:0;
 	}
 	to{
 		width: 100%;
+		max-height:40vh;
 	}
 }
 
@@ -135,6 +147,14 @@ h2.ui.dividing.header{
 	min-height: 50vh;
 }
 
+#loanpanel{
+	margin-bottom:5vh;
+}
+
+.ui.attached.raised.segment{
+	min-height: 40vh;
+}
+
 .ui.card>.content>.header:not(.ui), .ui.cards>.card>.content>.header:not(.ui){
 	text-transform: capitalize;
 }
@@ -154,4 +174,14 @@ h2.ui.dividing.header{
 #chargedescription{
 	border-bottom-right-radius:1px;
 	border-top-right-radius:1px;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+#sharedchargeform{
+	display:none;
 }
