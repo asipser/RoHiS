@@ -75,8 +75,6 @@ router.get('/', function (req, res) {
 		    			creator = charges[transaction]['creator'];
 		    		}
 
-		    		console.log("My username =" + username +" and the boolean is " + charges[transaction]['payer']['username']);
-
 		    		if(charges[transaction]['payer']['username'] === username){   // user is borrowing money
 
 		    			console.log("I'M HERE AND THIS IS THE WRONG PLACE");
@@ -88,9 +86,6 @@ router.get('/', function (req, res) {
 		    				you_owe.unshift({username:charges[transaction]['recipient']['username'], name: displayName, amount:charges[transaction]['amount'], id:charges[transaction]['_id'], note:charges[transaction]['description'], date_created: date_created, creator: creator});
 		    			}
 		    		}
-
-		    		console.log("My username =" + username +" and the boolean is " + charges[transaction]['recipient']['username']);
-
 		    		else if(charges[transaction]['recipient']['username'] === username){                
 
 		    			console.log("I'M HERE AND THIS IS CORRECT");
@@ -706,66 +701,44 @@ router.get('/ping', function(req, res){ // test function to see if tutorial work
 //search 
 
 router.get('/usersearch',function(req,res){ // this is a function unused for now, but will be used for the dropdown menu when you enter a username into the charge form. Supplies a list of users that begin with the letters entered in by user
-	if(req.user === undefined){
-		res.redirect('/');
-	}
-	else{	
-		name = req.query.name;
-		console.log(name);
-		var response_data = {items:[]};
-		Account.find({}, function (err, docs) {
-			for(user in docs){
-				if(docs[user]['username'] === req.user.username){
-				}
-				else{
-					if(stringStartsWith(docs[user]['username'], name)){
-						response_data['items'].push({full_name: docs[user]['full_name'],
-							username: docs[user]['username']});
-					}
+	name = req.query.name;
+	console.log(name);
+	var response_data = {items:[]};
+	Account.find({}, function (err, docs) {
+		for(user in docs){
+			if(docs[user]['username'] === req.user.username){
+			}
+			else{
+				if(stringStartsWith(docs[user]['username'], name)){
+					response_data['items'].push({full_name: docs[user]['full_name'],
+						username: docs[user]['username']});
 				}
 			}
-			for(user in docs){
-				var inArray = false; // used so no duplicate things happen
-				console.log("User: " + docs[user]['full_name']);
-				if(docs[user]['username'] === req.user.username){
-				}
-				else{
-					console.log(response_data['items'].length);
-					if(stringStartsWith(docs[user]['full_name'], name)){
-						response_data['items'].forEach(function(entry){
-							if(entry['username'] === docs[user]['username']){
-								inArray = true;
-							}
-						});
-					}
-					else if(stringStartsWith(docs[user]['last_name'], name)){
-						response_data['items'].forEach(function(entry){
-							if(entry['username'] === docs[user]['username']){
-								inArray = true;
-							}
-						});
-					}
-				}
-				if((!inArray) && stringStartsWith(docs[user]['last_name'], name)){
-					response_data['items'].push({full_name: docs[user]['full_name'],
-															username: docs[user]['username']});
-				}
-				if((!inArray) && stringStartsWith(docs[user]['full_name'], name)){
-					response_data['items'].push({full_name: docs[user]['full_name'],
-															username: docs[user]['username']});
-				}
+		}
 
+		for(user in docs){
+			console.log("User: " + docs[user]['full_name']);
+			if(docs[user]['username'] === req.user.username){
 			}
-			response_data['items'].unshift({full_name:'Charge Custom User', username:req.query.name});
-			res.send(response_data);
-		});
-	}
+			else{
+				if(stringStartsWith(docs[user]['full_name'], name)){
+					response_data['items'].push({full_name: docs[user]['full_name'],
+						username: docs[user]['username']});
+				}
+				else if(stringStartsWith(docs[user]['last_name'], name)){
+					response_data['items'].push({full_name: docs[user]['full_name'],
+						username: docs[user]['username']});
+				}
+			}
+		}
+		response_data['items'].unshift({full_name:'Charge Custom User', username:req.query.name});
+		res.send(response_data);
+	});
 });
 
 function stringStartsWith (string, prefix) { // used by usersearch route, boolean function. Inputs are string (complete string you are testing the prefix against, and prefix is the string you are checking if the input string begins with)
 	if(string === undefined)
 		return false;
-	console.log("string: " + string + " prefix: " + prefix +" "+ (string.slice(0, prefix.length).toLowerCase() == prefix.toLowerCase()));
 	return string.slice(0, prefix.length).toLowerCase() == prefix.toLowerCase();
 }
 

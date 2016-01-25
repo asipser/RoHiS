@@ -286,7 +286,14 @@ $(document).ready(function(){
 		}
 
 		$('#step3confirmbutton').click(function(){
+
+			console.log("You made it!");
+
 			var fakeNote = "fake note"
+
+			var counter = userData.length;
+			var chargeObjects = [];
+
 			for(var i=0;i<userData.length;i++){
 				var chargeObject = {
 					recipient: payer,
@@ -294,6 +301,12 @@ $(document).ready(function(){
 					amount: userData[i].charge,
 					note: fakeNote
 				}
+
+				chargeObjects.push(chargeObject);
+			}
+
+			function split_charge(chargeObject) {
+
 				$.ajax({
 					type: "POST",
 					url: '/payments/addsplitcharge',
@@ -301,8 +314,13 @@ $(document).ready(function(){
 					success: function(data){
 						if (data === "Success!") {
 							console.log("Success!");
-						}else{
-							console.log('Some weird data error');
+							counter -= 1;
+
+							if (counter > 0) {
+								var current_object = chargeObjects.shift();
+								current_object['counter'] = counter;
+								split_charge(current_object);
+							}
 						}
 					},
 					error: function(xhr, status, error) {
@@ -310,6 +328,11 @@ $(document).ready(function(){
 					}
 				});
 			}
+
+			var current_object = chargeObjects.shift();
+			current_object['counter'] = counter;
+			split_charge(current_object);
+
 		});
 	}
 
