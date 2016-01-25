@@ -1,6 +1,6 @@
 body, body.pushable>.pusher{
 	background-color: #7f8c8d;
-	background-image: url('/images/stonesbg	.png');
+	background-image: url('/images/stonesbg.png');
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 }
@@ -19,6 +19,10 @@ body, body.pushable>.pusher{
 
 #headerpanel{
 	height: 100vh;
+}
+
+.header{
+	font-family: 'Questrial', sans-serif;
 }
 
 .pusher .dimmed{
