@@ -205,7 +205,7 @@ $(document).ready(function(){
 			var payer = userData[i].payer;
 			step2AddCard(username, payer);
 
-			$('#participantdropdown').append("<option value='" + username.replace(' ', '.') + "'>" + username + "</option>");
+			$('#participantdropdown').append("<option value='" + username.trim().split(' ').join('.') + "'>" + username + "</option>");
 		}
 
 		$('input[type="number"]').keydown(function(e){
@@ -309,8 +309,8 @@ $(document).ready(function(){
 			for(var i=0;i<userCards.length;i++){
 				var currentCard = userCards[i];
 				var currentUser = $(currentCard).attr('id');
-				var sharedCharge = parseFloat($('div.content.sharedcharges.' + currentUser.replace(' ', '.')).text());
-				var indCharge = parseFloat($('input.indcharge.' + currentUser.replace(' ', '.')).val());
+				var sharedCharge = parseFloat($('div.content.sharedcharges.' + currentUser.trim().split(' ').join('.')).text());
+				var indCharge = parseFloat($('input.indcharge.' + currentUser.trim().split(' ').join('.')).val());
 				var debt = 0;
 				if(sharedCharge)
 					debt += sharedCharge;
@@ -319,7 +319,7 @@ $(document).ready(function(){
 				debt += leftoversplit;
 
 				userData[i] = {
-					username: currentUser,
+					username: currentrentUser,
 					charge: debt
 				}
 			}
