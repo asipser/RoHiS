@@ -131,7 +131,7 @@
 					</div>
 					<div class="ui search labeled input field">
 						<div class='ui label' id='tofrom'>to</div>
-						<input type="text" name="user" id='chargeuser' oninput='mySanitize($(this))' placeholder="Username" maxlength='30' class='prompt chargeuserinput'>
+						<input type="text" name="user" id='chargeuser' oninput='mySanitizeSpace($(this))' placeholder="Username" maxlength='30' class='prompt chargeuserinput'>
 						<div class="results"></div>
 					</div>
 					<div class="field">
@@ -186,8 +186,8 @@
 									<div class='content'>
 										<div class='header'>{{user.username}} (You)</div>
 									</div>
-									<div class='content'>
-										<i class='massive smile icon'></i>
+									<div class='ui image'>
+										<image src='/images/profile_image.png'>
 									</div>
 									<div class='content stardiv'>
 										<span class='right floated'>Paid the bill <i onclick="starClick($(this))" class='empty star icon'></i></span>
