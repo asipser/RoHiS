@@ -25,6 +25,10 @@ body, body.pushable>.pusher{
 .header{
 }
 
+a.anchorText{
+	color:white;
+}
+
 #needstobewider{
 	width: 80vw !important;
 }
