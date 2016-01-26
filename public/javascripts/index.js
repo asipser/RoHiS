@@ -564,7 +564,9 @@ $(document).ready(function(){
 
 	if($('#venmobool').attr('data') == 'true'){
 		var requestButtons = $('.venmorequestbutton');
+		console.log(requestButtons);
 		var completeButtons = $('.venmocompletebutton');
+		console.log(completeButtons)
 
 		for(var i=0;i<requestButtons.length;i++){
 			var currentButton = $(requestButtons[i]);
