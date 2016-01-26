@@ -20,15 +20,49 @@
 			<div class="ui grid">
 				<div class="eight wide column">
 					<h3 class="ui small header">History of charges owed to you</h3>
-					{{#each history_owe_you}}
-					<p class='historicalcharges' data-title="{{description}}" data-content="Completed by {{who_completed}} on {{date_completed}}" id="{{id}}">{{username}} paid you $<span class='historychargeamount'>{{amount}}</span></p>
-					{{/each}}
+					<div class='ui feed'>
+						{{#each history_owe_you}}
+						<div class='event'>
+							<div class='label'>
+								<div class='ui tiny circular image'>
+									<image src='/images/p4.png'>
+								</div>
+							</div>
+							<div class='content'>
+								<div class='summary'>
+									<span class='user'>{{username}}</span> paid you $<span class='historychargeamount'>{{amount}}</span>
+									<div class='date'>
+										Completed by {{who_completed}} on {{date_completed}}
+									</div>
+								</div>
+								<div class='meta'>Description: "{{description}}"</div>
+							</div>
+						</div>
+						{{/each}}
+					</div>
 				</div>
 				<div class="eight wide column">
 					<h3 class="ui small header">History of charges you owed</h3>
-					{{#each history_you_owe}}
-					<p class='historicalcharges' data-title="{{description}}" data-content="Completed by {{who_completed}} on {{date_completed}}" id="{{id}}">You paid {{username}} $<span class='historychargeamount'>{{amount}}</span></p>
-					{{/each}}
+					<div class='ui feed'>
+						{{#each history_you_owe}}
+						<div class='event'>
+							<div class='label'>
+								<div class='ui tiny circular image'>
+									<image src='/images/p6.png'>
+								</div>
+							</div>
+							<div class='content'>
+								<div class='summary'>
+									You paid <span class='user'>{{username}}</span> $<span class='historychargeamount'>{{amount}}</span>
+									<div class='date'>
+										Completed by {{who_completed}} on {{date_completed}}
+									</div>
+								</div>
+								<div class='meta'>Description: "{{description}}"</div>
+							</div>
+						</div>
+						{{/each}}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -36,15 +70,49 @@
 			<div class="ui grid">
 				<div class="eight wide column">
 					<h3 class="ui small header">Cancelled charges owed to you</h3>
-					{{#each cancelled_owe_you}}
-					<p class='historicalcharges' data-title="{{description}}" data-content="Cancelled by {{who_cancelled_h}} on {{date_cancelled}}" class="{{id}}">{{who_cancelled_d}} cancelled a charge of $<span class='historychargeamount'>{{amount}}</span> with {{with_who}}</p>
-					{{/each}}
+					<div class='ui feed'>
+						{{#each cancelled_owe_you}}
+						<div class='event'>
+							<div class='label'>
+								<div class='ui tiny circular image'>
+									<image src='/images/p8.png'>
+								</div>
+							</div>
+							<div class='content'>
+								<div class='summary'>
+									<span class='user'>{{who_cancelled_d}}</span> cancelled a charge of $<span class='historychargeamount'>{{amount}}</span> with {{with_who}}
+									<div class='date'>
+										{{date_cancelled}}
+									</div>
+								</div>
+								<div class='meta'>Description: "{{description}}"</div>
+							</div>
+						</div>
+						{{/each}}
+					</div>
 				</div>
 				<div class="eight wide column">
 					<h3 class="ui small header">Cancelled charges you owe</h3>
-					{{#each cancelled_you_owe}}
-					<p class='historicalcharges' data-title="{{description}}" data-content="Cancelled by {{who_cancelled_h}} on {{date_cancelled}}" class="{{id}}">{{who_cancelled_d}} cancelled a charge of $<span class='historychargeamount'>{{amount}}</span> with {{with_who}}</p>
-					{{/each}}
+					<div class='ui feed'>
+						{{#each cancelled_you_owe}}
+						<div class='event'>
+							<div class='label'>
+								<div class='ui tiny circular image'>
+									<image src='/images/p2.png'>
+								</div>
+							</div>
+							<div class='content'>
+								<div class='summary'>
+									<span class='user'>{{who_cancelled_d}}</span> cancelled a charge of $<span class='historychargeamount'>{{amount}}</span> with {{with_who}}
+									<div class='date'>
+										{{date_cancelled}}
+									</div>
+								</div>
+								<div class='meta'>Description: "{{description}}"</div>
+							</div>
+						</div>
+						{{/each}}
+					</div>
 				</div>
 			</div>
 		</div>

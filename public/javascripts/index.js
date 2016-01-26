@@ -59,17 +59,13 @@ $(document).ready(function(){
 			$('#tofrom').text('from');
 	});
 	$('#makechargebutton').click(function(){
-		$('#splitchargebutton').addClass('animated fadeOutRight').removeClass('massive');
+		$('#splitchargebutton').addClass('animated fadeOutRight');
+		$('#makechargebutton').addClass('animated fadeOutLeft');
 		$('#chargeformwrapper').addClass('expansion');
-		$(this).removeClass('massive');
-		$('#precharge').css('margin-top','-37px');
-		$('#precharge').css('margin-bottom','-10vh');
-		$('#precharge').css('max-height','0');
-		$(this).text('Charge!');
-		$(this).css('margin-left', '6.9vw');
+		$('#precharge').css('opacity','0');
 		setTimeout(function(){
 			$('#submitchargebutton').css('opacity', '1');
-		}, 1000);
+		}, 500);
 		setTimeout(function(){
 			$('#chargeformwrapper').css('overflow', 'visible');
 		}, 1000);
@@ -106,8 +102,10 @@ $(document).ready(function(){
 				</div> \
 				<span class="right floated meta"><div onclick="exitCard($(this))" class="ui mini icon circular button"><i class="remove icon"></i></div></span> \
 			</div> \
-			<div class="ui small image"> \
-				<img src="/images/p' + rand + '.png"> \
+			<div class="ui center aligned container"> \
+				<div class="ui small image"> \
+					<img src="/images/p' + rand + '.png"> \
+				</div> \
 			</div> \
 			<div class="content stardiv"> \
 				<span class="right floated starspan">Paid the bill <i onclick="starClick($(this))" class="empty star icon"></i></span> \

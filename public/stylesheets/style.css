@@ -114,7 +114,7 @@ div.ui.message.opaque {
 	margin-top:8vh;
 	padding-bottom:-40vh;
 	margin-bottom:-40vh;
-	transition: 1s;
+	transition: .5s;
 	max-height:50vh;
 }
 #makechargebutton{
@@ -144,6 +144,7 @@ h2.ui.dividing.header{
 #submitchargebutton{
 	opacity:0;
 	margin-left:25.83vw;
+	transition: 1s;
 }
 
 #popupmenu{
