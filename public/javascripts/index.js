@@ -574,21 +574,21 @@ $(document).ready(function(){
 		for(var i=0;i<requestButtons.length;i++){
 			var currentButton = $(requestButtons[i]);
 			var currentUser = $(currentButton).attr('data');
-			users_1.push(currentUser);
+			users_1.push({currentUser: currentUser, currentButton: currentButton});
 		}
 
-		function multiple_calls_1(currentUser) {
+		function multiple_calls_1(currentCharge) {
 
 			$.ajax({
 				type: 'GET',
 				url: '/isUser',
 				data: {
-					username: currentUser
+					username: currentCharge['currentUser']
 				},
 				success: function(data){
 					console.log(currentUser + data);
 					if(data){
-						$(currentButton).show();
+						$(currentCharge['currentButton']).show();
 					}
 
 					counter_1 -= 1;
@@ -607,21 +607,21 @@ $(document).ready(function(){
 		for(var i=0;i<completeButtons.length;i++){
 			var currentButton2 = $(completeButtons[i]);
 			var currentUser2 = $(currentButton).attr('data');
-			users_2.push(currentUser2);
+			users_2.push({currentUser2: currentUser2, currentButton2: currentButton2});
 		}
 
-		function multiple_calls_2(currentUser2) {
+		function multiple_calls_2(currentCharge2) {
 
 			$.ajax({
 				type: 'GET',
 				url: '/isUser',
 				data: {
-					username: currentUser
+					username: currentCharge2['currentUser2']
 				},
 				success: function(data){
 					console.log(currentUser + data);
 					if(data){
-						$(currentButton).show();
+						$(currentCharge2['currentButton2']).show();
 					}
 
 					counter_2 -= 1;
