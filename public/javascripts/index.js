@@ -586,7 +586,7 @@ $(document).ready(function(){
 					username: currentCharge['currentUser']
 				},
 				success: function(data){
-					console.log(currentUser + data);
+					console.log(currentCharge['currentUser'] + data);
 					if(data){
 						$(currentCharge['currentButton']).show();
 					}
@@ -606,7 +606,7 @@ $(document).ready(function(){
 		
 		for(var i=0;i<completeButtons.length;i++){
 			var currentButton2 = $(completeButtons[i]);
-			var currentUser2 = $(currentButton).attr('data');
+			var currentUser2 = $(currentButton2).attr('data');
 			users_2.push({currentUser2: currentUser2, currentButton2: currentButton2});
 		}
 
@@ -619,7 +619,7 @@ $(document).ready(function(){
 					username: currentCharge2['currentUser2']
 				},
 				success: function(data){
-					console.log(currentUser + data);
+					console.log(currentCharge2['currentUser2'] + data);
 					if(data){
 						$(currentCharge2['currentButton2']).show();
 					}
