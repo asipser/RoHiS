@@ -598,8 +598,9 @@ $(document).ready(function(){
 				}
 			});
 		}
-
-		multiple_calls_1(users_1.shift());
+		if(requestButtons.length){
+			multiple_calls_1(users_1.shift());
+		}
 
 		var counter_2 = completeButtons.length;
 		var users_2 = [];
@@ -635,6 +636,8 @@ $(document).ready(function(){
 			});
 		}
 
-		multiple_calls_2(users_2.shift());
+		if(completeButtons.length){
+			multiple_calls_2(users_2.shift());
+		}
 	}
 });
