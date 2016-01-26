@@ -270,11 +270,13 @@ router.post('/addsplitcharge', function (req, res, next) {
                 
                 Account.findOne({username: req.body.recipient.toLowerCase()}, function (err, profile) {
 
+                    var string_amount = (parseFloat(req.body.amount).toFixed(2)).toString();
+
                     var mailOptions = {
                         from: 'noreply.rohis@gmail.com',
                         to: users[0]['email'],
                         subject: "You've split a charge with " + profile.first_name + " " + profile.last_name + "!",
-                        text: "You owe " + profile.first_name + " $" + req.body.amount + " for '" + req.body.note + ".' Check it out at http://moneymatters.eastus.cloudapp.azure.com/!"
+                        text: "You owe " + profile.first_name + " $" + string_amount + " for '" + req.body.note + ".' Check it out at http://moneymatters.eastus.cloudapp.azure.com/!"
                     }
 
                     transporter.sendMail(mailOptions);
