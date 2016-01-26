@@ -47,4 +47,80 @@ router.get('/checkdata', function (req, res, next) {
         });
 });
 
+router.post('/completeall', function (req, res, next) {
+    console.log(req.body);
+
+    var username = req.body.user; // OTHER PERSON'S USERNAME. IF YOU WANT YOUR OWN USERNAME IT'S REQ.USER.USERNAME, AS ALWAYS
+    var amount = req.body.amount; // AMOUNT BEING PAID/REQUESTED
+    var note = req.body.note;     // NOTE ASSOCIATED WITH THING
+    var access_token;      
+    var user_id;
+    var email; 
+    var url = 'https://api.venmo.com/v1/payments';
+
+    Account.findOne({username: req.user.username}, function (err, profile) {
+        access_token = profile['access_token'];
+    
+        Account.findOne({username: username}, function (err, profile) {
+            if (profile) {
+                if (profile['venmo_id']) {
+                    user_id = profile['venmo_id'];
+                    var parameters = {access_token: access_token, user_id: user_id, note: note, amount: amount};
+                    request.post({url: url, formData: parameters}, function(err, response, body) {
+                        res.send('Success!');
+                    });
+                } else {
+                    email = profile['email'];
+                    var parameters = {access_token: access_token, email: email, note: note, amount: amount};
+                    request.post({url: url, formData: parameters}, function(err, response, body) {
+                        res.send('Success!');
+                    });
+                }
+            }
+
+        });
+
+    });
+    
+});
+
+router.post('/requestall', function (req, res, next) {
+    console.log(req.body);
+
+    var username = req.body.user; // OTHER PERSON'S USERNAME. IF YOU WANT YOUR OWN USERNAME IT'S REQ.USER.USERNAME, AS ALWAYS
+    var amount = req.body.amount; // AMOUNT BEING PAID/REQUESTED
+    var note = req.body.note;     // NOTE ASSOCIATED WITH THING
+    var access_token;      
+    var user_id;
+    var email; 
+    var url = 'https://api.venmo.com/v1/payments';
+
+    amount = amount * -1;    
+
+    Account.findOne({username: req.user.username}, function (err, profile) {
+        access_token = profile['access_token'];
+    
+        Account.findOne({username: username}, function (err, profile) {
+            if (profile) {
+                if (profile['venmo_id']) {
+                    user_id = profile['venmo_id'];
+                    var parameters = {access_token: access_token, user_id: user_id, note: note, amount: amount};
+                    request.post({url: url, formData: parameters}, function(err, response, body) {
+                        res.send('Success!');
+                    });
+                } else {
+                    email = profile['email'];
+                    var parameters = {access_token: access_token, email: email, note: note, amount: amount};
+                    request.post({url: url, formData: parameters}, function(err, response, body) {
+                        res.send('Success!');
+                    });
+                }
+            }
+
+        });
+
+    });
+    
+});
+
 module.exports = router;
