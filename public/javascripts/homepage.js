@@ -131,4 +131,6 @@ $(document).ready(function(){
         }
     });
 
+	$('.listeditem').popup();
+	$('.venmopopup').popup();
 });
