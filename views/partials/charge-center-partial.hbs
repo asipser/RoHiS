@@ -69,7 +69,7 @@
 				username: username
 			},
 			success: function(data){
-				var starSpan = $(element).parent().parent().siblings('.extra.content').children();
+				var starSpan = $(element).parent().parent().siblings('.stardiv').children();
 				if(data){
 					$(starSpan).show();
 				}else{
@@ -88,7 +88,7 @@
 						username: username
 					},
 					success: function(data){
-						var starSpan = $(element).parent().parent().siblings('.extra.content').children();
+						var starSpan = $(element).parent().parent().siblings('.stardiv').children();
 						if(data){
 							$(starSpan).show();
 						}else{
@@ -101,6 +101,9 @@
 	};
 	var mySanitize = function(element){
 		$(element).val($(element).val().replace(/\W+/g, ""));
+	};
+	var mySanitizeSpace = function(element){
+		$(element).val($(element).val().replace(/\W+/g, " "));
 	};	
 </script>
 <div class="ui container" id="chargecenterpanel">
@@ -186,7 +189,7 @@
 									<div class='content'>
 										<i class='massive smile icon'></i>
 									</div>
-									<div class='content'>
+									<div class='content stardiv'>
 										<span class='right floated'>Paid the bill <i onclick="starClick($(this))" class='empty star icon'></i></span>
 									</div>
 								</div>
@@ -209,6 +212,7 @@
 								<!-- Charged cards go here -->
 							</div>
 						</div>
+						<div class='ui error message' id='spliterrormessage' style='display: none'>Please fill out all fields!</div>
 						<div class='ui container'>
 							<div class='ui horizontal segments'>
 								<div class='ui center aligned segment'>
@@ -225,10 +229,14 @@
 											split between <span id='numpeoplesplit'>2</span> people
 										</div>
 									</div>
+									<br>
+									<div class='ui input'>
+										<input type='text' oninput='mySanitizeSpace($(this))' id='billsplitnote' placeholder='Write note here...' maxlength="25">
+									</div>
 								</div>
 								<div class='ui segment'>
 									<div class='ui right floated buttons'>
-										<div class='ui blue button' id='sharedchargebutton'><br>Add Shared Charge</div>
+										<div class='ui blue button' id='sharedchargebutton'><br>Add Shared Item</div>
 										<div class='ui vertical buttons'>
 											<div class='ui positive button' id='step2nextbutton' style='border-top-left-radius: 0; border-bottom-left-radius: 0;'>Split Rest</div>
 											<div class='ui negative button cancelbutton' style='border-top-left-radius: 0; border-bottom-left-radius: 0;'>Cancel</div>
@@ -252,7 +260,6 @@
 												</select>
 											</div>
 										</div>
-										<div class='ui error message' style='display: none'>Please fill out all fields!</div>
 										<button class='ui button' id='submitsharedchargebutton'>Submit</button>
 										<button class='ui basic grey button' id='cancelsharedchargebutton'>Cancel</button>
 									</div>
@@ -302,7 +309,7 @@
 									<div class='ui statistic'>
 										<div class='label'>owes you a total of</div>
 										<div class='value'>
-											$<span class='dbamount {{username}}'>{{amount}}</span>
+											$<span class='dbamount {{username}}' data='{{username}}'>{{amount}}</span>
 										</div>
 									</div>
 								</div>
@@ -318,8 +325,8 @@
 						</div>
 						<div class='extra content'>
 							<div class='ui two buttons'>
-								<div class="ui green button chargecompleteall" data='{{username}}'>Complete</div>
-								<div class="ui basic red button chargecancelall" data='{{username}}'>Remove</div>
+								<div class="ui green button chargecompleteall {{username}}" data='{{username}}'>Complete</div>
+								<div class="ui basic red button chargecancelall {{username}}" data='{{username}}'>Remove</div>
 							</div>
 						</div>
 						<div class='venmopopup' data-content='You must authorize Venmo in account settings before you can request charges with Venmo on MoneyMatters.'>
@@ -350,7 +357,7 @@
 								<div class='ui statistic'>
 									<div class='label'>lent you a total of</div>
 									<div class='value'>
-										$<span class='dbamount {{username}}'>{{amount}}</span>
+										$<span class='dbamount {{username}}' data='{{username}}'>{{amount}}</span>
 									</div>
 								</div>
 							</div>
@@ -367,11 +374,11 @@
 					<div class='extra content'>
 						<div class='ui two buttons'>
 							<div class="ui green button chargecompleteall {{username}}" data='{{username}}'>Complete</div>
-							<div class="ui basic red button chargecancelall" data='{{username}}'>Remove</div>
+							<div class="ui basic red button chargecancelall {{username}}" data='{{username}}'>Remove</div>
 						</div>
 					</div>
 					<div class='venmopopup' data-content='You must authorize Venmo in account settings before you can complete charges with Venmo on MoneyMatters.'>
-						<div style='display:none;' class='ui blue bottom attached disabled button venmocompletebutton {{username}}' data='{{username}}'>
+						<div class='ui blue bottom attached disabled button venmocompletebutton {{username}}' data='{{username}}'>
 							Complete with Venmo
 						</div>
 					</div>

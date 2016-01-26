@@ -26,6 +26,7 @@ $(".chargecomplete").click(function() {
 				setTimeout(function(){
 					thisElement.css('display', 'none');
 				}, 1000);
+				checkForZeros();
 			}
 		},
 		error: function(xhr, status, error) {
@@ -71,6 +72,7 @@ $(".chargecancel").click(function() {
 				setTimeout(function(){
 					thisElement.css('display', 'none');
 				}, 1000);
+				checkForZeros();
 			}
 		},
 		error: function(xhr, status, error) {
