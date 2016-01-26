@@ -395,8 +395,26 @@ router.post('/chargecomplete', function(req, res) {
 		            	var new_avg = (previous_total + time_diff) / (previous_num + 1);
 
 		            	var average_display = humanizeDuration(new_avg, {round: true, largest: 2});
+
+		            	var highest_time_num = payer_info['highest_time_num'];
+		            	var lowest_time_num = payer_info['lowest_time_num'];
+		            	var highest_time_display = payer_info['highest_time_display'];
+		            	var lowest_time_display = payer_info['lowest_time_display'];
+
+		            	if (time_diff > highest_time_num) {
+		            		highest_time_num = time_diff;
+		            		highest_time_display = humanizeDuration(time_diff, {round: true, largest: 2});
+		            	}
+
+		            	if (lowest_time_num === 0 || time_diff < lowest_time_num) {
+		            		lowest_time_num = time_diff;
+		            		lowest_time_display = humanizeDuration(time_diff, {round: true, largest: 2});
+		            	}
+
+		            	console.log("lowest time!: " + lowest_time_display);
+		            	console.log("highest time!: " + highest_time_display);
 		            
-		            	Account.findOneAndUpdate({username: profile['payer']['username']}, {statistics: {num_charges: previous_num + 1, average_time: new_avg, average_display: average_display}}, function() {
+		            	Account.findOneAndUpdate({username: profile['payer']['username']}, {lowest_time_display: lowest_time_display, lowest_time_num: lowest_time_num, highest_time_display: highest_time_display, highest_time_num: highest_time_num, statistics: {num_charges: previous_num + 1, average_time: new_avg, average_display: average_display}}, function() {
 		            		res.send('Success!');
 		            	});
 

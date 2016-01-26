@@ -564,40 +564,70 @@ $(document).ready(function(){
 
 	if($('#venmobool').attr('data') == 'true'){
 		var requestButtons = $('.venmorequestbutton');
+		console.log(requestButtons);
 		var completeButtons = $('.venmocompletebutton');
+		console.log(completeButtons)
+
+		var counter_1 = requestButtons.length;
+		var users_1 = [];
 
 		for(var i=0;i<requestButtons.length;i++){
 			var currentButton = $(requestButtons[i]);
 			var currentUser = $(currentButton).attr('data');
+			users_1.push({currentUser: currentUser, currentButton: currentButton});
+		}
+
+		function multiple_calls_1(currentCharge) {
 
 			$.ajax({
 				type: 'GET',
 				url: '/isUser',
 				data: {
-					username: currentUser
+					username: currentCharge['currentUser']
 				},
 				success: function(data){
-					console.log(currentUser + data);
+					console.log(currentCharge['currentUser'] + data);
 					if(data){
-						$(currentButton).show();
+						$(currentCharge['currentButton']).removeClass('disabled');
+					}
+
+					counter_1 -= 1;
+					if (counter_1 > 0) {
+						multiple_calls_1(users_1.shift());
 					}
 				}
 			});
 		}
+		if(requestButtons.length){
+			multiple_calls_1(users_1.shift());
+		}
+
+		var counter_2 = completeButtons.length;
+		var users_2 = [];
+		
 		for(var i=0;i<completeButtons.length;i++){
-			var currentButton = $(completeButtons[i]);
-			var currentUser = $(currentButton).attr('data');
+			var currentButton2 = $(completeButtons[i]);
+			var currentUser2 = $(currentButton2).attr('data');
+			users_2.push({currentUser2: currentUser2, currentButton2: currentButton2});
+		}
+
+		function multiple_calls_2(currentCharge2) {
 
 			$.ajax({
 				type: 'GET',
 				url: '/isUser',
 				data: {
-					username: currentUser
+					username: currentCharge2['currentUser2']
 				},
 				success: function(data){
-					console.log(currentUser + data);
+					console.log(currentCharge2['currentUser2'] + data);
 					if(data){
-						$(currentButton).show();
+						$(currentCharge2['currentButton2']).removeClass('disabled');
+					}
+
+					counter_2 -= 1;
+					if (counter_2 > 0) {
+						multiple_calls_2(users_2.shift());
 					}
 				},
 				error: function(xhr, status, error) {
@@ -605,5 +635,13 @@ $(document).ready(function(){
 				}
 			});
 		}
+
+		if(completeButtons.length){
+			multiple_calls_2(users_2.shift());
+		}
+	};
+
+	if($('#venmobool').attr('data') == 'false'){
+		$('.venmopopup').popup();
 	}
 });
