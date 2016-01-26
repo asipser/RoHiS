@@ -8,6 +8,7 @@ moment().format();
 var nodemailer = require('nodemailer');
 var secret = require('../secret/secret');
 var transporter = secret['transporter'];
+var humanizeDuration = require("humanize-duration")
 
 
 // CHECKS FOR SPLIT BILL IF RECIPIENT IS A USER
@@ -386,8 +387,10 @@ router.post('/chargecomplete', function(req, res) {
 		            	var previous_avg = payer_info['statistics']['average_time'];
 		            	var previous_total = previous_num * previous_avg;
 		            	var new_avg = (previous_total + time_diff) / (previous_num + 1);
+
+		            	var average_display = humanizeDuration(new_avg, {round: true, largest: 2});
 		            
-		            	Account.findOneAndUpdate({username: profile['payer']['username']}, {statistics: {num_charges: previous_num + 1, average_time: new_avg}}, function() {
+		            	Account.findOneAndUpdate({username: profile['payer']['username']}, {statistics: {num_charges: previous_num + 1, average_time: new_avg, average_display: average_display}}, function() {
 		            		res.send('Success!');
 		            	});
 

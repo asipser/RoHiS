@@ -14,7 +14,7 @@ var Account = new Schema({
     profile_picture_url: String,
     information: String,
     email_notifications: { type : Boolean, default : true },
-    statistics: { type: Object, default: {num_charges: 0, average_time: 0}},
+    statistics: { type: Object, default: {num_charges: 0, average_time: 0, average_display: 0}},
     current_lent: {type:Number,default:0},
     current_borrowed: {type:Number,default:0},
     greatest_loan: {type:Number, default:null},
