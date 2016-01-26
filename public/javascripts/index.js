@@ -223,7 +223,7 @@ $(document).ready(function(){
 	
 	var step2AddCard = function(username, payer){
 		if(payer){
-			$('#step2cards').prepend("<div class='ui yellow card' id='" + username + "'> \
+			$('#step2cards').append("<div class='ui yellow card' id='" + username + "'> \
 								<div class='content'> \
 									<div class='header'>" + username + "<span class='right floated meta'>Paid the bill <i class='star icon'></i></span></div> \
 								</div> \

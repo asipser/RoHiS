@@ -32,7 +32,6 @@ a.anchorText{
 #needstobewider{
 	width: 80vw !important;
 }
-}
 
 .pusher .dimmed{
 	background-color: #bdc3c7;
@@ -40,7 +39,7 @@ a.anchorText{
 
 .masthead h1.ui.header{
 	margin-top: 25vh;
-	font-size: 7em;
+	font-size: 5rem;
 	margin-bottom: -5vh;
 	font-family: 'Questrial', sans-serif;
 }
@@ -232,8 +231,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 #stats_graph{
-	width: 15vw;
-	height: 30vh;
+	width: 16vw;
+	height: 39vh;
 }
 
 .starspan{
