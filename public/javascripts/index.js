@@ -37,9 +37,6 @@ $(document).ready(function(){
 				{
 					type: notFormUserName,
 					prompt: 'You cannot charge yourself'
-				},{
-					type: 'regExp[^[a-zA-Z0-9_]*$]',
-					prompt: 'Username can only contain letters, numbers, and certain special characters'
 				}]
 			},
 			note		: {
@@ -209,7 +206,7 @@ $(document).ready(function(){
 			var payer = userData[i].payer;
 			step2AddCard(username, payer);
 
-			$('#participantdropdown').append("<option value='" + username + "'>" + username + "</option>");
+			$('#participantdropdown').append("<option value='" + username.replace(' ', '.') + "'>" + username + "</option>");
 		}
 
 		$('input[type="number"]').keydown(function(e){
@@ -270,8 +267,8 @@ $(document).ready(function(){
 			console.log(chargePerPerson);
 			for(var i=0; i<numParticipants;i++){
 				var user = participants[i];
+				console.log(user);
 				var currentAmount = $('div.content.sharedcharges.' + user).text();
-				console.log(currentAmount);
 				if(currentAmount == "No shared charges yet!"){
 					$('div.content.sharedcharges.' + user).text(chargePerPerson.toFixed(2));
 				}else{
@@ -313,8 +310,8 @@ $(document).ready(function(){
 			for(var i=0;i<userCards.length;i++){
 				var currentCard = userCards[i];
 				var currentUser = $(currentCard).attr('id');
-				var sharedCharge = parseFloat($('div.content.sharedcharges.' + currentUser).text());
-				var indCharge = parseFloat($('input.indcharge.' + currentUser).val());
+				var sharedCharge = parseFloat($('div.content.sharedcharges.' + currentUser.replace(' ', '.')).text());
+				var indCharge = parseFloat($('input.indcharge.' + currentUser.replace(' ', '.')).val());
 				var debt = 0;
 				if(sharedCharge)
 					debt += sharedCharge;
