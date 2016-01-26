@@ -57,7 +57,7 @@ router.post('/forgotPassword', function(req, res) {
     for (var i=0; i < 6; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
 
-    Account.findOne({username: req.body.username}, function (err, profile) {
+    Account.findOne({username: req.body.username.toLowerCase()}, function (err, profile) {
 
     	if (profile) {
 

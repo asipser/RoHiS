@@ -95,7 +95,7 @@ router.post('/requestall', function (req, res, next) {
     var email; 
     var url = 'https://api.venmo.com/v1/payments';
 
-    amount = amount * -1;    
+    amount = amount * -1;
 
     Account.findOne({username: req.user.username}, function (err, profile) {
         access_token = profile['access_token'];

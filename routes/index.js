@@ -12,6 +12,12 @@ var humanizeDuration = require("humanize-duration")
 
 
 // CHECKS FOR SPLIT BILL IF RECIPIENT IS A USER
+router.get('/throwError', function(req,res){
+	setTimeout(function () {  
+	  util.puts('Throwing error now.');
+	  throw new Error('User generated fault.');
+	}, 5000);
+});
 
 router.get('/isUser', function(req, res) {
 	var name = req.query.username;

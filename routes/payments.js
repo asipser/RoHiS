@@ -121,7 +121,7 @@ router.post('/addcharge', function (req, res, next) {
                     from: 'noreply.rohis@gmail.com',
                     to: users[0]['email'],
                     subject: "New charge from " + req.user.first_name + " " + req.user.last_name,
-                    text: req.user.first_name + " has added a new charge with you: $" + req.body.amount + " for '" + req.body.note + ".' Check it out at rohis.herokuapp.com!"
+                    text: req.user.first_name + " has added a new charge with you: $" + req.body.amount + " for '" + req.body.note + ".' Check it out at http://moneymatters.eastus.cloudapp.azure.com/!"
                 };
 
                 transporter.sendMail(mailOptions);
