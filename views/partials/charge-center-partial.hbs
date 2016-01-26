@@ -285,7 +285,7 @@
 	<div class="ui raised segment" id='loanpanel'>
 		<div class="ui center aligned divided two column grid">
 			<div class="eight wide column">
-				<h3 class="ui small header">Charges owed to you</h3>
+				<h3 class="ui small header">Charges Owed To You</h3>
 				{{!-- <div class='ui massive statistic'>
 					<div class='value'><i class='meh icon'></i></div>
 					<div class='label'>No one owes you money!</div>
@@ -322,17 +322,21 @@
 								<div class="ui basic red button chargecancelall" data='{{username}}'>Remove</div>
 							</div>
 						</div>
+						<div style='display:none;' class='ui blue bottom attached button venmorequestbutton' data='{{username}}'>
+							Request on Venmo
+						</div>
 					</div>
 					{{/each}}
 				</div>
 			</div>
 			<div class="eight wide column">
-				<h3 class="ui small header">Charges you owe</h3>
+				<h3 class="ui small header">Charges You Owe</h3>
 				{{!-- <div class='ui massive statistic'>
 					<div class='value'>$0</div>
 					<div class='label'>= 0 stress <i class='smile icon'></i></div>
 				</div>
-				--}}				<div class='ui two cards'>
+				--}}
+				<div class='ui two cards'>
 				{{#each merged_you_owe}}
 				<div class='ui card {{username}}'>
 					<div class='content'>
@@ -360,9 +364,12 @@
 					</div>
 					<div class='extra content'>
 						<div class='ui two buttons'>
-							<div class="ui green button chargecompleteall" data='{{username}}'>Complete</div>
+							<div class="ui green button chargecompleteall {{username}}" data='{{username}}'>Complete</div>
 							<div class="ui basic red button chargecancelall" data='{{username}}'>Remove</div>
 						</div>
+					</div>
+					<div style='display:none;' class='ui blue bottom attached button venmocompletebutton {{username}}' data='{{username}}'>
+						Complete with Venmo
 					</div>
 				</div>
 				{{/each}}
@@ -370,5 +377,35 @@
 		</div>
 	</div>
 </div>
+</div>
+<div class='ui small modal venmocomplete'>
+	<div class='ui header'>Complete with Venmo</div>
+	<div class='ui text content'>
+		<div class='ui subheader'>Please input a note for your Venmo payment:</div>
+		<div class='ui fluid input'>
+			<input type="text" id="venmocompletenote" placeholder="Description">
+		</div>
+		<br>
+		<button class='ui green button' id='venmocompletesubmit'>Submit</button>
+	</div>
+	<div class='ui bottom attached warning message'>
+		<i class='warning icon'></i>
+		Clicking submit will automatically pay <span id='venmocompleteuser'>user</span> $<span id='venmocompleteamount'>0</span> on Venmo.
+	</div>
+</div>
+<div class='ui small modal venmorequest'>
+	<div class='ui header'>Request with Venmo</div>
+	<div class='ui text content'>
+		<div class='ui subheader'>Please input a note for your Venmo request:</div>
+		<div class='ui fluid input'>
+			<input type="text" id="venmorequestnote" placeholder="Description">
+		</div>
+		<br>
+		<button class='ui green button' id='venmorequestsubmit'>Submit</button>
+	</div>
+	<div class='ui bottom attached warning message'>
+		<i class='warning icon'></i>
+		Clicking submit will automatically request <span id='venmorequestuser'>user</span> for $<span id='venmorequestamount'>0</span> on Venmo.
+	</div>
 </div>
 <script src="/javascripts/index.js"></script>

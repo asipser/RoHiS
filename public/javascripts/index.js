@@ -473,8 +473,6 @@ $(document).ready(function(){
 		$('div.ui.toggle.checkbox').checkbox('uncheck');
 	}
 
-	$('div.statisticsreturntime').text((parseFloat($('div.statisticsreturntime').attr('data'))/(60000)).toFixed(2));
-
 	var stats = $('div.statisticspage.value');
 	for(var i=0;i<stats.length;i++){
 		if($(stats[i]).attr('data'))
@@ -494,4 +492,118 @@ $(document).ready(function(){
 	      e.preventDefault();
 	   }
 	});
+
+	$('.venmocompletebutton').click(function(){
+		var username = $(this).attr('data');
+		var totalAmount = $('.dbamount.' + username).text();
+
+		$('#venmocompleteuser').text(username);
+		$('#venmocompleteamount').text(totalAmount);
+		$('.ui.modal.venmocomplete').modal('show');
+
+		$('#venmocompletesubmit').click(function(){
+			var description = $('#venmocompletenote').val();
+			console.log(description);
+			$.ajax({
+				type: 'POST',
+				url: '/venmo/completeall',
+				data: {
+					user: username,
+					amount: totalAmount,
+					note: description
+				},
+				success: function(data){
+					if(data === "Success!"){
+						console.log(data);
+						$('.ui.modal.venmocomplete').modal('hide');
+						$('.chargecompleteall.' + username).click();
+					}else{
+						console.log("Something wrong with the data: " + data);
+					}
+				},
+				error: function(xhr, status, error){
+					console.log("A problem occurred: " + error);
+				}
+			});
+		});
+	});
+
+	$('.venmorequestbutton').click(function(){
+		var username = $(this).attr('data');
+		var totalAmount = $('.dbamount.' + username).text();
+
+		$('#venmorequestuser').text(username);
+		$('#venmorequestamount').text(totalAmount);
+		$('.ui.modal.venmorequest').modal('show');
+
+		$('#venmorequestsubmit').click(function(){
+			var description = $('#venmorequestnote').val();
+			console.log(description);
+			$.ajax({
+				type: 'POST',
+				url: '/venmo/requestall',
+				data: {
+					user: username,
+					amount: totalAmount,
+					note: description
+				},
+				success: function(data){
+					if(data === "Success!"){
+						console.log(data);
+						location.reload();
+					}else{
+						console.log("Something wrong with the data: " + data);
+					}
+				},
+				error: function(xhr, status, error){
+					console.log("A problem occurred: " + error);
+				}
+			});
+		});
+	});
+
+	if($('#venmobool').attr('data') == 'true'){
+		var requestButtons = $('.venmorequestbutton');
+		var completeButtons = $('.venmocompletebutton');
+
+		for(var i=0;i<requestButtons.length;i++){
+			var currentButton = $(requestButtons[i]);
+			var currentUser = $(currentButton).attr('data');
+
+			$.ajax({
+				type: 'GET',
+				url: '/isUser',
+				data: {
+					username: currentUser
+				},
+				success: function(data){
+					console.log(currentUser + data);
+					if(data){
+						$(currentButton).show();
+					}
+				}
+			});
+		}
+		for(var i=0;i<completeButtons.length;i++){
+			var currentButton = $(completeButtons[i]);
+			var currentUser = $(currentButton).attr('data');
+
+			$.ajax({
+				type: 'GET',
+				url: '/isUser',
+				data: {
+					username: currentUser
+				},
+				success: function(data){
+					console.log(currentUser + data);
+					if(data){
+						$(currentButton).show();
+					}
+				},
+				error: function(xhr, status, error) {
+					console.log("A problem occurred" + error);
+				}
+			});
+		}
+	}
 });
