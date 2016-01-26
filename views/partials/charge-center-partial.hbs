@@ -46,7 +46,6 @@
 			},
 			success: function(data){
 				var starSpan = $(element).parent().parent().siblings('.extra.content').children();
-				console.log(data);
 				if(data){
 					$(starSpan).show();
 				}else{
@@ -55,6 +54,26 @@
 				}
 			}
 		});
+	};
+	var starCheckOnDropdown = function(element){
+		setTimeout(function(){var username = $(element).siblings('.usercardinput').val();
+				$.ajax({
+					type: 'GET',
+					url: '/isUser',
+					data: {
+						username: username
+					},
+					success: function(data){
+						var starSpan = $(element).parent().parent().siblings('.extra.content').children();
+						if(data){
+							$(starSpan).show();
+						}else{
+							$(starSpan).hide();
+							$(starSpan).children().addClass('empty');
+						}
+					}
+				});
+			}, 100);
 	};
 </script>
 <div class="ui container" id="chargecenterpanel">
@@ -68,7 +87,7 @@
 							<label style='display: none'>Payer status</label>
 							<input name="borroworlent" id="borroworlent" type="hidden">
 							<i class='dropdown icon'></i>
-							<div class='default text'>Who's paying?</div>
+							<div class='default text'>Lend or Borrow?</div>
 							<div class="menu">
 								<div class='item' data-value="true"><i class='pointing right icon'></i>I lent</div>
 								<div class='item' data-value="false"><i class='pointing left icon'></i>I borrowed</div>
@@ -78,7 +97,7 @@
 					<div class="ui field labeled input">
 						<label style='display: none'>Charge amount</label>
 						<div class='ui label'>$</div>
-						<input type="number" id='chargeamount' min='0.01' max='999.99' step='0.01' name="amount" placeholder="1.23">
+						<input type="number" id='chargeamount' min='0.01' max='999.99' step='0.01' name="amount" placeholder="How much?">
 					</div>
 					<div class="ui search labeled input field">
 						<div class='ui label' id='tofrom'>to</div>

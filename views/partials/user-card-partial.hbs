@@ -1,8 +1,8 @@
 <div class='card standard'>
 	<div class='content'>
 		<div class="ui compact search labeled input field">
-			<input oninput="starCheck($(this))" type="text" name="user" id='chargeuser' placeholder="Username" class='prompt usercardinput'>
-			<div class="results"></div>
+			<input oninput="starCheck($(this))" type="text" name="user" placeholder="Username" class='prompt usercardinput'></input>
+			<div onclick='starCheckOnDropdown($(this))' class="results"></div>
 		</div>
 		<span class='right floated meta'><div class='ui mini icon circular button' onclick='exitCard($(this))'><i class='remove icon' ></i></div></span>
 	</div>

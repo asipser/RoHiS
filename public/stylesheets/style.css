@@ -21,6 +21,10 @@ body, body.pushable>.pusher{
 	height: 100vh;
 }
 
+.header{
+	font-family: 'Questrial', sans-serif;
+}
+
 .pusher .dimmed{
 	background-color: #bdc3c7;
 }
