@@ -588,7 +588,7 @@ $(document).ready(function(){
 				success: function(data){
 					console.log(currentCharge['currentUser'] + data);
 					if(data){
-						$(currentCharge['currentButton']).show();
+						$(currentCharge['currentButton']).removeClass('disabled');
 					}
 
 					counter_1 -= 1;
@@ -622,7 +622,7 @@ $(document).ready(function(){
 				success: function(data){
 					console.log(currentCharge2['currentUser2'] + data);
 					if(data){
-						$(currentCharge2['currentButton2']).show();
+						$(currentCharge2['currentButton2']).removeClass('disabled');
 					}
 
 					counter_2 -= 1;
@@ -639,5 +639,9 @@ $(document).ready(function(){
 		if(completeButtons.length){
 			multiple_calls_2(users_2.shift());
 		}
+	};
+
+	if($('#venmobool').attr('data') == 'false'){
+		$('.venmopopup').popup();
 	}
 });
