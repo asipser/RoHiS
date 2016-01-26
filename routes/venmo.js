@@ -20,6 +20,10 @@ router.get('/auth', function(req, res, next) {
 
 router.get('/getCode', function (req, res, next) {
 
+    if (req.query.error) {
+        res.redirect('/');
+    }
+
     var code = req.query.code;
 
     var url = "https://api.venmo.com/v1/oauth/access_token";
