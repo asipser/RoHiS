@@ -568,9 +568,16 @@ $(document).ready(function(){
 		var completeButtons = $('.venmocompletebutton');
 		console.log(completeButtons)
 
+		var counter_1 = requestButtons.length;
+		var users_1 = [];
+
 		for(var i=0;i<requestButtons.length;i++){
 			var currentButton = $(requestButtons[i]);
 			var currentUser = $(currentButton).attr('data');
+			users_1.push(currentUser);
+		}
+
+		function multiple_calls_1(currentUser) {
 
 			$.ajax({
 				type: 'GET',
@@ -583,12 +590,27 @@ $(document).ready(function(){
 					if(data){
 						$(currentButton).show();
 					}
+
+					counter_1 -= 1;
+					if (counter_1 > 0) {
+						multiple_calls_1(users_1.shift());
+					}
 				}
 			});
 		}
+
+		multiple_calls_1(users_1.shift());
+
+		var counter_2 = completeButtons.length;
+		var users_2 = [];
+		
 		for(var i=0;i<completeButtons.length;i++){
-			var currentButton = $(completeButtons[i]);
-			var currentUser = $(currentButton).attr('data');
+			var currentButton2 = $(completeButtons[i]);
+			var currentUser2 = $(currentButton).attr('data');
+			users_2.push(currentUser2);
+		}
+
+		function multiple_calls_2(currentUser2) {
 
 			$.ajax({
 				type: 'GET',
@@ -600,6 +622,11 @@ $(document).ready(function(){
 					console.log(currentUser + data);
 					if(data){
 						$(currentButton).show();
+					}
+
+					counter_2 -= 1;
+					if (counter_2 > 0) {
+						multiple_calls_2(users_2.shift());
 					}
 				},
 				error: function(xhr, status, error) {
@@ -607,5 +634,7 @@ $(document).ready(function(){
 				}
 			});
 		}
+
+		multiple_calls_2(users_2.shift());
 	}
 });
