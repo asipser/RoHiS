@@ -97,6 +97,7 @@ $(document).ready(function(){
 		if(numCards===8){
 			$(this).parent().parent().hide();
 		}
+		var rand = Math.floor((Math.random() * 9) + 1);
 		$('#addbuttoncard').before('<div class="standard card"> \
 			<div class="content"> \
 				<div class="ui compact search labeled input field"> \
@@ -105,8 +106,8 @@ $(document).ready(function(){
 				</div> \
 				<span class="right floated meta"><div onclick="exitCard($(this))" class="ui mini icon circular button"><i class="remove icon"></i></div></span> \
 			</div> \
-			<div class="content"> \
-				<i class="massive smile icon"></i> \
+			<div class="ui small image"> \
+				<img src="/images/p' + rand + '.png"> \
 			</div> \
 			<div class="content stardiv"> \
 				<span class="right floated starspan">Paid the bill <i onclick="starClick($(this))" class="empty star icon"></i></span> \
