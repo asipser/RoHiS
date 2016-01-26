@@ -473,8 +473,6 @@ $(document).ready(function(){
 		$('div.ui.toggle.checkbox').checkbox('uncheck');
 	}
 
-	$('div.statisticsreturntime').text((parseFloat($('div.statisticsreturntime').attr('data'))/(60000)).toFixed(2));
-
 	var stats = $('div.statisticspage.value');
 	for(var i=0;i<stats.length;i++){
 		if($(stats[i]).attr('data'))
@@ -494,4 +492,152 @@ $(document).ready(function(){
 	      e.preventDefault();
 	   }
 	});
+
+	$('.venmocompletebutton').click(function(){
+		var username = $(this).attr('data');
+		var totalAmount = $('.dbamount.' + username).text();
+
+		$('#venmocompleteuser').text(username);
+		$('#venmocompleteamount').text(totalAmount);
+		$('.ui.modal.venmocomplete').modal('show');
+
+		$('#venmocompletesubmit').click(function(){
+			var description = $('#venmocompletenote').val();
+			console.log(description);
+			$.ajax({
+				type: 'POST',
+				url: '/venmo/completeall',
+				data: {
+					user: username,
+					amount: totalAmount,
+					note: description
+				},
+				success: function(data){
+					if(data === "Success!"){
+						console.log(data);
+						$('.ui.modal.venmocomplete').modal('hide');
+						$('.chargecompleteall.' + username).click();
+					}else{
+						console.log("Something wrong with the data: " + data);
+					}
+				},
+				error: function(xhr, status, error){
+					console.log("A problem occurred: " + error);
+				}
+			});
+		});
+	});
+
+	$('.venmorequestbutton').click(function(){
+		var username = $(this).attr('data');
+		var totalAmount = $('.dbamount.' + username).text();
+
+		$('#venmorequestuser').text(username);
+		$('#venmorequestamount').text(totalAmount);
+		$('.ui.modal.venmorequest').modal('show');
+
+		$('#venmorequestsubmit').click(function(){
+			var description = $('#venmorequestnote').val();
+			console.log(description);
+			$.ajax({
+				type: 'POST',
+				url: '/venmo/requestall',
+				data: {
+					user: username,
+					amount: totalAmount,
+					note: description
+				},
+				success: function(data){
+					if(data === "Success!"){
+						console.log(data);
+						location.reload();
+					}else{
+						console.log("Something wrong with the data: " + data);
+					}
+				},
+				error: function(xhr, status, error){
+					console.log("A problem occurred: " + error);
+				}
+			});
+		});
+	});
+
+	if($('#venmobool').attr('data') == 'true'){
+		var requestButtons = $('.venmorequestbutton');
+		console.log(requestButtons);
+		var completeButtons = $('.venmocompletebutton');
+		console.log(completeButtons)
+
+		var counter_1 = requestButtons.length;
+		var users_1 = [];
+
+		for(var i=0;i<requestButtons.length;i++){
+			var currentButton = $(requestButtons[i]);
+			var currentUser = $(currentButton).attr('data');
+			users_1.push({currentUser: currentUser, currentButton: currentButton});
+		}
+
+		function multiple_calls_1(currentCharge) {
+
+			$.ajax({
+				type: 'GET',
+				url: '/isUser',
+				data: {
+					username: currentCharge['currentUser']
+				},
+				success: function(data){
+					console.log(currentCharge['currentUser'] + data);
+					if(data){
+						$(currentCharge['currentButton']).show();
+					}
+
+					counter_1 -= 1;
+					if (counter_1 > 0) {
+						multiple_calls_1(users_1.shift());
+					}
+				}
+			});
+		}
+		if(requestButtons.length){
+			multiple_calls_1(users_1.shift());
+		}
+
+		var counter_2 = completeButtons.length;
+		var users_2 = [];
+		
+		for(var i=0;i<completeButtons.length;i++){
+			var currentButton2 = $(completeButtons[i]);
+			var currentUser2 = $(currentButton2).attr('data');
+			users_2.push({currentUser2: currentUser2, currentButton2: currentButton2});
+		}
+
+		function multiple_calls_2(currentCharge2) {
+
+			$.ajax({
+				type: 'GET',
+				url: '/isUser',
+				data: {
+					username: currentCharge2['currentUser2']
+				},
+				success: function(data){
+					console.log(currentCharge2['currentUser2'] + data);
+					if(data){
+						$(currentCharge2['currentButton2']).show();
+					}
+
+					counter_2 -= 1;
+					if (counter_2 > 0) {
+						multiple_calls_2(users_2.shift());
+					}
+				},
+				error: function(xhr, status, error) {
+					console.log("A problem occurred" + error);
+				}
+			});
+		}
+
+		if(completeButtons.length){
+			multiple_calls_2(users_2.shift());
+		}
+	}
 });
