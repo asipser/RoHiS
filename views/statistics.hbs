@@ -23,49 +23,56 @@
 		<h2 class="ui dividing large header"><i class="large line chart icon"></i> Statistics</h2>
 		<div class="ui three column grid">
 			<div class="column"><div class='ui center aligned segment'>
-				<div class='ui header'><i class='wait icon'></i> Return Rate</div>
-				<div class='ui small statistic'>
-					<div class='value'>{{user.statistics.average_display}}</div>
+				<div class='ui header'><i class='wait icon'></i> Return Rate*</div>
+				<div class='ui orange small statistic'>
 					<div class='label'>Average return</div>
+					<br>
+					<div class='statisticspage value'>{{user.statistics.average_display}}</div>				
 				</div>
 				<br>
-				<div class='ui small statistic'>
-					<div class='value'>{{user.highest_time_display}}</div>
+				<div class='ui olive small statistic'>
 					<div class='label'>Slowest return</div>
+					<br>
+					<div class='statisticspage value'>{{user.highest_time_display}}</div>					
 				</div>
 				<br>
-				<div class='ui small statistic'>
-					<div class='value'>{{user.lowest_time_display}}</div>
+				<div class='ui orange small statistic'>
 					<div class='label'>Quickest return</div>
+					<br>
+					<div class='statisticspage value'>{{user.lowest_time_display}}</div>					
 				</div>
-			</div></div>
+			</div><div class='ui bottom attached message'>*Upon completion of charges you owe to others</div></div>
 			<div class="column"><div class='ui center aligned segment'>
-				<div class='ui center aligned header'>Completed Charges</div>
+				<div class='ui center aligned header'>All Time Charges*</div>
 				<div class='ui orange statistic'>
 					<div class='label'>Greatest Loan</div>
+					<br>
 					<div class='statisticspage value' data='{{user.greatest_loan}}'>0</div>
 				</div>
 				<br>
 				<div class='ui olive statistic'>
 					<div class='label'>Smallest Loan</div>
+					<br>
 					<div class='statisticspage value' data='{{user.smallest_loan}}'>0</div>
 				</div>
 				<br>
 				<div class='ui orange statistic'>
 					<div class='label'>Greatest Debt</div>
+					<br>
 					<div class='statisticspage value' data='{{user.highest_debt}}'>0</div>
 				</div>
 				<br>
 				<div class='ui olive statistic'>
 					<div class='label'>Smallest Debt</div>
+					<br>
 					<div class='statisticspage value' data='{{user.smallest_debt}}'>0</div>
 				</div>
 			</div></div>
 			<div class="column">
 				<div class='ui segment'>
-					<div class='ui header'>Lend/Loan Graph</div>
-					<svg width="300" height="800" id = "stats_graph"></svg>
-				</div>
+					<div class='ui center aligned header'>Lend/Loan Graph</div>
+					<svg id = "stats_graph"></svg>
+				</div><div class='ui bottom attached message'>Current Total = Currently Lent $ - Currently Borrowed $</div>
 			</div>
 		</div>
 	</div>
