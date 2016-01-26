@@ -211,6 +211,13 @@ $(document).ready(function(){
 
 			$('#participantdropdown').append("<option value='" + username + "'>" + username + "</option>");
 		}
+
+		$('input[type="number"]').keydown(function(e){
+		   var ingnore_key_codes = [189];
+		   if ($.inArray(e.keyCode, ingnore_key_codes) >= 0){
+		      e.preventDefault();
+		   }
+		});
 	};
 	
 	var step2AddCard = function(username, payer){
@@ -223,7 +230,7 @@ $(document).ready(function(){
 								<div class='content'> \
 									<div class='ui transparent fluid left icon input'> \
 										<i class='dollar icon'></i> \
-										<input type='number' class='indcharge " + username + "' min='0.01' max='999.99' step='0.01' onchange='chargeOnChange()' name='amount' placeholder='Individual charges'> \
+										<input type='number' class='indcharge " + username + "' min='0.01' max='999.99' step='0.01' oninput='chargeOnChange($(this))' name='amount' placeholder='Individual charges'> \
 									</div> \
 								</div> \
 							</div>");
@@ -236,7 +243,7 @@ $(document).ready(function(){
 								<div class='extra content'> \
 									<div class='ui transparent fluid left icon input'> \
 										<i class='dollar icon'></i> \
-										<input type='number' class='indcharge " + username + "' min='0.01' max='999.99' step='0.01' onchange='chargeOnChange()' name='amount' placeholder='Individual charges'> \
+										<input type='number' class='indcharge " + username + "' min='0.01' max='999.99' step='0.01' oninput='chargeOnChange($(this))' name='amount' placeholder='Individual charges'> \
 									</div> \
 								</div> \
 							</div>")
@@ -275,6 +282,13 @@ $(document).ready(function(){
 		}
 
 		chargeOnChange();
+	});
+	
+	$('#cancelsharedchargebutton').click(function(){
+		$(this).siblings('.ui.error.message').hide();
+		$('#sharedchargeamount').val('');
+		$('#participantdropdown').dropdown('clear');
+		$('#sharedchargeform').hide();
 	});
 
 	$('#step2nextbutton').click(function(){
@@ -474,9 +488,10 @@ $(document).ready(function(){
 		$(historyChargeAmounts[i]).text(parseFloat($(historyChargeAmounts[i]).text()).toFixed(2));
 	}
 
-	$('.cookie.nag')
-	  .nag({
-	    key      : 'accepts-cookies',
-	    value    : true
-	  });
+	$('input[type="number"]').keydown(function(e){
+	   var ingnore_key_codes = [189];
+	   if ($.inArray(e.keyCode, ingnore_key_codes) >= 0){
+	      e.preventDefault();
+	   }
+	});
 });

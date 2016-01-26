@@ -36,7 +36,31 @@
 			$('#totalshared').text((totalBill - totalCharges).toFixed(2));
 		}
 	};
+	var chargeOnChange = function(element){
+		var individualCharges = $('input.indcharge');
+		var sharedCharges = $('div.content.sharedcharges');
+		var totalCharges = 0;
+
+		for(var i=0;i<individualCharges.length;i++){
+			var currentInd = parseFloat($(individualCharges[i]).val());
+			var currentShared = parseFloat($(sharedCharges[i]).text());
+			if(currentInd){
+				totalCharges += currentInd;
+			}
+			if(currentShared){
+				totalCharges += currentShared;
+			}
+		}
+
+		$('#totalremoved').text(totalCharges.toFixed(2));
+
+		var totalBill = parseFloat($('#totalbill').val());
+		if(totalBill){
+			$('#totalshared').text((totalBill - totalCharges).toFixed(2));
+		}
+	};
 	var starCheck = function(element){
+		mySanitize(element);
 		var username = $(element).val();
 		$.ajax({
 			type: 'GET',
@@ -75,6 +99,9 @@
 				});
 			}, 100);
 	};
+	var mySanitize = function(element){
+		$(element).val($(element).val().replace(/\W+/g, ""));
+	};	
 </script>
 <div class="ui container" id="chargecenterpanel">
 	<div class='ui message opaque'>
@@ -101,7 +128,7 @@
 					</div>
 					<div class="ui search labeled input field">
 						<div class='ui label' id='tofrom'>to</div>
-						<input type="text" name="user" id='chargeuser' placeholder="Username" maxlength='30' class='prompt chargeuserinput'>
+						<input type="text" name="user" id='chargeuser' oninput='mySanitize($(this))' placeholder="Username" maxlength='30' class='prompt chargeuserinput'>
 						<div class="results"></div>
 					</div>
 					<div class="field">
@@ -187,7 +214,7 @@
 								<div class='ui center aligned segment'>
 									<div class='ui huge labeled input'>
 										<div class='ui label' style='border-top-left-radius: .28571429rem; border-bottom-left-radius: .28571429rem;'>$</div>
-										<input type='number' id='totalbill' onchange='chargeOnChange()' placeholder='Input Total Bill Here' style='text-align: center'></input>
+										<input type='number' id='totalbill' oninput='chargeOnChange($(this))' placeholder='Input Total Bill Here' style='text-align: center'></input>
 									</div>
 									<div>-<br>$<span id='totalremoved'>0</span> individual/shared charges</div>
 									<div class='ui statistic'>
@@ -227,6 +254,7 @@
 										</div>
 										<div class='ui error message' style='display: none'>Please fill out all fields!</div>
 										<button class='ui button' id='submitsharedchargebutton'>Submit</button>
+										<button class='ui basic grey button' id='cancelsharedchargebutton'>Cancel</button>
 									</div>
 								</div>
 							</div>
