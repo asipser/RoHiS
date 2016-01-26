@@ -135,7 +135,7 @@
 						<input type="text" name="note" id='chargedescription' placeholder="Note" maxlength='25'>
 					</div>
 				</div>
-				<div class="field">
+				<div style='display: none' class="field">
 					<div id='venmobool' data='{{venmo}}' data-content='You must authenticate your venmo account in settings in order to use venmo' class="ui disabled slider checkbox">
 						<input type="checkbox" name="venmousage" value='true'>
 						<label>Use Venmo?</label>
@@ -322,8 +322,10 @@
 								<div class="ui basic red button chargecancelall" data='{{username}}'>Remove</div>
 							</div>
 						</div>
-						<div style='display:none;' class='ui blue bottom attached button venmorequestbutton' data='{{username}}'>
-							Request on Venmo
+						<div class='venmopopup' data-content='You must authorize Venmo in account settings before you can request charges with Venmo on MoneyMatters.'>
+							<div class='ui blue bottom attached disabled button venmorequestbutton' data='{{username}}'>
+								Request on Venmo
+							</div>
 						</div>
 					</div>
 					{{/each}}
@@ -368,8 +370,10 @@
 							<div class="ui basic red button chargecancelall" data='{{username}}'>Remove</div>
 						</div>
 					</div>
-					<div style='display:none;' class='ui blue bottom attached button venmocompletebutton {{username}}' data='{{username}}'>
-						Complete with Venmo
+					<div class='venmopopup' data-content='You must authorize Venmo in account settings before you can complete charges with Venmo on MoneyMatters.'>
+						<div style='display:none;' class='ui blue bottom attached disabled button venmocompletebutton {{username}}' data='{{username}}'>
+							Complete with Venmo
+						</div>
 					</div>
 				</div>
 				{{/each}}

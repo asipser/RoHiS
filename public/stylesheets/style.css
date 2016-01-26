@@ -1,6 +1,7 @@
 body, body.pushable>.pusher{
 	background-color: #7f8c8d;
-	background-image: url('/images/stonesbg.png');
+	background-image: url('/images/pen.png');
+	background-size: 100vw 100vh;
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 }
