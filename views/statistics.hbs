@@ -23,12 +23,24 @@
 		<h2 class="ui dividing large header"><i class="large line chart icon"></i> Statistics</h2>
 		<div class="ui three column grid">
 			<div class="column"><div class='ui center aligned segment'>
+				<div class='ui header'><i class='wait icon'></i> Return Rate</div>
 				<div class='ui small statistic'>
 					<div class='value'>{{user.statistics.average_display}}</div>
 					<div class='label'>Average return</div>
 				</div>
+				<br>
+				<div class='ui small statistic'>
+					<div class='value'>{{user.highest_time_display}}</div>
+					<div class='label'>Slowest return</div>
+				</div>
+				<br>
+				<div class='ui small statistic'>
+					<div class='value'>{{user.lowest_time_display}}</div>
+					<div class='label'>Quickest return</div>
+				</div>
 			</div></div>
 			<div class="column"><div class='ui center aligned segment'>
+				<div class='ui center aligned header'>Completed Charges</div>
 				<div class='ui orange statistic'>
 					<div class='label'>Greatest Loan</div>
 					<div class='statisticspage value' data='{{user.greatest_loan}}'>0</div>

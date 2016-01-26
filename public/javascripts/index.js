@@ -111,7 +111,7 @@ $(document).ready(function(){
 			<div class="content"> \
 				<i class="massive smile icon"></i> \
 			</div> \
-			<div class="content"> \
+			<div class="content stardiv"> \
 				<span class="right floated starspan">Paid the bill <i onclick="starClick($(this))" class="empty star icon"></i></span> \
 			</div> \
 		</div>');
@@ -227,7 +227,7 @@ $(document).ready(function(){
 									<div class='header'>" + username + "<span class='right floated meta'>Paid the bill <i class='star icon'></i></span></div> \
 								</div> \
 								<div class='content sharedcharges " + username + "'>No shared charges yet!</div> \
-								<div class='content'> \
+								<div class='content extra'> \
 									<div class='ui transparent fluid left icon input'> \
 										<i class='dollar icon'></i> \
 										<input type='number' class='indcharge " + username + "' min='0.01' max='999.99' step='0.01' oninput='chargeOnChange($(this))' name='amount' placeholder='Individual charges'> \
@@ -240,7 +240,7 @@ $(document).ready(function(){
 									<div class='header'>" + username + "</div> \
 								</div> \
 								<div class='content sharedcharges " + username + "'>No shared charges yet!</div> \
-								<div class='extra content'> \
+								<div class='content extra'> \
 									<div class='ui transparent fluid left icon input'> \
 										<i class='dollar icon'></i> \
 										<input type='number' class='indcharge " + username + "' min='0.01' max='999.99' step='0.01' oninput='chargeOnChange($(this))' name='amount' placeholder='Individual charges'> \
@@ -252,15 +252,18 @@ $(document).ready(function(){
 
 	$('#sharedchargebutton').click(function(){
 		$('#sharedchargeform').show();
+		$('#spliterrormessage').text('');
+		$('#spliterrormessage').hide();
 	});
 
 	$('#submitsharedchargebutton').click(function(){
-		$(this).siblings('.ui.error.message').hide();
 		var charge = parseFloat($('#sharedchargeamount').val());
 		var participants = $('#participantdropdown').val();
 
 		if(!(participants && charge)){
-			$(this).siblings('.ui.error.message').show();
+			console.log('error');
+			$('#spliterrormessage').text("Please enter values for all fields");
+			$('#spliterrormessage').show();
 		}else{
 			var numParticipants = participants.length;
 			var chargePerPerson = charge/numParticipants;
@@ -278,14 +281,17 @@ $(document).ready(function(){
 			}
 			$('#sharedchargeamount').val('');
 			$('#participantdropdown').dropdown('clear');
+
+			$('#spliterrormessage').text('');
+			$('#spliterrormessage').hide();
+
 			$('#sharedchargeform').hide();
 		}
-
 		chargeOnChange();
 	});
 	
 	$('#cancelsharedchargebutton').click(function(){
-		$(this).siblings('.ui.error.message').hide();
+		$('#spliterrormessage').hide();
 		$('#sharedchargeamount').val('');
 		$('#participantdropdown').dropdown('clear');
 		$('#sharedchargeform').hide();
@@ -293,7 +299,9 @@ $(document).ready(function(){
 
 	$('#step2nextbutton').click(function(){
 		var leftover = parseFloat($('#totalshared').text());
-		if(leftover > 0){
+		var note = $('#billsplitnote').val();
+		console.log(note);
+		if(leftover >= 0 && note){
 			var payerCard = $('div.ui.yellow.card');
 			var userCards = $(payerCard).siblings();
 			var payer = $(payerCard).attr('id');
@@ -325,13 +333,14 @@ $(document).ready(function(){
 			$('#step3tab').removeClass('disabled');
 			$('#step3tab').click();
 			$('#step2tab').addClass('disabled');
-			setUpStep3Tab(userData, payer);
+			setUpStep3Tab(userData, payer, note);
 		}else{
-			// ERROR MESSAGE
+			$('#spliterrormessage').text('Total leftover value cannot be negative, and there must be a note. Please adjust or restart.');
+			$('#spliterrormessage').show();
 		}
 	});
 
-	var setUpStep3Tab = function(userData, payer){
+	var setUpStep3Tab = function(userData, payer, note){
 		for(var i=0;i<userData.length;i++){
 			var username = userData[i].username;
 			var debt = (userData[i].charge).toFixed(2);
@@ -352,8 +361,6 @@ $(document).ready(function(){
 
 			console.log("You made it!");
 
-			var fakeNote = "fake note"
-
 			var counter = userData.length;
 			var chargeObjects = [];
 
@@ -362,7 +369,7 @@ $(document).ready(function(){
 					recipient: payer,
 					payer: userData[i].username,
 					amount: userData[i].charge,
-					note: fakeNote
+					note: note
 				}
 
 				chargeObjects.push(chargeObject);
@@ -643,5 +650,21 @@ $(document).ready(function(){
 
 	if($('#venmobool').attr('data') == 'false'){
 		$('.venmopopup').popup();
+	};
+
+	var checkForZeros = function(){
+		var totals = $('.dbamount');
+		for(var i=0;i<totals.length;i++){
+			var current = totals[i];
+			console.log($(current).text());
+			if($(current).text() == '0.00'){
+				var user = $(current).attr('data');
+				setTimeout(function(){
+					$('.chargecompleteall.'+ user).click();
+				}, 500)
+			}
+		}
 	}
+
+	checkForZeros();
 });
