@@ -22,7 +22,11 @@ body, body.pushable>.pusher{
 }
 
 .header{
-	font-family: 'Questrial', sans-serif;
+}
+
+#needstobewider{
+	width: 80vw !important;
+}
 }
 
 .pusher .dimmed{
@@ -30,8 +34,10 @@ body, body.pushable>.pusher{
 }
 
 .masthead h1.ui.header{
-	margin-top: 35vh;
+	margin-top: 25vh;
 	font-size: 7em;
+	margin-bottom: -5vh;
+	font-family: 'Questrial', sans-serif;
 }
 
 .masthead .menu a.ui.inverted.button{
@@ -46,9 +52,23 @@ body, body.pushable>.pusher{
 
 #aboutpanel{
 	padding-top: 5vh;
-	padding-bottom: 5vh;
+	padding-bottom: 50vh;
 	padding-left:5vw;
 	padding-right: 5vw;
+}
+
+#messagegrid{
+	margin-bottom: 15vh;
+}
+
+.ui.piled.segment.homepage{
+	min-height: 35vh;
+	margin-top: 15vh;
+	margin-bottom: 15vh;
+}
+
+#bottomlogocontainer{
+	margin-bottom: 30vh;
 }
 
 div.ui.grid{

@@ -111,7 +111,7 @@ $(document).ready(function(){
 			<div class="content"> \
 				<i class="massive smile icon"></i> \
 			</div> \
-			<div class="extra content"> \
+			<div class="content"> \
 				<span class="right floated starspan">Paid the bill <i onclick="starClick($(this))" class="empty star icon"></i></span> \
 			</div> \
 		</div>');
@@ -213,7 +213,7 @@ $(document).ready(function(){
 		}
 
 		$('input[type="number"]').keydown(function(e){
-		   var ingnore_key_codes = [189];
+		   var ingnore_key_codes = [69, 101, 45, 109, 189, 43, 107];
 		   if ($.inArray(e.keyCode, ingnore_key_codes) >= 0){
 		      e.preventDefault();
 		   }
@@ -487,7 +487,7 @@ $(document).ready(function(){
 	}
 
 	$('input[type="number"]').keydown(function(e){
-	   var ingnore_key_codes = [189];
+	   var ingnore_key_codes = [69, 101, 43, 45, 109, 189, 107];
 	   if ($.inArray(e.keyCode, ingnore_key_codes) >= 0){
 	      e.preventDefault();
 	   }
