@@ -70,9 +70,9 @@
 			</div></div>
 			<div class="column">
 				<div class='ui segment'>
-					<div class='ui center aligned header'>Lend/Loan Graph</div>
+					<div class='ui center aligned header'>My Balance Graph</div>
 					<svg id = "stats_graph"></svg>
-				</div><div class='ui bottom attached message'>Current Total = Currently Lent $ - Currently Borrowed $</div>
+				</div><div class='ui bottom attached message'>My Balance = Currently Lent $ - Currently Borrowed $</div>
 			</div>
 		</div>
 	</div>
@@ -102,7 +102,7 @@
 	pziYAxis.addYScale(yScale);
 	pziYAxis.attachTo(yAxis);
 
-	var label_y = new Plottable.Components.AxisLabel("Current Total", -90);
+	var label_y = new Plottable.Components.AxisLabel("My Balance", -90);
 	var label_x = new Plottable.Components.AxisLabel("Actions", 0);
 
 	$.ajax({
