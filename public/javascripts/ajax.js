@@ -93,7 +93,7 @@ $(".chargecancel").click(function() {
 
 $(".chargecompleteall").click(function() {
 
-	var username = $(this).attr('data').trim().replace(' ','.');
+	var username = $(this).attr('data').trim().split(' ').join('.');
 	console.log(username);
 	var subcharges = $('div.listeditem.' + username);
 	var totalAmount = parseFloat($('.dbamount.' + username).text());
@@ -147,7 +147,7 @@ $(".chargecompleteall").click(function() {
 });
 
 $(".chargecancelall").click(function() {
-	var username = $(this).attr('data').trim().replace(' ','.');
+	var username = $(this).attr('data').trim().split(' ').join('.');
 	console.log(username);
 	var subcharges = $('div.listeditem.' + username);
 	var totalAmount = parseFloat($('.dbamount.' + username).text());
