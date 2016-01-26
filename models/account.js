@@ -23,7 +23,11 @@ var Account = new Schema({
     smallest_debt: {type:Number, default:null},
     date_created: Date,
     number_changes: { type: Number, default: 0},
-    graph_current_total: { type: Array, default : [{"changes": 0, "current_total": 0}]}
+    graph_current_total: { type: Array, default : [{"changes": 0, "current_total": 0}]},
+    highest_time_num: {type:Number, default:0},
+    lowest_time_num: {type:Number, default:0},
+    highest_time_display: {type:String, default: "0"},
+    lowest_time_display: {type:String, default: "0"}
 
 });
 
