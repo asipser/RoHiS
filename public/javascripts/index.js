@@ -319,7 +319,7 @@ $(document).ready(function(){
 				debt += leftoversplit;
 
 				userData[i] = {
-					username: currentrentUser,
+					username: currentUser,
 					charge: debt
 				}
 			}
@@ -331,7 +331,7 @@ $(document).ready(function(){
 			$('#step2tab').addClass('disabled');
 			setUpStep3Tab(userData, payer, note);
 		}else{
-			$('#spliterrormessage').text('Total leftover value cannot be negative, and there must be a note. Please adjust or restart.');
+			$('#spliterrormessage').text('You either have a total negative leftover value or you did not fill in the note section. Please adjust or restart.');
 			$('#spliterrormessage').show();
 		}
 	});
