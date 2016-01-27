@@ -317,7 +317,7 @@
 								</div>
 								<div class='hidden content chargelist'>
 									{{#each transactions_info}}
-									<div id='{{id}}' data-title="Created by {{creator}} on {{date_created}}" class='listeditem {{../username}}'>
+									<div id='{{id}}' data-title='"{{note}}"' data-content="Created by {{creator}} on {{date_created}}" class='listeditem {{../username}}'>
 										<span class='left floated listednote'>"{{note}}":</span>
 										<span class='right floated'>$<span class='listedchargeamount'>{{amount}}</span> | <a data='{{../username}}' class="chargecomplete"><i class='green checkmark icon'></i></a>| <a class="chargecancel" data='{{../username}}'><i class='red remove icon'></i></a>|</span><br>
 									</div>
@@ -365,7 +365,7 @@
 							</div>
 							<div class='hidden content chargelist'>
 								{{#each transactions_info}}
-								<div id='{{id}}' data-title="Created by {{creator}} on {{date_created}}" class='listeditem {{../username}}'>
+								<div id='{{id}}' data-title='"{{note}}"' data-content="Created by {{creator}} on {{date_created}}" class='listeditem {{../username}}'>
 									<span class='left floated listednote'>"{{note}}":</span>
 									<span class='right floated'>$<span class='listedchargeamount'>{{amount}}</span> | <a class="chargecomplete" data='{{../username}}'><i class='green checkmark icon'></i></a>| <a data='{{../username}}' class="chargecancel"><i class='red remove icon'></i></a>|</span><br>
 								</div>
