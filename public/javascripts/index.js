@@ -319,7 +319,7 @@ $(document).ready(function(){
 				debt += leftoversplit;
 
 				userData[i] = {
-					username: currentrentUser,
+					username: currentUser,
 					charge: debt
 				}
 			}
